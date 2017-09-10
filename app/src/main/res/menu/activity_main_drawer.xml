@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:checked="true"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_local"
+            android:icon="@drawable/local"
+            android:title="Local Music" />
+        <item
+            android:id="@+id/nav_playlists"
+            android:icon="@drawable/ic_playlist"
+            android:title="Playlists" />
+        <item
+            android:id="@+id/nav_recent"
+            android:icon="@drawable/ic_recent"
+            android:title="Recently Played" />
+        <item
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/ic_heart_filled"
+            android:title="Favourites" />
+        <item
+            android:id="@+id/nav_folder"
+            android:icon="@drawable/folder"
+            android:title="Folders" />
+        <item
+            android:id="@+id/nav_view"
+            android:icon="@drawable/ic_save_filled"
+            android:title="Saved DNA" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+    </group>
+
+
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="Share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    <!--</item>-->
+
+</menu>
