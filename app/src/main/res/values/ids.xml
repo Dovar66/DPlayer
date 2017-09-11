@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="id_statusbar_tint_bg" type="id">id</item>
+    <item name="id_statusbar_tint_space" type="id">id</item>
+</resources>
