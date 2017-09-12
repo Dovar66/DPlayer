@@ -2,6 +2,7 @@ package com.dovar.dplayer.presenter;
 
 import android.support.annotation.NonNull;
 
+import com.dovar.dplayer.contract.BaseContract;
 import com.example.touchtv.R;
 import com.gdtv.common.application.MyApplication;
 import com.gdtv.common.base.presenter.MyBasePresenter;
@@ -18,7 +19,7 @@ import java.lang.ref.WeakReference;
  * Created by heweizong on 2017/5/5.
  */
 
-public abstract class DPresenter<T> implements BasePresenter {
+public abstract class DPresenter<T> implements BaseContract.IPresenter {
     private WeakReference<T> view;
 
     public DPresenter(T viewImp) {

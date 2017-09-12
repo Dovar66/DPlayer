@@ -10,13 +10,19 @@ import android.widget.RelativeLayout;
 import android.widget.Space;
 
 import com.dovar.dplayer.R;
+import com.dovar.dplayer.bean.VideoBean;
 import com.dovar.dplayer.http.Api;
 import com.dovar.dplayer.http.Reception;
+import com.dovar.dplayer.http.RetrofitUtil;
 import com.dovar.dplayer.utils.DisplayUtil;
 import com.zhy.autolayout.AutoRelativeLayout;
 
 import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -97,16 +103,46 @@ public abstract class StatusBarTintActivity extends BaseModuleActivity {
 //        Response<Reception> reception=mCall.execute();
 
         call.getMusics().subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Reception>(){
-
+                .subscribe(new Observer<Reception>() {
                     @Override
-                    public void onNext(Reception reception) {
+                    public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onError(Throwable t) {
+                    public void onNext(Reception value) {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        RetrofitUtil.getInstance().create(Api.class)
+                .getVideoBean()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VideoBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(VideoBean value) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace(); //请求过程中发生错误
                     }
 
                     @Override

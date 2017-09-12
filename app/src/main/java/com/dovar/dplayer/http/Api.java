@@ -1,5 +1,7 @@
 package com.dovar.dplayer.http;
 
+import com.dovar.dplayer.bean.VideoBean;
+
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -15,4 +17,7 @@ public interface Api {
 
     @GET("www.baidu.com")
     Observable<Reception> getMusics();
+
+    @GET("v4/tabs/selected")
+    Observable<VideoBean> getVideoBean();
 }
