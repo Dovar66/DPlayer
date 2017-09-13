@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dovar.dplayer.module.video.VideoListActivity;
 import com.lantouzi.wheelview.WheelView;
 
 import java.util.ArrayList;
@@ -47,7 +48,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction("Action", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                VideoListActivity.jump(MainActivity.this);
+                            }
+                        }).show();
             }
         });
 

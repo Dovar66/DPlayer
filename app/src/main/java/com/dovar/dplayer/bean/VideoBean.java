@@ -122,7 +122,7 @@ public class VideoBean {
 
         private String type;//视频：video
         private String data;
-        private Object tag;
+        private String tag;
 
         public String getType() {
             return type;
@@ -140,11 +140,11 @@ public class VideoBean {
             this.data = data;
         }
 
-        public Object getTag() {
+        public String getTag() {
             return tag;
         }
 
-        public void setTag(Object tag) {
+        public void setTag(String tag) {
             this.tag = tag;
         }
 

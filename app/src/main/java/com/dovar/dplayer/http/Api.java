@@ -3,6 +3,7 @@ package com.dovar.dplayer.http;
 import com.dovar.dplayer.bean.VideoBean;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -20,4 +21,10 @@ public interface Api {
 
     @GET("v4/tabs/selected")
     Observable<VideoBean> getVideoBean();
+
+    @GET("v4/tabs/selected")
+    Observable<ResponseBody> getVideoResponse();
+
+    @GET("v4/tabs/selected")
+    Observable<String> getVideoResponseStr();
 }

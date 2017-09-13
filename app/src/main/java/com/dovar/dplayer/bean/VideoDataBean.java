@@ -65,29 +65,29 @@ public class VideoDataBean {
     private long releaseTime;
     private String library;
     private ConsumptionBean consumption;
-    private Object campaign;
-    private Object waterMarks;
-    private Object adTrack;
+    private String campaign;
+    private String waterMarks;
+    private String adTrack;
     private String type;
-    private Object titlePgc;
-    private Object descriptionPgc;
-    private Object remark;
+    private String titlePgc;
+    private String descriptionPgc;
+    private String remark;
     private int idx;
-    private Object shareAdTrack;
-    private Object favoriteAdTrack;
-    private Object webAdTrack;
+    private String shareAdTrack;
+    private String favoriteAdTrack;
+    private String webAdTrack;
     private long date;
-    private Object promotion;
-    private Object label;
+    private String promotion;
+    private String label;
     private String descriptionEditor;
     private boolean collected;
     private boolean played;
-    private Object lastViewTime;
-    private Object playlists;
+    private String lastViewTime;
+    private String playlists;
     private List<PlayInfoBean> playInfo;
     private List<TagsBean> tags;
-    private List<?> labelList;
-    private List<?> subtitles;
+    private List<String> labelList;
+    private List<String> subtitles;
 
     public String getDataType() {
         return dataType;
@@ -217,27 +217,27 @@ public class VideoDataBean {
         this.consumption = consumption;
     }
 
-    public Object getCampaign() {
+    public String getCampaign() {
         return campaign;
     }
 
-    public void setCampaign(Object campaign) {
+    public void setCampaign(String campaign) {
         this.campaign = campaign;
     }
 
-    public Object getWaterMarks() {
+    public String getWaterMarks() {
         return waterMarks;
     }
 
-    public void setWaterMarks(Object waterMarks) {
+    public void setWaterMarks(String waterMarks) {
         this.waterMarks = waterMarks;
     }
 
-    public Object getAdTrack() {
+    public String getAdTrack() {
         return adTrack;
     }
 
-    public void setAdTrack(Object adTrack) {
+    public void setAdTrack(String adTrack) {
         this.adTrack = adTrack;
     }
 
@@ -249,27 +249,27 @@ public class VideoDataBean {
         this.type = type;
     }
 
-    public Object getTitlePgc() {
+    public String getTitlePgc() {
         return titlePgc;
     }
 
-    public void setTitlePgc(Object titlePgc) {
+    public void setTitlePgc(String titlePgc) {
         this.titlePgc = titlePgc;
     }
 
-    public Object getDescriptionPgc() {
+    public String getDescriptionPgc() {
         return descriptionPgc;
     }
 
-    public void setDescriptionPgc(Object descriptionPgc) {
+    public void setDescriptionPgc(String descriptionPgc) {
         this.descriptionPgc = descriptionPgc;
     }
 
-    public Object getRemark() {
+    public String getRemark() {
         return remark;
     }
 
-    public void setRemark(Object remark) {
+    public void setRemark(String remark) {
         this.remark = remark;
     }
 
@@ -281,27 +281,27 @@ public class VideoDataBean {
         this.idx = idx;
     }
 
-    public Object getShareAdTrack() {
+    public String getShareAdTrack() {
         return shareAdTrack;
     }
 
-    public void setShareAdTrack(Object shareAdTrack) {
+    public void setShareAdTrack(String shareAdTrack) {
         this.shareAdTrack = shareAdTrack;
     }
 
-    public Object getFavoriteAdTrack() {
+    public String getFavoriteAdTrack() {
         return favoriteAdTrack;
     }
 
-    public void setFavoriteAdTrack(Object favoriteAdTrack) {
+    public void setFavoriteAdTrack(String favoriteAdTrack) {
         this.favoriteAdTrack = favoriteAdTrack;
     }
 
-    public Object getWebAdTrack() {
+    public String getWebAdTrack() {
         return webAdTrack;
     }
 
-    public void setWebAdTrack(Object webAdTrack) {
+    public void setWebAdTrack(String webAdTrack) {
         this.webAdTrack = webAdTrack;
     }
 
@@ -313,19 +313,19 @@ public class VideoDataBean {
         this.date = date;
     }
 
-    public Object getPromotion() {
+    public String getPromotion() {
         return promotion;
     }
 
-    public void setPromotion(Object promotion) {
+    public void setPromotion(String promotion) {
         this.promotion = promotion;
     }
 
-    public Object getLabel() {
+    public String getLabel() {
         return label;
     }
 
-    public void setLabel(Object label) {
+    public void setLabel(String label) {
         this.label = label;
     }
 
@@ -353,19 +353,19 @@ public class VideoDataBean {
         this.played = played;
     }
 
-    public Object getLastViewTime() {
+    public String getLastViewTime() {
         return lastViewTime;
     }
 
-    public void setLastViewTime(Object lastViewTime) {
+    public void setLastViewTime(String lastViewTime) {
         this.lastViewTime = lastViewTime;
     }
 
-    public Object getPlaylists() {
+    public String getPlaylists() {
         return playlists;
     }
 
-    public void setPlaylists(Object playlists) {
+    public void setPlaylists(String playlists) {
         this.playlists = playlists;
     }
 
@@ -389,7 +389,7 @@ public class VideoDataBean {
         return labelList;
     }
 
-    public void setLabelList(List<?> labelList) {
+    public void setLabelList(List<String> labelList) {
         this.labelList = labelList;
     }
 
@@ -397,7 +397,7 @@ public class VideoDataBean {
         return subtitles;
     }
 
-    public void setSubtitles(List<?> subtitles) {
+    public void setSubtitles(List<String> subtitles) {
         this.subtitles = subtitles;
     }
 
@@ -460,7 +460,7 @@ public class VideoDataBean {
         private String link;
         private long latestReleaseTime;
         private int videoNum;
-        private Object adTrack;
+        private String adTrack;
         private FollowBean follow;
         private ShieldBean shield;
         private int approvedNotReadyVideoCount;
@@ -522,11 +522,11 @@ public class VideoDataBean {
             this.videoNum = videoNum;
         }
 
-        public Object getAdTrack() {
+        public String getAdTrack() {
             return adTrack;
         }
 
-        public void setAdTrack(Object adTrack) {
+        public void setAdTrack(String adTrack) {
             this.adTrack = adTrack;
         }
 
@@ -647,7 +647,7 @@ public class VideoDataBean {
         private String feed;
         private String detail;
         private String blurred;
-        private Object sharing;
+        private String sharing;
         private String homepage;
 
         public String getFeed() {
@@ -674,11 +674,11 @@ public class VideoDataBean {
             this.blurred = blurred;
         }
 
-        public Object getSharing() {
+        public String getSharing() {
             return sharing;
         }
 
-        public void setSharing(Object sharing) {
+        public void setSharing(String sharing) {
             this.sharing = sharing;
         }
 
@@ -866,7 +866,7 @@ public class VideoDataBean {
         private int id;
         private String name;
         private String actionUrl;
-        private Object adTrack;
+        private String adTrack;
 
         public int getId() {
             return id;
@@ -892,11 +892,11 @@ public class VideoDataBean {
             this.actionUrl = actionUrl;
         }
 
-        public Object getAdTrack() {
+        public String getAdTrack() {
             return adTrack;
         }
 
-        public void setAdTrack(Object adTrack) {
+        public void setAdTrack(String adTrack) {
             this.adTrack = adTrack;
         }
     }

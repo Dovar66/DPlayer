@@ -1,5 +1,7 @@
 package com.dovar.dplayer.module.video;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,10 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoCon
     private RCommenAdapter<VideoDataBean> mAdapter;
     private RefreshLayout refreshLayout;
 
+    public static void jump(Context mContext){
+        Intent mIntent=new Intent(mContext,VideoListActivity.class);
+        mContext.startActivity(mIntent);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
