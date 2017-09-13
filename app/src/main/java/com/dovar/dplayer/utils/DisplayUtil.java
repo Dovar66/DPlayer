@@ -8,7 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.touchtv.R;
+import com.dovar.dplayer.R;
+
 
 /**
  * dp、sp、px转换

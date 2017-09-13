@@ -124,32 +124,6 @@ public abstract class StatusBarTintActivity extends BaseModuleActivity {
 
                     }
                 });
-
-        RetrofitUtil.getInstance().create(Api.class)
-                .getVideoBean()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<VideoBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(VideoBean value) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace(); //请求过程中发生错误
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     public ImageView getBackgroundImageView() {
