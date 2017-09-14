@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class VideoDataBean {
+
     /**
      * dataType : VideoBeanForClient
      * id : 50286
