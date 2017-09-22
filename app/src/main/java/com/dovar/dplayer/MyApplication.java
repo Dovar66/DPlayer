@@ -2,8 +2,13 @@ package com.dovar.dplayer;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 
+import com.dovar.dplayer.utils.ActivityLifecycle;
+import com.dovar.dplayer.utils.PhoneUtil;
+import com.dovar.dplayer.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
@@ -20,6 +25,13 @@ import com.zhy.autolayout.config.AutoLayoutConifg;
  */
 
 public class MyApplication extends Application {
+
+    private static MyApplication application;
+    private ActivityLifecycle mActivityLifecycle;
+    public boolean appInBackground = false;//app被压入后台
+    private long appLastInForegroundTime = 0;//后台进前台开始时间
+    private long appLastGoBackGroundTime;
+
 
     static {
         //设置全局的Header构建器
@@ -42,12 +54,56 @@ public class MyApplication extends Application {
         });
     }
 
+
+    public static MyApplication getInstance() {
+        return application;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        application = this;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            mActivityLifecycle = new ActivityLifecycle();
+            registerActivityLifecycleCallbacks(mActivityLifecycle);
+        }
         //默认使用的高度是设备的可用高度，也就是不包括状态栏和底部的操作栏的
         // 如果你希望拿设备的物理高度进行百分比化,可以在Application的onCreate方法中进行设置:
         AutoLayoutConifg.getInstance().useDeviceSize();
+    }
+
+
+    public static synchronized void appGoBackground(final boolean goBackground) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (goBackground) {
+                        if (!MyApplication.getInstance().mActivityLifecycle.isApplicationInForeground()
+                                || !PhoneUtil.isAppOnForeground(MyApplication.getInstance(), MyApplication.getInstance().getPackageName())) {
+                            MyApplication.getInstance().appInBackground = true;
+                            ToastUtil.show("应用进入后台");
+                            MyApplication.getInstance().appLastGoBackGroundTime = System.currentTimeMillis();
+                            if (MyApplication.getInstance().appLastInForegroundTime > 0) {
+                                MyApplication.getInstance().appLastInForegroundTime = 0;
+                            }
+                        }
+                    } else {
+                        if (MyApplication.getInstance().appInBackground) {
+                            ToastUtil.show("从后台进入前台");
+                            MyApplication.getInstance().appInBackground = false;
+                            if (MyApplication.getInstance().appLastGoBackGroundTime > 0) {
+                                long backTime = System.currentTimeMillis() - MyApplication.getInstance().appLastGoBackGroundTime;
+                                ToastUtil.show("后台停留时间" + (backTime / 1000) + "s");
+                                MyApplication.getInstance().appLastInForegroundTime = System.currentTimeMillis();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
     }
 }
