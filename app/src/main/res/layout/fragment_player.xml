@@ -203,7 +203,7 @@
             android:src="@drawable/menu_overflow" />
     </RelativeLayout>
 
-    <com.dovar.dplayer.customview.VisualizerView
+    <com.dovar.dplayer.commen.customview.VisualizerView
         android:id="@+id/myvisualizerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

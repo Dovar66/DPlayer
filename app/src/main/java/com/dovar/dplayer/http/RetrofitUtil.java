@@ -1,6 +1,5 @@
 package com.dovar.dplayer.http;
 
-import com.dovar.dplayer.NetConfig;
 import com.dovar.dplayer.bean.VideoBean;
 
 import io.reactivex.Observable;

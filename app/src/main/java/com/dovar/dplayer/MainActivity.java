@@ -1,9 +1,6 @@
 package com.dovar.dplayer;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dovar.dplayer.module.video.VideoListActivity;
+import com.dovar.dplayer.module.video.ui.VideoListActivity;
 import com.lantouzi.wheelview.WheelView;
 
 import java.util.ArrayList;
