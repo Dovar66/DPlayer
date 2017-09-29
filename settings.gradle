@@ -1,1 +1,1 @@
-include ':app', ':xsnow', ':autolayout'
+include ':app', ':xsnow', ':autolayout', ':pili'
