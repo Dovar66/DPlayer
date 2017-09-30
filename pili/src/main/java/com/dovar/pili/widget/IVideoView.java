@@ -124,7 +124,7 @@ public abstract class IVideoView extends FrameLayout implements IMediaController
             }
 
             if (bufferingIndicator != null) {
-                if (what == 701 && !var1.a()) {
+                if (what == 701 && !var1.optimizeLiveStream()) {
                     bufferingIndicator.setVisibility(VISIBLE);
                 } else if (what == 702 || what == 10002 || what == 3) {
                     bufferingIndicator.setVisibility(GONE);

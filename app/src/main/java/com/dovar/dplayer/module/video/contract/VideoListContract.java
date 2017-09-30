@@ -1,6 +1,6 @@
 package com.dovar.dplayer.module.video.contract;
 
-import com.dovar.dplayer.commen.base.BaseContract;
+import com.dovar.dplayer.common.base.BaseContract;
 
 /**
  * Created by Administrator on 2017-09-13.

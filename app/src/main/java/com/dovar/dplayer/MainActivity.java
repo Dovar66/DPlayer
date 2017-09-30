@@ -141,8 +141,8 @@ public class MainActivity extends AppCompatActivity
 //        try {
 //            Bitmap croppedBmp = Bitmap.createBitmap(playerFragment.mVisualizerView.bmp, 0, (int) (75 * ratio), screen_width, screen_width);
 //            navImageView.setImageBitmap(croppedBmp);
-//        } catch (Exception | OutOfMemoryError e) {
-//            e.printStackTrace();
+//        } catch (Exception | OutOfMemoryError dropVideoFrames) {
+//            dropVideoFrames.printStackTrace();
 //        }
     }
 
@@ -237,8 +237,8 @@ public class MainActivity extends AppCompatActivity
 //                                    notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //                                    try {
 //                                        notificationManager.cancel(1);
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
+//                                    } catch (Exception dropVideoFrames) {
+//                                        dropVideoFrames.printStackTrace();
 //                                    } finally {
 //                                        finish();
 //                                    }

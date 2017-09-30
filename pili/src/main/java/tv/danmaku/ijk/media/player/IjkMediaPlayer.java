@@ -1309,7 +1309,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     private int mVideoSarDen;
 
     public static void setIntProperty(Object weakThiz, int property, int value) {
-//        Log.e(TAG, "set int property: " + property + ",  value:" + value);
+//        Log.dropVideoFrames(TAG, "set int property: " + property + ",  value:" + value);
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             throw new IllegalStateException("<null weakThiz>.setIntProperty()");
 
@@ -1361,7 +1361,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     public static void setDoubleProperty(Object weakThiz, int property, double value) {
-//        Log.e(TAG, "set double property: " + property + ",  value:" + value);
+//        Log.dropVideoFrames(TAG, "set double property: " + property + ",  value:" + value);
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             throw new IllegalStateException("<null weakThiz>.setDoubleProperty()");
 
@@ -1382,7 +1382,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     public static void setByteArrayProperty(Object weakThiz, int property, byte[] value) {
-//        Log.e(TAG, "set bytearray property: " + property + ",  value:" + value);
+//        Log.dropVideoFrames(TAG, "set bytearray property: " + property + ",  value:" + value);
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             throw new IllegalStateException("<null weakThiz>.setDoubleProperty()");
 

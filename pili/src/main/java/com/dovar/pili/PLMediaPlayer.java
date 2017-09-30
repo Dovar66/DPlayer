@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.dovar.pili.qos.StreamParam;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -36,12 +38,12 @@ import tv.danmaku.ijk.media.player.MediaInfo;
 public class PLMediaPlayer {
     private Context mContext;
     private IjkMediaPlayer mIjkMediaPlayer;
-    private long c;
+    private long startTimeMilli;//用于计算preparedTime
     private static volatile boolean d = false;
-    private com.dovar.pili.qos.a e;
+    private StreamParam mStreamParam;
     private PrepareAsyncHandler prepareAsyncHandler;
-    private long g;
-    private long h;
+    private long bufferingTotalCount;
+    private long bufferingTotalTimes;
     private long i;
     private int j;
     private boolean k;
@@ -54,7 +56,7 @@ public class PLMediaPlayer {
     private SurfaceHolder mSurfaceHolder;
     private Surface mSurface;
     private AVOptions mAVOptions;
-    private boolean u;
+    private boolean isLiveStream;
     private long v;
     private long w;
     private tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener mIjkOnVideoSizeChangeListener;
@@ -96,15 +98,15 @@ public class PLMediaPlayer {
     public static final int ERROR_CODE_READ_FRAME_TIMEOUT = -2002;
     public static final int ERROR_CODE_HW_DECODE_FAILURE = -2003;
     private PLMediaPlayer.OnErrorListener mOnErrorListener;
-    private OnMediaDataListener M;
+    private OnMediaDataListener mOnMediaDataListener;
 
     public PLMediaPlayer(Context var1) {
         this(var1, null);
     }
 
     public PLMediaPlayer(Context mContext, AVOptions mAVOptions) {
-        this.c = 0L;
-        this.e = new com.dovar.pili.qos.a();
+        this.startTimeMilli = 0L;
+        this.mStreamParam = new StreamParam();
         this.j = 0;
         this.k = false;
         this.l = false;
@@ -116,7 +118,7 @@ public class PLMediaPlayer {
         this.mSurfaceHolder = null;
         this.mSurface = null;
         this.mAVOptions = null;
-        this.u = false;
+        this.isLiveStream = false;
         this.v = 0L;
         this.w = 0L;
         this.mIjkOnVideoSizeChangeListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener() {
@@ -129,19 +131,19 @@ public class PLMediaPlayer {
         };
         this.mIjkOnPreparedListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener() {
             public void onPrepared(IMediaPlayer var1) {
-                int var2 = (int) (System.currentTimeMillis() - PLMediaPlayer.this.c);
-                if (PLMediaPlayer.this.mOnPreparedListener != null) {
-                    PLMediaPlayer.this.mOnPreparedListener.onPrepared(PLMediaPlayer.this, var2);
+                int preparedTime = (int) (System.currentTimeMillis() - startTimeMilli);
+                if (mOnPreparedListener != null) {
+                    mOnPreparedListener.onPrepared(PLMediaPlayer.this, preparedTime);
                 }
 
-                Log.d("PLMediaPlayer", "on prepared: " + var2 + " ms");
-                PLMediaPlayer.this.mPlayerState = PlayerState.PREPARED;
+                Log.d("PLMediaPlayer", "on prepared: " + preparedTime + " ms");
+                mPlayerState = PlayerState.PREPARED;
             }
         };
         this.mIjkOnSeekCompleteListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnSeekCompleteListener() {
             public void onSeekComplete(IMediaPlayer var1) {
-                if (PLMediaPlayer.this.mOnSeekCompleteListener != null) {
-                    PLMediaPlayer.this.mOnSeekCompleteListener.onSeekComplete(PLMediaPlayer.this);
+                if (mOnSeekCompleteListener != null) {
+                    mOnSeekCompleteListener.onSeekComplete(PLMediaPlayer.this);
                 }
 
             }
@@ -150,42 +152,42 @@ public class PLMediaPlayer {
             public boolean onInfo(IMediaPlayer var1, int var2, int var3) {
                 switch (var2) {
                     case 3:
-                        long var4 = System.currentTimeMillis() - PLMediaPlayer.this.c - PLMediaPlayer.this.w;
-                        PLMediaPlayer.this.e.n = var4;
+                        long var4 = System.currentTimeMillis() - PLMediaPlayer.this.startTimeMilli - PLMediaPlayer.this.w;
+                        mStreamParam.firstVideoRenderedTime = var4;
                         Log.d("PLMediaPlayer", "first video rendered: " + var4 + " ms");
-                        PLMediaPlayer.this.mPlayerState = PlayerState.PLAYING;
+                        mPlayerState = PlayerState.PLAYING;
                         var3 = (int) var4;
-                        if (PLMediaPlayer.this.prepareAsyncHandler != null) {
-                            PLMediaPlayer.this.prepareAsyncHandler.sendMessage(PLMediaPlayer.this.prepareAsyncHandler.obtainMessage(0));
+                        if (prepareAsyncHandler != null) {
+                            prepareAsyncHandler.sendMessage(PLMediaPlayer.this.prepareAsyncHandler.obtainMessage(0));
                         }
                         break;
                     case 701:
                         Log.d("PLMediaPlayer", "MEDIA_INFO_BUFFERING_START");
                         PLMediaPlayer.this.mPlayerState = PlayerState.BUFFERING;
-                        PLMediaPlayer.this.e.c = 1L;
+                        PLMediaPlayer.this.mStreamParam.bufferingTimes = 1L;
                         PLMediaPlayer.this.i = System.currentTimeMillis();
                         break;
                     case 702:
                         Log.d("PLMediaPlayer", "MEDIA_INFO_BUFFERING_END");
                         PLMediaPlayer.this.mPlayerState = PlayerState.PLAYING;
-                        PLMediaPlayer.this.e.c = 1L;
-                        PLMediaPlayer.this.g++;
-                        PLMediaPlayer.this.h = PLMediaPlayer.this.h + (System.currentTimeMillis() - PLMediaPlayer.this.i);
+                        PLMediaPlayer.this.mStreamParam.bufferingTimes = 1L;
+                        PLMediaPlayer.this.bufferingTotalCount++;
+                        PLMediaPlayer.this.bufferingTotalTimes = PLMediaPlayer.this.bufferingTotalTimes + (System.currentTimeMillis() - PLMediaPlayer.this.i);
                         PLMediaPlayer.this.i = 0L;
                         break;
                     case 10002:
-                        long var6 = System.currentTimeMillis() - PLMediaPlayer.this.c - PLMediaPlayer.this.w;
-                        PLMediaPlayer.this.e.o = var6;
+                        long var6 = System.currentTimeMillis() - PLMediaPlayer.this.startTimeMilli - PLMediaPlayer.this.w;
+                        PLMediaPlayer.this.mStreamParam.o = var6;
                         Log.d("PLMediaPlayer", "first audio rendered: " + var6 + " ms");
                         PLMediaPlayer.this.mPlayerState = PlayerState.PLAYING;
                         var3 = (int) var6;
                         break;
                     case 10003:
                         PLMediaPlayer.this.m = true;
-                        PLMediaPlayer.this.e.p = (long) var3;
+                        PLMediaPlayer.this.mStreamParam.p = (long) var3;
                 }
 
-                if (!PLMediaPlayer.this.k && PLMediaPlayer.this.m && PLMediaPlayer.this.e.n > 0L && PLMediaPlayer.this.e.o > 0L) {
+                if (!PLMediaPlayer.this.k && PLMediaPlayer.this.m && PLMediaPlayer.this.mStreamParam.firstVideoRenderedTime > 0L && PLMediaPlayer.this.mStreamParam.o > 0L) {
                     PLMediaPlayer.this.c();
                     PLMediaPlayer.this.d();
                 }
@@ -211,9 +213,9 @@ public class PLMediaPlayer {
                     PLMediaPlayer.this.mOnCompletionListener.onCompletion(PLMediaPlayer.this);
                 }
 
-                PLMediaPlayer.this.mPlayerState = PlayerState.COMPLETED;
+                mPlayerState = PlayerState.COMPLETED;
                 if (!PLMediaPlayer.this.l) {
-                    PLMediaPlayer.this.a(0, 0);
+                    PLMediaPlayer.this.optimizeLiveStream(0, 0);
                 }
 
             }
@@ -224,20 +226,20 @@ public class PLMediaPlayer {
                 if (var3 == 0) {
                     var3 = -1;
                 } else if (var3 == -2003 && PLMediaPlayer.this.j == 2) {
-                    PLMediaPlayer.this.j = 0;
+                    j = 0;
                     PLMediaPlayer.this.mAVOptions.setInteger("mediacodec", PLMediaPlayer.this.j);
                     PLMediaPlayer.this.mAVOptions.setInteger("start-on-prepared", 1);
-                    if (PLMediaPlayer.this.mOnInfoListener != null) {
-                        PLMediaPlayer.this.mOnInfoListener.onInfo(PLMediaPlayer.this, 802, 0);
+                    if (mOnInfoListener != null) {
+                        mOnInfoListener.onInfo(PLMediaPlayer.this, 802, 0);
                     }
 
-                    PLMediaPlayer.this.e();
+                    prepare();
                     return true;
                 }
 
                 PLMediaPlayer.this.mPlayerState = PlayerState.ERROR;
                 if (!PLMediaPlayer.this.l) {
-                    PLMediaPlayer.this.a(var3, var3);
+                    PLMediaPlayer.this.optimizeLiveStream(var3, var3);
                 }
 
                 return PLMediaPlayer.this.mOnErrorListener != null ? PLMediaPlayer.this.mOnErrorListener.onError(PLMediaPlayer.this, var3) : false;
@@ -248,13 +250,13 @@ public class PLMediaPlayer {
             private final int c = 196610;
 
             public boolean onNativeInvoke(int var1, Bundle var2) {
-                if (PLMediaPlayer.this.M != null) {
+                if (PLMediaPlayer.this.mOnMediaDataListener != null) {
                     switch (var1) {
                         case 196609:
-                            PLMediaPlayer.this.M.a(PLMediaPlayer.this.mIjkMediaPlayer.getAudioData(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSize(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioPts(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioChannel(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioChannelLayout(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSampleRate(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSampleFormat());
+                            PLMediaPlayer.this.mOnMediaDataListener.a(PLMediaPlayer.this.mIjkMediaPlayer.getAudioData(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSize(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioPts(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioChannel(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioChannelLayout(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSampleRate(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSampleFormat());
                             return true;
                         case 196610:
-                            PLMediaPlayer.this.M.a(PLMediaPlayer.this.mIjkMediaPlayer.getVideoData(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoLinesize(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoPts(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoFormat(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoPlane(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoWidth(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoHeight(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoSarNum(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoSarDen());
+                            PLMediaPlayer.this.mOnMediaDataListener.a(PLMediaPlayer.this.mIjkMediaPlayer.getVideoData(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoLinesize(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoPts(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoFormat(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoPlane(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoWidth(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoHeight(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoSarNum(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoSarDen());
                             return true;
                     }
                 }
@@ -265,11 +267,11 @@ public class PLMediaPlayer {
         this.mContext = mContext.getApplicationContext();
         this.mAVOptions = mAVOptions;
         com.dovar.pili.qos.b.a(this.mContext);
-        this.a(mAVOptions);
-        this.e.a();
+        this.optimizeLiveStream(mAVOptions);
+        this.mStreamParam.reset();
     }
 
-    private void a(AVOptions var1) {
+    private void optimizeLiveStream(AVOptions var1) {
         this.mPlayerState = PlayerState.IDLE;
         this.l = false;
         this.mIjkMediaPlayer = new IjkMediaPlayer(new IjkLibLoader() {
@@ -340,8 +342,9 @@ public class PLMediaPlayer {
         return var1;
     }
 
-    private void a(String var1, String var2) {
-        if (this.u) {
+    //如果是直播流，优化  ----》》》还没看优化了什么，反正七牛说是优化
+    private void optimizeLiveStream(String var1, String var2) {
+        if (this.isLiveStream) {
             try {
                 this.k = false;
                 this.m = false;
@@ -389,23 +392,23 @@ public class PLMediaPlayer {
     }
 
     private void d() {
-        if (this.u) {
+        if (this.isLiveStream) {
             this.k = true;
             Intent var1 = new Intent("pldroid-player-qos-filter");
             var1.putExtra("pldroid-qos-msg-type", 195);
-            var1.putExtra("firstVideoTime", this.e.n);
-            var1.putExtra("firstAudioTime", this.e.o);
-            var1.putExtra("gopTime", this.e.p);
+            var1.putExtra("firstVideoTime", this.mStreamParam.firstVideoRenderedTime);
+            var1.putExtra("firstAudioTime", this.mStreamParam.o);
+            var1.putExtra("gopTime", this.mStreamParam.p);
             if (this.j == 0) {
-                this.e.format1 = "ffmpeg";
-                this.e.format2 = "ffmpeg";
+                this.mStreamParam.format1 = "ffmpeg";
+                this.mStreamParam.format2 = "ffmpeg";
             } else {
-                this.e.format1 = "droid264";
-                this.e.format2 = "droidaac";
+                this.mStreamParam.format1 = "droid264";
+                this.mStreamParam.format2 = "droidaac";
             }
 
-            var1.putExtra("videoDecoderType", this.e.format1);
-            var1.putExtra("audioDecoderType", this.e.format2);
+            var1.putExtra("videoDecoderType", this.mStreamParam.format1);
+            var1.putExtra("audioDecoderType", this.mStreamParam.format2);
             HashMap var2 = this.getMetadata();
             String var3;
             if (var2.containsKey("tcp_connect_time")) {
@@ -415,7 +418,7 @@ public class PLMediaPlayer {
 
             if (var2.containsKey("first_byte_time")) {
                 var3 = (String) var2.get("first_byte_time");
-                int var4 = (int) (Long.parseLong(var3) - this.c);
+                int var4 = (int) (Long.parseLong(var3) - this.startTimeMilli);
                 var1.putExtra("firstByteTime", var4);
             }
 
@@ -423,40 +426,40 @@ public class PLMediaPlayer {
         }
     }
 
-    private void a(int var1, int var2) {
-        if (this.u && (this.mSurface != null || this.mSurfaceHolder != null)) {
+    private void optimizeLiveStream(int errorCode, int errorOSCode) {
+        if (this.isLiveStream && (this.mSurface != null || this.mSurfaceHolder != null)) {
             this.l = true;
-            Intent var3 = new Intent("pldroid-player-qos-filter");
-            var3.putExtra("pldroid-qos-msg-type", 196);
-            var3.putExtra("beginAt", this.c);
-            var3.putExtra("endAt", System.currentTimeMillis());
-            var3.putExtra("bufferingTotalCount", this.g);
-            var3.putExtra("bufferingTotalTimes", this.h);
-            var3.putExtra("totalRecvBytes", this.e.q);
+            Intent mIntent = new Intent("pldroid-player-qos-filter");
+            mIntent.putExtra("pldroid-qos-msg-type", 196);
+            mIntent.putExtra("beginAt", this.startTimeMilli);
+            mIntent.putExtra("endAt", System.currentTimeMillis());
+            mIntent.putExtra("bufferingTotalCount", this.bufferingTotalCount);
+            mIntent.putExtra("bufferingTotalTimes", this.bufferingTotalTimes);
+            mIntent.putExtra("totalRecvBytes", this.mStreamParam.totalRecvBytes);
             int var4 = (int) (this.i > 0L ? System.currentTimeMillis() - this.i : this.i);
-            var3.putExtra("endBufferingTime", var4);
-            var3.putExtra("gopTime", this.e.p);
-            var3.putExtra("errorCode", var1);
-            var3.putExtra("errorOSCode", var2);
+            mIntent.putExtra("endBufferingTime", var4);
+            mIntent.putExtra("gopTime", this.mStreamParam.p);
+            mIntent.putExtra("errorCode", errorCode);
+            mIntent.putExtra("errorOSCode", errorOSCode);
             HashMap var5 = this.getMetadata();
             String var6;
             if (var5.containsKey("tcp_connect_time")) {
                 var6 = (String) var5.get("tcp_connect_time");
-                var3.putExtra("tcpConnectTime", Integer.parseInt(var6));
+                mIntent.putExtra("tcpConnectTime", Integer.parseInt(var6));
             }
 
             if (var5.containsKey("rtmp_connect_time")) {
                 var6 = (String) var5.get("rtmp_connect_time");
-                var3.putExtra("rtmpConnectTime", Integer.parseInt(var6));
+                mIntent.putExtra("rtmpConnectTime", Integer.parseInt(var6));
             }
 
             if (var5.containsKey("first_byte_time")) {
                 var6 = (String) var5.get("first_byte_time");
-                int var7 = (int) (Long.parseLong(var6) - this.c);
-                var3.putExtra("firstByteTime", var7);
+                int var7 = (int) (Long.parseLong(var6) - this.startTimeMilli);
+                mIntent.putExtra("firstByteTime", var7);
             }
 
-            com.dovar.pili.qos.c.a().a(var3);
+            com.dovar.pili.qos.c.a().a(mIntent);
         }
     }
 
@@ -469,9 +472,9 @@ public class PLMediaPlayer {
             this.mIjkMediaPlayer.setOption(4, "overlay-format", 842225234L);
             int var2 = var1.getInteger("start-on-prepared", 1);
             this.mIjkMediaPlayer.setOption(4, "start-on-prepared", (long) var2);
-            this.u = false;
+            this.isLiveStream = false;
             if (var1.containsKey("live-streaming") && var1.getInteger("live-streaming") != 0) {
-                this.u = true;
+                this.isLiveStream = true;
                 if (!var1.containsKey("rtmp_live") || var1.getInteger("rtmp_live") == 1) {
                     this.mIjkMediaPlayer.setOption(1, "rtmp_live", 1L);
                 }
@@ -487,7 +490,7 @@ public class PLMediaPlayer {
             String var3 = "analyzeduration";
             this.mIjkMediaPlayer.setOption(1, var3, var1.containsKey(var3) ? (long) var1.getInteger(var3) : 0L);
             this.mIjkMediaPlayer.setOption(1, "probesize", var1.containsKey("probesize") ? (long) var1.getInteger("probesize") : 131072L);
-            this.mIjkMediaPlayer.setOption(4, "live-streaming", (long) (this.u ? 1 : 0));
+            this.mIjkMediaPlayer.setOption(4, "live-streaming", (long) (this.isLiveStream ? 1 : 0));
             this.mIjkMediaPlayer.setOption(4, "get-av-frame-timeout", var1.containsKey("get-av-frame-timeout") ? (long) (var1.getInteger("get-av-frame-timeout") * 1000) : 10000000L);
             this.j = var1.containsKey("mediacodec") ? var1.getInteger("mediacodec") : 0;
             this.mIjkMediaPlayer.setOption(4, "mediacodec", this.j == 0 ? 0L : 1L);
@@ -503,8 +506,8 @@ public class PLMediaPlayer {
         }
     }
 
-    public boolean a() {
-        return this.u;
+    public boolean optimizeLiveStream() {
+        return this.isLiveStream;
     }
 
     public void setDisplay(SurfaceHolder var1) {
@@ -531,7 +534,7 @@ public class PLMediaPlayer {
 
     public void setDataSource(Context var1, Uri var2, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         Uri var4 = PLNetworkManager.getInstance().a(var2);
-        this.a(var2.toString(), var4.toString());
+        optimizeLiveStream(var2.toString(), var4.toString());
         if (Build.VERSION.SDK_INT > 14) {
             this.mIjkMediaPlayer.setDataSource(var1, var4, headers);
             this.uri_headers = headers;
@@ -544,7 +547,7 @@ public class PLMediaPlayer {
 
     public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         String var2 = PLNetworkManager.getInstance().a(path);
-        this.a(path, var2);
+        optimizeLiveStream(path, var2);
         this.mIjkMediaPlayer.setDataSource(var2);
         this.video_url = path;
     }
@@ -565,11 +568,11 @@ public class PLMediaPlayer {
 
         this.mPlayerState = PlayerState.PREPARING;
         this.mIjkMediaPlayer.prepareAsync();
-        this.c = System.currentTimeMillis();
+        this.startTimeMilli = System.currentTimeMillis();
         this.v = 0L;
         this.w = 0L;
-        this.h = 0L;
-        this.g = 0L;
+        this.bufferingTotalTimes = 0L;
+        this.bufferingTotalCount = 0L;
         this.n = true;
         this.k = false;
         this.l = false;
@@ -591,7 +594,7 @@ public class PLMediaPlayer {
 
     public void start() throws IllegalStateException {
         this.mIjkMediaPlayer.start();
-        if (this.v > this.c) {
+        if (this.v > this.startTimeMilli) {
             this.w += System.currentTimeMillis() - this.v;
         }
 
@@ -605,8 +608,8 @@ public class PLMediaPlayer {
 
     public void stop() throws IllegalStateException {
         if (!this.l) {
-            this.e.q = this.mIjkMediaPlayer.getPktTotalSize();
-            this.a(0, 0);
+            this.mStreamParam.totalRecvBytes = this.mIjkMediaPlayer.getPktTotalSize();
+            this.optimizeLiveStream(0, 0);
         }
 
         this.mIjkMediaPlayer.stop();
@@ -619,39 +622,39 @@ public class PLMediaPlayer {
         this.n = true;
     }
 
-    private void e() {
+    private void prepare() {
         (new Handler(Looper.getMainLooper())).post(new Runnable() {
             public void run() {
                 try {
-                    PLMediaPlayer.this.mIjkMediaPlayer.stop();
-                    PLMediaPlayer.this.mIjkMediaPlayer.release();
-                    PLMediaPlayer.this.a(PLMediaPlayer.this.mAVOptions);
-                    if (PLMediaPlayer.this.uri_headers == null) {
-                        PLMediaPlayer.this.mIjkMediaPlayer.setDataSource(PLMediaPlayer.this.video_url);
+                    mIjkMediaPlayer.stop();
+                    mIjkMediaPlayer.release();
+                    optimizeLiveStream(mAVOptions);
+                    if (uri_headers == null) {
+                        mIjkMediaPlayer.setDataSource(video_url);
                     } else {
-                        PLMediaPlayer.this.mIjkMediaPlayer.setDataSource(PLMediaPlayer.this.video_url, PLMediaPlayer.this.uri_headers);
+                        mIjkMediaPlayer.setDataSource(video_url, uri_headers);
                     }
 
-                    if (PLMediaPlayer.this.mSurfaceHolder != null) {
-                        PLMediaPlayer.this.mIjkMediaPlayer.setDisplay(PLMediaPlayer.this.mSurfaceHolder);
+                    if (mSurfaceHolder != null) {
+                        mIjkMediaPlayer.setDisplay(PLMediaPlayer.this.mSurfaceHolder);
                     } else if (PLMediaPlayer.this.mSurface != null) {
-                        PLMediaPlayer.this.mIjkMediaPlayer.setSurface(PLMediaPlayer.this.mSurface);
+                        mIjkMediaPlayer.setSurface(PLMediaPlayer.this.mSurface);
                     }
 
-                    PLMediaPlayer.this.mIjkMediaPlayer.prepareAsync();
+                    mIjkMediaPlayer.prepareAsync();
                 } catch (IOException var2) {
                     var2.printStackTrace();
-                    PLMediaPlayer.this.f();
+                    onError();
                 } catch (Exception var3) {
                     var3.printStackTrace();
-                    PLMediaPlayer.this.f();
+                    onError();
                 }
 
             }
         });
     }
 
-    private void f() {
+    private void onError() {
         if (this.mOnErrorListener != null) {
             this.mOnErrorListener.onError(this, -1);
         }
@@ -677,7 +680,7 @@ public class PLMediaPlayer {
                 MediaInfo var2 = this.mIjkMediaPlayer.getMediaInfo();
                 var1 = var2.mMeta.mVideoStream.getResolutionInline();
             } catch (Exception var3) {
-                ;
+
             }
         }
 
@@ -745,66 +748,66 @@ public class PLMediaPlayer {
     }
 
     public void setOnMediaDataListener(OnMediaDataListener mVar1) {
-        this.M = mVar1;
+        this.mOnMediaDataListener = mVar1;
     }
 
-    private void g() {
-        if (this.e != null && this.mIjkMediaPlayer != null) {
-            this.e.d = (int) this.mIjkMediaPlayer.getSourcFpsVideo();
-            this.e.e = (int) this.mIjkMediaPlayer.getFramesDroppedVideo();
-            this.e.f = (int) this.mIjkMediaPlayer.getSourcFpsAudio();
-            this.e.g = (int) this.mIjkMediaPlayer.getFramesDroppedAudio();
-            this.e.h = (int) this.mIjkMediaPlayer.getVideoOutputFramesPerSecond();
-            this.e.i = (int) this.mIjkMediaPlayer.getRenderFpsAudio();
-            this.e.j = (int) this.mIjkMediaPlayer.getBufferTimeVideo();
-            this.e.k = (int) this.mIjkMediaPlayer.getBufferTimeAudio();
-            this.e.l = this.mIjkMediaPlayer.getBitrateVideo();
-            this.e.m = this.mIjkMediaPlayer.getBitrateAudio();
+    private void setupStreamParam() {
+        if (this.mStreamParam != null && this.mIjkMediaPlayer != null) {
+            this.mStreamParam.videoSourceFps = (int) this.mIjkMediaPlayer.getSourcFpsVideo();
+            this.mStreamParam.dropVideoFrames = (int) this.mIjkMediaPlayer.getFramesDroppedVideo();
+            this.mStreamParam.audioSourceFps = (int) this.mIjkMediaPlayer.getSourcFpsAudio();
+            this.mStreamParam.audioDropFrames = (int) this.mIjkMediaPlayer.getFramesDroppedAudio();
+            this.mStreamParam.videoRenderFps = (int) this.mIjkMediaPlayer.getVideoOutputFramesPerSecond();
+            this.mStreamParam.audioRenderFps = (int) this.mIjkMediaPlayer.getRenderFpsAudio();
+            this.mStreamParam.videoBufferTime = (int) this.mIjkMediaPlayer.getBufferTimeVideo();
+            this.mStreamParam.audioBufferTime = (int) this.mIjkMediaPlayer.getBufferTimeAudio();
+            this.mStreamParam.videoBitrate = this.mIjkMediaPlayer.getBitrateVideo();
+            this.mStreamParam.audioBitrate = this.mIjkMediaPlayer.getBitrateAudio();
         }
     }
 
     public static class PrepareAsyncHandler extends Handler {
-        private WeakReference<PLMediaPlayer> a;
+        private WeakReference<PLMediaPlayer> mWeakReference;
 
         public PrepareAsyncHandler(Looper var1, PLMediaPlayer var2) {
             super(var1);
-            this.a = new WeakReference(var2);
+            this.mWeakReference = new WeakReference(var2);
         }
 
         public void destory() {
             this.getLooper().quit();
-            this.a.clear();
+            this.mWeakReference.clear();
         }
 
         public void handleMessage(Message var1) {
-            PLMediaPlayer var2 = (PLMediaPlayer) this.a.get();
-            if (var2 != null && var2.e != null) {
+            PLMediaPlayer mp = mWeakReference.get();
+            if (mp != null && mp.mStreamParam != null) {
                 switch (var1.what) {
                     case 0:
-                        var2.g();
-                        com.dovar.pili.qos.a var3 = var2.e;
-                        var3.b = System.currentTimeMillis();
+                        mp.setupStreamParam();
+                        StreamParam params = mp.mStreamParam;
+                        params.endAt = System.currentTimeMillis();
                         Intent var4 = new Intent("pldroid-player-qos-filter");
                         var4.putExtra("pldroid-qos-msg-type", 193);
-                        var4.putExtra("beginAt", var3.a);
-                        var4.putExtra("endAt", var3.b);
-                        var4.putExtra("bufferingTimes", var3.c);
-                        var4.putExtra("videoSourceFps", var3.d);
-                        var4.putExtra("dropVideoFrames", var3.e);
-                        var4.putExtra("audioSourceFps", var3.f);
-                        var4.putExtra("audioDropFrames", var3.g);
-                        var4.putExtra("videoRenderFps", var3.h);
-                        var4.putExtra("audioRenderFps", var3.i);
-                        var4.putExtra("videoBufferTime", var3.j);
-                        var4.putExtra("audioBufferTime", var3.k);
-                        var4.putExtra("videoBitrate", var3.l);
-                        var4.putExtra("audioBitrate", var3.m);
-                        if (var3.p > 0L && var3.a > 0L) {
+                        var4.putExtra("beginAt", params.beginAt);
+                        var4.putExtra("endAt", params.endAt);
+                        var4.putExtra("bufferingTimes", params.bufferingTimes);
+                        var4.putExtra("videoSourceFps", params.videoSourceFps);
+                        var4.putExtra("dropVideoFrames", params.dropVideoFrames);
+                        var4.putExtra("audioSourceFps", params.audioSourceFps);
+                        var4.putExtra("audioDropFrames", params.audioDropFrames);
+                        var4.putExtra("videoRenderFps", params.videoRenderFps);
+                        var4.putExtra("audioRenderFps", params.audioRenderFps);
+                        var4.putExtra("videoBufferTime", params.videoBufferTime);
+                        var4.putExtra("audioBufferTime", params.audioBufferTime);
+                        var4.putExtra("videoBitrate", params.videoBitrate);
+                        var4.putExtra("audioBitrate", params.audioBitrate);
+                        if (params.p > 0L && params.beginAt > 0L) {
                             com.dovar.pili.qos.c.a().a(var4);
                         }
 
-                        var3.a = System.currentTimeMillis();
-                        var2.e.a();
+                        params.beginAt = System.currentTimeMillis();
+                        mp.mStreamParam.reset();
                         this.sendMessageDelayed(this.obtainMessage(0), (long) com.dovar.pili.qos.c.a().b());
                     default:
                 }

@@ -146,11 +146,11 @@ public class PLVideoTextureView extends IVideoView {
     }
 
     @TargetApi(16)
-    protected void init(PLMediaPlayer var1, Surface var2) {
-        if (var1 != null && !this.b && this.mSurfaceTexture != null && Build.VERSION.SDK_INT >= 16) {
+    protected void init(PLMediaPlayer mp, Surface var2) {
+        if (mp != null && !this.b && this.mSurfaceTexture != null && Build.VERSION.SDK_INT >= 16) {
             this.mPlTextureView.setSurfaceTexture(this.mSurfaceTexture);
         } else {
-            super.init(var1, var2);
+            super.init(mp, var2);
             this.b = false;
         }
 

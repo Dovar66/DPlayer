@@ -4,6 +4,7 @@ import android.util.Log;
 
 /**
  * Created by heweizong on 2017/9/29.
+ * load library name
  */
 
 public class SharedLibraryNameHelper {

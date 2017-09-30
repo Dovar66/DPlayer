@@ -12,17 +12,17 @@ import com.dovar.pili.report.core.CoreD;
 public class B {
     private static boolean a = false;
 
-    public static void a(Context var0) {
-        if(!a && var0 != null) {
+    public static void a(Context mContext) {
+        if (!a && mContext != null) {
             a = true;
-            A.a().a(var0.getApplicationContext());
+            A.a().a(mContext.getApplicationContext());
             A.a().a(true);
-            CoreD.a().a(var0.getApplicationContext());
+            CoreD.a().a(mContext.getApplicationContext());
         }
     }
 
     public static void a() {
-        CoreD.a().b((Context)null);
+        CoreD.a().b(null);
         A.a().b();
         com.dovar.pili.report.common.A.h();
         a = false;

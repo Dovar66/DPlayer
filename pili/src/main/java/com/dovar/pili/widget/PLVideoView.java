@@ -45,7 +45,7 @@ public class PLVideoView extends IVideoView {
 
     protected void init(PLMediaPlayer var1, Surface var2) {
         super.init(var1, var2);
-        if (this.isPlaying() && !var1.a()) {
+        if (this.isPlaying() && !var1.optimizeLiveStream()) {
             var1.seekTo(var1.getCurrentPosition());
         }
 

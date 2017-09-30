@@ -12,11 +12,11 @@ public class b {
     private static boolean a = true;
     private static boolean b = false;
 
-    public static void a(Context var0) {
+    public static void a(Context mContext) {
         if(a || !b) {
             b = true;
-            B.a(var0);
-            c.a().a(var0);
+            B.a(mContext);
+            c.a().a(mContext);
         }
     }
 

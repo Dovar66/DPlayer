@@ -1,7 +1,7 @@
 package com.dovar.dplayer.module.video.presenter;
 
 import com.dovar.dplayer.bean.VideoBean;
-import com.dovar.dplayer.commen.base.DPresenter;
+import com.dovar.dplayer.common.base.DPresenter;
 import com.dovar.dplayer.http.Api;
 import com.dovar.dplayer.http.RetrofitUtil;
 import com.dovar.dplayer.module.video.contract.VideoContract;
@@ -63,8 +63,8 @@ public class VideoPresenter extends DPresenter<VideoContract.IView<VideoBean>> i
 //                    }
 //
 //                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace(); //请求过程中发生错误
+//                    public void onError(Throwable dropVideoFrames) {
+//                        dropVideoFrames.printStackTrace(); //请求过程中发生错误
 //                    }
 //
 //                    @Override

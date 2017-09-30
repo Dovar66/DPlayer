@@ -11,7 +11,7 @@ import com.dovar.pili.report.core.CoreE;
  */
 
 public class c {
-    public Context a;
+    public Context mContext;
 
     private c() {
     }
@@ -20,22 +20,21 @@ public class c {
         return c.ClassB.a;
     }
 
-    public void a(Context var1) {
-        if(var1 != null) {
-            this.a = var1.getApplicationContext();
+    public void a(Context mContext) {
+        if (mContext != null) {
+            this.mContext = mContext.getApplicationContext();
         } else {
-            this.a = null;
+            this.mContext = null;
         }
-
     }
 
     public int b() {
         return CoreE.a();
     }
 
-    public void a(Intent var1) {
-        if(this.a != null) {
-            A.a().a(var1);
+    public void a(Intent mIntent) {
+        if (this.mContext != null) {
+            A.a().a(mIntent);
         }
     }
 
