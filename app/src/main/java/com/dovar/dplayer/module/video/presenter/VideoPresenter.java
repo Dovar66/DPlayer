@@ -53,7 +53,7 @@ public class VideoPresenter extends DPresenter<VideoContract.IView<VideoBean>> i
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(new Observer<String>() {
 //                    @Override
-//                    public void onSubscribe(Disposable d) {
+//                    public void onSubscribe(Disposable showHideController) {
 //
 //                    }
 //

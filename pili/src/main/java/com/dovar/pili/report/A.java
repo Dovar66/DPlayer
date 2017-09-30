@@ -179,7 +179,7 @@ public class A {
 
                         if(var12.c) {
                             if(var8) {
-                                Log.v("QosBroadcastManager", "  Filter\'s target already added");
+                                Log.v("QosBroadcastManager", "  Filter\'format2 target already added");
                             }
                         } else {
                             int var13 = var12.a.match(var3, var4, var6, var5, var7, "QosBroadcastManager");

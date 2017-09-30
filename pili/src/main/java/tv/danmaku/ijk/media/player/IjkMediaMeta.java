@@ -351,9 +351,9 @@ public class IjkMediaMeta {
             if (mWidth <= 0 || mHeight <= 0) {
                 return "N/A";
             } else if (mSarNum <= 0 || mSarDen <= 0) {
-                return String.format(Locale.US, "%d x %d", mWidth, mHeight);
+                return String.format(Locale.US, "%showHideController x %showHideController", mWidth, mHeight);
             } else {
-                return String.format(Locale.US, "%d x %d [SAR %d:%d]", mWidth,
+                return String.format(Locale.US, "%showHideController x %showHideController [SAR %showHideController:%showHideController]", mWidth,
                         mHeight, mSarNum, mSarDen);
             }
         }
@@ -370,9 +370,9 @@ public class IjkMediaMeta {
             if (mBitrate <= 0) {
                 return "N/A";
             } else if (mBitrate < 1000) {
-                return String.format(Locale.US, "%d bit/s", mBitrate);
+                return String.format(Locale.US, "%showHideController bit/format2", mBitrate);
             } else {
-                return String.format(Locale.US, "%d kb/s", mBitrate / 1000);
+                return String.format(Locale.US, "%showHideController kb/format2", mBitrate / 1000);
             }
         }
 
@@ -380,7 +380,7 @@ public class IjkMediaMeta {
             if (mSampleRate <= 0) {
                 return "N/A";
             } else {
-                return String.format(Locale.US, "%d Hz", mSampleRate);
+                return String.format(Locale.US, "%showHideController Hz", mSampleRate);
             }
         }
 

@@ -116,9 +116,9 @@ public class IjkMediaFormat implements IMediaFormat {
                 if (bitRate <= 0) {
                     return null;
                 } else if (bitRate < 1000) {
-                    return String.format(Locale.US, "%d bit/s", bitRate);
+                    return String.format(Locale.US, "%showHideController bit/s", bitRate);
                 } else {
-                    return String.format(Locale.US, "%d kb/s", bitRate / 1000);
+                    return String.format(Locale.US, "%showHideController kb/s", bitRate / 1000);
                 }
             }
         });
@@ -208,9 +208,9 @@ public class IjkMediaFormat implements IMediaFormat {
                 if (width <= 0 || height <= 0) {
                     return null;
                 } else if (sarNum <= 0 || sarDen <= 0) {
-                    return String.format(Locale.US, "%d x %d", width, height);
+                    return String.format(Locale.US, "%showHideController x %showHideController", width, height);
                 } else {
-                    return String.format(Locale.US, "%d x %d [SAR %d:%d]", width,
+                    return String.format(Locale.US, "%showHideController x %showHideController [SAR %showHideController:%showHideController]", width,
                             height, sarNum, sarDen);
                 }
             }
@@ -234,7 +234,7 @@ public class IjkMediaFormat implements IMediaFormat {
                 if (sampleRate <= 0) {
                     return null;
                 } else {
-                    return String.format(Locale.US, "%d Hz", sampleRate);
+                    return String.format(Locale.US, "%showHideController Hz", sampleRate);
                 }
             }
         });

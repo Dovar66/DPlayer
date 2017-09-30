@@ -44,9 +44,9 @@ public class PhotoUtil {
     private static String aliUrl_2 = "img2-cloud.itouchtv.cn";
 
     public interface BitmapCallBack {
-        public void onResourceReady(Bitmap resource);
+        void onResourceReady(Bitmap resource);
 
-        public void onFail();
+        void onFail();
     }
 
     public static String smallPhoto(String url) {
@@ -337,7 +337,7 @@ public class PhotoUtil {
      * @param photoUrl  图片url
      */
     public static void loadPhoto(ImageView imageView, String photoUrl) {
-        loadPhoto(imageView, photoUrl, R.drawable.default_pic_big, R.drawable.default_pic_big);
+        loadPhoto(imageView, photoUrl, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
     }
 
     /**
@@ -416,7 +416,7 @@ public class PhotoUtil {
      * @param photoUrl  图片url
      */
     public static void loadCirclePhoto(ImageView imageView, String photoUrl) {
-        loadCirclePhoto(imageView, photoUrl, R.drawable.default_pic_big, R.drawable.default_pic_big);
+        loadCirclePhoto(imageView, photoUrl, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
     }
 
     /**
@@ -492,7 +492,7 @@ public class PhotoUtil {
      * @param photoUrl  图片url
      */
     public static void loadRoundPhoto(ImageView imageView, String photoUrl, int dp) {
-        loadRoundPhoto(imageView, photoUrl, R.drawable.default_pic_big, R.drawable.default_pic_big, dp);
+        loadRoundPhoto(imageView, photoUrl, R.mipmap.ic_launcher, R.mipmap.ic_launcher, dp);
     }
 
     /**
@@ -596,9 +596,7 @@ public class PhotoUtil {
 
     }
 
-    public static final String path = Environment
-            .getExternalStorageDirectory().getAbsolutePath()
-            + "/touchtv/touchtvImage/";
+    public static final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/dplayer/image/";
 
     /**
      * 保存方法

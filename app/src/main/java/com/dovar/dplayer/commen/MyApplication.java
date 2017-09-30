@@ -2,10 +2,16 @@ package com.dovar.dplayer.commen;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.dovar.dplayer.R;
+import com.dovar.dplayer.commen.utils.ActivityLifecycle;
+import com.dovar.dplayer.commen.utils.PhoneUtil;
+import com.dovar.dplayer.commen.utils.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
@@ -69,6 +75,28 @@ public class MyApplication extends Application {
         AutoLayoutConifg.getInstance().useDeviceSize();
     }
 
+    /**
+     * 获取屏幕宽,部分手机可以动态修改屏幕分辨率
+     */
+    public int getWidth() {
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
+    }
+
+    /**
+     * 获取屏幕高
+     */
+    public int getHeight() {
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.y;
+    }
+
 
     public static synchronized void appGoBackground(final boolean goBackground) {
         new Handler().postDelayed(new Runnable() {
@@ -91,7 +119,7 @@ public class MyApplication extends Application {
                             MyApplication.getInstance().appInBackground = false;
                             if (MyApplication.getInstance().appLastGoBackGroundTime > 0) {
                                 long backTime = System.currentTimeMillis() - MyApplication.getInstance().appLastGoBackGroundTime;
-                                ToastUtil.show("后台停留时间" + (backTime / 1000) + "s");
+                                ToastUtil.show("后台停留时间" + (backTime / 1000) + "format2");
                                 MyApplication.getInstance().appLastInForegroundTime = System.currentTimeMillis();
                             }
                         }

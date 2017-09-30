@@ -54,10 +54,10 @@ public class TouchImageAdapter extends PagerAdapter {
         });
         if (imagelist.get(position).equals(IMG_OFFLINE)) {
             img.setScaleType(ImageView.ScaleType.FIT_XY);
-            img.setImageResource(R.drawable.img_offline);
+            img.setImageResource(R.mipmap.ic_launcher);
         } else {
             img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            PhotoUtil.loadPhoto(img, PhotoUtil.setPhotoSize(imagelist.get(position), 100), R.drawable.empty_picture, R.drawable.empty_picture, DiskCacheStrategy.SOURCE);
+            PhotoUtil.loadPhoto(img, PhotoUtil.setPhotoSize(imagelist.get(position), 100), R.mipmap.ic_launcher, R.mipmap.ic_launcher, DiskCacheStrategy.SOURCE);
         }
 
         container.addView(view);

@@ -34,12 +34,12 @@ import tv.danmaku.ijk.media.player.MediaInfo;
  */
 
 public class PLMediaPlayer {
-    private Context a;
-    private IjkMediaPlayer b;
+    private Context mContext;
+    private IjkMediaPlayer mIjkMediaPlayer;
     private long c;
     private static volatile boolean d = false;
     private com.dovar.pili.qos.a e;
-    private PLMediaPlayer.b f;
+    private PrepareAsyncHandler prepareAsyncHandler;
     private long g;
     private long h;
     private long i;
@@ -48,23 +48,23 @@ public class PLMediaPlayer {
     private boolean l;
     private boolean m;
     private boolean n;
-    private PlayerState o;
-    private String p;
-    private Map<String, String> q;
-    private SurfaceHolder r;
-    private Surface s;
-    private AVOptions t;
+    private PlayerState mPlayerState;
+    private String video_url;
+    private Map<String, String> uri_headers;
+    private SurfaceHolder mSurfaceHolder;
+    private Surface mSurface;
+    private AVOptions mAVOptions;
     private boolean u;
     private long v;
     private long w;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener x;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener y;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnSeekCompleteListener z;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener A;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnBufferingUpdateListener B;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener C;
-    private tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener D;
-    private IjkMediaPlayer.OnNativeInvokeListener E;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener mIjkOnVideoSizeChangeListener;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener mIjkOnPreparedListener;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnSeekCompleteListener mIjkOnSeekCompleteListener;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener mIjkOnInfoListener;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnBufferingUpdateListener mIjkOnBufferingUpdateListener;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener mIjkOnCompletionListener;
+    private tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener mIjkOnErrorListener;
+    private IjkMediaPlayer.OnNativeInvokeListener mOnNativeInvokeListener;
     public static final int MEDIA_INFO_UNKNOWN = 1;
     public static final int MEDIA_INFO_VIDEO_RENDERING_START = 3;
     public static final int MEDIA_INFO_BUFFERING_BYTES_UPDATE = 503;
@@ -77,12 +77,12 @@ public class PLMediaPlayer {
     public static final int MEDIA_INFO_VIDEO_GOP_TIME = 10003;
     public static final int MEDIA_INFO_VIDEO_FRAME_RENDERING = 10004;
     public static final int MEDIA_INFO_AUDIO_FRAME_RENDERING = 10005;
-    private PLMediaPlayer.OnInfoListener F;
-    private PLMediaPlayer.OnPreparedListener G;
-    private PLMediaPlayer.OnCompletionListener H;
-    private PLMediaPlayer.OnBufferingUpdateListener I;
-    private PLMediaPlayer.OnSeekCompleteListener J;
-    private PLMediaPlayer.OnVideoSizeChangedListener K;
+    private PLMediaPlayer.OnInfoListener mOnInfoListener;
+    private PLMediaPlayer.OnPreparedListener mOnPreparedListener;
+    private PLMediaPlayer.OnCompletionListener mOnCompletionListener;
+    private PLMediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener;
+    private PLMediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener;
+    private PLMediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener;
     public static final int MEDIA_ERROR_UNKNOWN = -1;
     public static final int ERROR_CODE_INVALID_URI = -2;
     public static final int ERROR_CODE_IO_ERROR = -5;
@@ -95,14 +95,14 @@ public class PLMediaPlayer {
     public static final int ERROR_CODE_PREPARE_TIMEOUT = -2001;
     public static final int ERROR_CODE_READ_FRAME_TIMEOUT = -2002;
     public static final int ERROR_CODE_HW_DECODE_FAILURE = -2003;
-    private PLMediaPlayer.OnErrorListener L;
-    private PLMediaPlayer.a M;
+    private PLMediaPlayer.OnErrorListener mOnErrorListener;
+    private OnMediaDataListener M;
 
     public PLMediaPlayer(Context var1) {
-        this(var1, (AVOptions) null);
+        this(var1, null);
     }
 
-    public PLMediaPlayer(Context var1, AVOptions var2) {
+    public PLMediaPlayer(Context mContext, AVOptions mAVOptions) {
         this.c = 0L;
         this.e = new com.dovar.pili.qos.a();
         this.j = 0;
@@ -110,64 +110,64 @@ public class PLMediaPlayer {
         this.l = false;
         this.m = false;
         this.n = true;
-        this.o = PlayerState.IDLE;
-        this.p = null;
-        this.q = null;
-        this.r = null;
-        this.s = null;
-        this.t = null;
+        this.mPlayerState = PlayerState.IDLE;
+        this.video_url = null;
+        this.uri_headers = null;
+        this.mSurfaceHolder = null;
+        this.mSurface = null;
+        this.mAVOptions = null;
         this.u = false;
         this.v = 0L;
         this.w = 0L;
-        this.x = new tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener() {
+        this.mIjkOnVideoSizeChangeListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener() {
             public void onVideoSizeChanged(IMediaPlayer var1, int var2, int var3, int var4, int var5) {
-                if (PLMediaPlayer.this.K != null) {
-                    PLMediaPlayer.this.K.onVideoSizeChanged(PLMediaPlayer.this, var2, var3, var4, var5);
+                if (PLMediaPlayer.this.mOnVideoSizeChangedListener != null) {
+                    PLMediaPlayer.this.mOnVideoSizeChangedListener.onVideoSizeChanged(PLMediaPlayer.this, var2, var3, var4, var5);
                 }
 
             }
         };
-        this.y = new tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener() {
+        this.mIjkOnPreparedListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener() {
             public void onPrepared(IMediaPlayer var1) {
                 int var2 = (int) (System.currentTimeMillis() - PLMediaPlayer.this.c);
-                if (PLMediaPlayer.this.G != null) {
-                    PLMediaPlayer.this.G.onPrepared(PLMediaPlayer.this, var2);
+                if (PLMediaPlayer.this.mOnPreparedListener != null) {
+                    PLMediaPlayer.this.mOnPreparedListener.onPrepared(PLMediaPlayer.this, var2);
                 }
 
                 Log.d("PLMediaPlayer", "on prepared: " + var2 + " ms");
-                PLMediaPlayer.this.o = PlayerState.PREPARED;
+                PLMediaPlayer.this.mPlayerState = PlayerState.PREPARED;
             }
         };
-        this.z = new tv.danmaku.ijk.media.player.IMediaPlayer.OnSeekCompleteListener() {
+        this.mIjkOnSeekCompleteListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnSeekCompleteListener() {
             public void onSeekComplete(IMediaPlayer var1) {
-                if (PLMediaPlayer.this.J != null) {
-                    PLMediaPlayer.this.J.onSeekComplete(PLMediaPlayer.this);
+                if (PLMediaPlayer.this.mOnSeekCompleteListener != null) {
+                    PLMediaPlayer.this.mOnSeekCompleteListener.onSeekComplete(PLMediaPlayer.this);
                 }
 
             }
         };
-        this.A = new tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener() {
+        this.mIjkOnInfoListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener() {
             public boolean onInfo(IMediaPlayer var1, int var2, int var3) {
                 switch (var2) {
                     case 3:
                         long var4 = System.currentTimeMillis() - PLMediaPlayer.this.c - PLMediaPlayer.this.w;
                         PLMediaPlayer.this.e.n = var4;
                         Log.d("PLMediaPlayer", "first video rendered: " + var4 + " ms");
-                        PLMediaPlayer.this.o = PlayerState.PLAYING;
+                        PLMediaPlayer.this.mPlayerState = PlayerState.PLAYING;
                         var3 = (int) var4;
-                        if (PLMediaPlayer.this.f != null) {
-                            PLMediaPlayer.this.f.sendMessage(PLMediaPlayer.this.f.obtainMessage(0));
+                        if (PLMediaPlayer.this.prepareAsyncHandler != null) {
+                            PLMediaPlayer.this.prepareAsyncHandler.sendMessage(PLMediaPlayer.this.prepareAsyncHandler.obtainMessage(0));
                         }
                         break;
                     case 701:
                         Log.d("PLMediaPlayer", "MEDIA_INFO_BUFFERING_START");
-                        PLMediaPlayer.this.o = PlayerState.BUFFERING;
+                        PLMediaPlayer.this.mPlayerState = PlayerState.BUFFERING;
                         PLMediaPlayer.this.e.c = 1L;
                         PLMediaPlayer.this.i = System.currentTimeMillis();
                         break;
                     case 702:
                         Log.d("PLMediaPlayer", "MEDIA_INFO_BUFFERING_END");
-                        PLMediaPlayer.this.o = PlayerState.PLAYING;
+                        PLMediaPlayer.this.mPlayerState = PlayerState.PLAYING;
                         PLMediaPlayer.this.e.c = 1L;
                         PLMediaPlayer.this.g++;
                         PLMediaPlayer.this.h = PLMediaPlayer.this.h + (System.currentTimeMillis() - PLMediaPlayer.this.i);
@@ -177,7 +177,7 @@ public class PLMediaPlayer {
                         long var6 = System.currentTimeMillis() - PLMediaPlayer.this.c - PLMediaPlayer.this.w;
                         PLMediaPlayer.this.e.o = var6;
                         Log.d("PLMediaPlayer", "first audio rendered: " + var6 + " ms");
-                        PLMediaPlayer.this.o = PlayerState.PLAYING;
+                        PLMediaPlayer.this.mPlayerState = PlayerState.PLAYING;
                         var3 = (int) var6;
                         break;
                     case 10003:
@@ -190,60 +190,60 @@ public class PLMediaPlayer {
                     PLMediaPlayer.this.d();
                 }
 
-                if (PLMediaPlayer.this.F != null) {
-                    PLMediaPlayer.this.F.onInfo(PLMediaPlayer.this, var2, var3);
+                if (PLMediaPlayer.this.mOnInfoListener != null) {
+                    PLMediaPlayer.this.mOnInfoListener.onInfo(PLMediaPlayer.this, var2, var3);
                 }
 
                 return true;
             }
         };
-        this.B = new tv.danmaku.ijk.media.player.IMediaPlayer.OnBufferingUpdateListener() {
+        this.mIjkOnBufferingUpdateListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnBufferingUpdateListener() {
             public void onBufferingUpdate(IMediaPlayer var1, int var2) {
-                if (PLMediaPlayer.this.I != null) {
-                    PLMediaPlayer.this.I.onBufferingUpdate(PLMediaPlayer.this, var2);
+                if (PLMediaPlayer.this.mOnBufferingUpdateListener != null) {
+                    PLMediaPlayer.this.mOnBufferingUpdateListener.onBufferingUpdate(PLMediaPlayer.this, var2);
                 }
 
             }
         };
-        this.C = new tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener() {
+        this.mIjkOnCompletionListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener() {
             public void onCompletion(IMediaPlayer var1) {
-                if (PLMediaPlayer.this.H != null) {
-                    PLMediaPlayer.this.H.onCompletion(PLMediaPlayer.this);
+                if (PLMediaPlayer.this.mOnCompletionListener != null) {
+                    PLMediaPlayer.this.mOnCompletionListener.onCompletion(PLMediaPlayer.this);
                 }
 
-                PLMediaPlayer.this.o = PlayerState.COMPLETED;
+                PLMediaPlayer.this.mPlayerState = PlayerState.COMPLETED;
                 if (!PLMediaPlayer.this.l) {
                     PLMediaPlayer.this.a(0, 0);
                 }
 
             }
         };
-        this.D = new tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener() {
+        this.mIjkOnErrorListener = new tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener() {
             public boolean onError(IMediaPlayer var1, int var2, int var3) {
                 Log.e("PLMediaPlayer", "Error happened, what = " + var2 + ", errorCode = " + var3);
                 if (var3 == 0) {
                     var3 = -1;
                 } else if (var3 == -2003 && PLMediaPlayer.this.j == 2) {
                     PLMediaPlayer.this.j = 0;
-                    PLMediaPlayer.this.t.setInteger("mediacodec", PLMediaPlayer.this.j);
-                    PLMediaPlayer.this.t.setInteger("start-on-prepared", 1);
-                    if (PLMediaPlayer.this.F != null) {
-                        PLMediaPlayer.this.F.onInfo(PLMediaPlayer.this, 802, 0);
+                    PLMediaPlayer.this.mAVOptions.setInteger("mediacodec", PLMediaPlayer.this.j);
+                    PLMediaPlayer.this.mAVOptions.setInteger("start-on-prepared", 1);
+                    if (PLMediaPlayer.this.mOnInfoListener != null) {
+                        PLMediaPlayer.this.mOnInfoListener.onInfo(PLMediaPlayer.this, 802, 0);
                     }
 
                     PLMediaPlayer.this.e();
                     return true;
                 }
 
-                PLMediaPlayer.this.o = PlayerState.ERROR;
+                PLMediaPlayer.this.mPlayerState = PlayerState.ERROR;
                 if (!PLMediaPlayer.this.l) {
                     PLMediaPlayer.this.a(var3, var3);
                 }
 
-                return PLMediaPlayer.this.L != null ? PLMediaPlayer.this.L.onError(PLMediaPlayer.this, var3) : false;
+                return PLMediaPlayer.this.mOnErrorListener != null ? PLMediaPlayer.this.mOnErrorListener.onError(PLMediaPlayer.this, var3) : false;
             }
         };
-        this.E = new IjkMediaPlayer.OnNativeInvokeListener() {
+        this.mOnNativeInvokeListener = new IjkMediaPlayer.OnNativeInvokeListener() {
             private final int b = 196609;
             private final int c = 196610;
 
@@ -251,10 +251,10 @@ public class PLMediaPlayer {
                 if (PLMediaPlayer.this.M != null) {
                     switch (var1) {
                         case 196609:
-                            PLMediaPlayer.this.M.a(PLMediaPlayer.this.b.getAudioData(), PLMediaPlayer.this.b.getAudioSize(), PLMediaPlayer.this.b.getAudioPts(), PLMediaPlayer.this.b.getAudioChannel(), PLMediaPlayer.this.b.getAudioChannelLayout(), PLMediaPlayer.this.b.getAudioSampleRate(), PLMediaPlayer.this.b.getAudioSampleFormat());
+                            PLMediaPlayer.this.M.a(PLMediaPlayer.this.mIjkMediaPlayer.getAudioData(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSize(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioPts(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioChannel(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioChannelLayout(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSampleRate(), PLMediaPlayer.this.mIjkMediaPlayer.getAudioSampleFormat());
                             return true;
                         case 196610:
-                            PLMediaPlayer.this.M.a(PLMediaPlayer.this.b.getVideoData(), PLMediaPlayer.this.b.getVideoLinesize(), PLMediaPlayer.this.b.getVideoPts(), PLMediaPlayer.this.b.getVideoFormat(), PLMediaPlayer.this.b.getVideoPlane(), PLMediaPlayer.this.b.getVideoWidth(), PLMediaPlayer.this.b.getVideoHeight(), PLMediaPlayer.this.b.getVideoSarNum(), PLMediaPlayer.this.b.getVideoSarDen());
+                            PLMediaPlayer.this.M.a(PLMediaPlayer.this.mIjkMediaPlayer.getVideoData(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoLinesize(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoPts(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoFormat(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoPlane(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoWidth(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoHeight(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoSarNum(), PLMediaPlayer.this.mIjkMediaPlayer.getVideoSarDen());
                             return true;
                     }
                 }
@@ -262,17 +262,17 @@ public class PLMediaPlayer {
                 return false;
             }
         };
-        this.a = var1.getApplicationContext();
-        this.t = var2;
-        com.dovar.pili.qos.b.a(this.a);
-        this.a(var2);
+        this.mContext = mContext.getApplicationContext();
+        this.mAVOptions = mAVOptions;
+        com.dovar.pili.qos.b.a(this.mContext);
+        this.a(mAVOptions);
         this.e.a();
     }
 
     private void a(AVOptions var1) {
-        this.o = PlayerState.IDLE;
+        this.mPlayerState = PlayerState.IDLE;
         this.l = false;
-        this.b = new IjkMediaPlayer(new IjkLibLoader() {
+        this.mIjkMediaPlayer = new IjkMediaPlayer(new IjkLibLoader() {
             public void loadLibrary(String var1) throws UnsatisfiedLinkError, SecurityException {
                 if (!PLMediaPlayer.d) {
                     Log.i("PLMediaPlayer", "load shared lib:" + SharedLibraryNameHelper.getInstance().getSharedLibraryName());
@@ -283,14 +283,14 @@ public class PLMediaPlayer {
 
             }
         });
-        this.b.setOnPreparedListener(this.y);
-        this.b.setOnInfoListener(this.A);
-        this.b.setOnErrorListener(this.D);
-        this.b.setOnCompletionListener(this.C);
-        this.b.setOnBufferingUpdateListener(this.B);
-        this.b.setOnSeekCompleteListener(this.z);
-        this.b.setOnVideoSizeChangedListener(this.x);
-        this.b.setOnNativeInvokeListener(this.E);
+        this.mIjkMediaPlayer.setOnPreparedListener(this.mIjkOnPreparedListener);
+        this.mIjkMediaPlayer.setOnInfoListener(this.mIjkOnInfoListener);
+        this.mIjkMediaPlayer.setOnErrorListener(this.mIjkOnErrorListener);
+        this.mIjkMediaPlayer.setOnCompletionListener(this.mIjkOnCompletionListener);
+        this.mIjkMediaPlayer.setOnBufferingUpdateListener(this.mIjkOnBufferingUpdateListener);
+        this.mIjkMediaPlayer.setOnSeekCompleteListener(this.mIjkOnSeekCompleteListener);
+        this.mIjkMediaPlayer.setOnVideoSizeChangedListener(this.mIjkOnVideoSizeChangeListener);
+        this.mIjkMediaPlayer.setOnNativeInvokeListener(this.mOnNativeInvokeListener);
         this.setAVOptions(var1);
     }
 
@@ -299,8 +299,8 @@ public class PLMediaPlayer {
             this.stop();
         }
 
-        this.b.release();
-        this.o = PlayerState.IDLE;
+        this.mIjkMediaPlayer.release();
+        this.mPlayerState = PlayerState.IDLE;
     }
 
     public void setDebugLoggingEnabled(boolean var1) {
@@ -313,12 +313,12 @@ public class PLMediaPlayer {
     }
 
     public PlayerState getPlayerState() {
-        return this.o;
+        return this.mPlayerState;
     }
 
     public HashMap<String, String> getMetadata() {
         HashMap var1 = new HashMap();
-        MediaInfo var2 = this.b.getMediaInfo();
+        MediaInfo var2 = this.mIjkMediaPlayer.getMediaInfo();
         Set var3 = var2.mMeta.mMediaMeta.keySet();
         Iterator var4 = var3.iterator();
 
@@ -370,7 +370,7 @@ public class PLMediaPlayer {
             if (var1.containsKey("remote_ip")) {
                 String var2 = (String) var1.get("remote_ip");
                 if (var2.length() > 0) {
-                    URI var3 = new URI(this.p);
+                    URI var3 = new URI(this.video_url);
                     Intent var4 = new Intent("pldroid-player-qos-filter");
                     var4.putExtra("pldroid-qos-msg-type", 4);
                     var4.putExtra("scheme", var3.getScheme());
@@ -397,15 +397,15 @@ public class PLMediaPlayer {
             var1.putExtra("firstAudioTime", this.e.o);
             var1.putExtra("gopTime", this.e.p);
             if (this.j == 0) {
-                this.e.r = "ffmpeg";
-                this.e.s = "ffmpeg";
+                this.e.format1 = "ffmpeg";
+                this.e.format2 = "ffmpeg";
             } else {
-                this.e.r = "droid264";
-                this.e.s = "droidaac";
+                this.e.format1 = "droid264";
+                this.e.format2 = "droidaac";
             }
 
-            var1.putExtra("videoDecoderType", this.e.r);
-            var1.putExtra("audioDecoderType", this.e.s);
+            var1.putExtra("videoDecoderType", this.e.format1);
+            var1.putExtra("audioDecoderType", this.e.format2);
             HashMap var2 = this.getMetadata();
             String var3;
             if (var2.containsKey("tcp_connect_time")) {
@@ -424,7 +424,7 @@ public class PLMediaPlayer {
     }
 
     private void a(int var1, int var2) {
-        if (this.u && (this.s != null || this.r != null)) {
+        if (this.u && (this.mSurface != null || this.mSurfaceHolder != null)) {
             this.l = true;
             Intent var3 = new Intent("pldroid-player-qos-filter");
             var3.putExtra("pldroid-qos-msg-type", 196);
@@ -462,44 +462,44 @@ public class PLMediaPlayer {
 
     private void setAVOptions(AVOptions var1) {
         if (var1 != null) {
-            this.b.setOption(4, "framedrop", 12L);
-            this.b.setOption(4, "start-on-prepared", 1L);
-            this.b.setOption(1, "http-detect-range-support", 0L);
-            this.b.setOption(2, "skip_loop_filter", 0L);
-            this.b.setOption(4, "overlay-format", 842225234L);
+            this.mIjkMediaPlayer.setOption(4, "framedrop", 12L);
+            this.mIjkMediaPlayer.setOption(4, "start-on-prepared", 1L);
+            this.mIjkMediaPlayer.setOption(1, "http-detect-range-support", 0L);
+            this.mIjkMediaPlayer.setOption(2, "skip_loop_filter", 0L);
+            this.mIjkMediaPlayer.setOption(4, "overlay-format", 842225234L);
             int var2 = var1.getInteger("start-on-prepared", 1);
-            this.b.setOption(4, "start-on-prepared", (long) var2);
+            this.mIjkMediaPlayer.setOption(4, "start-on-prepared", (long) var2);
             this.u = false;
             if (var1.containsKey("live-streaming") && var1.getInteger("live-streaming") != 0) {
                 this.u = true;
                 if (!var1.containsKey("rtmp_live") || var1.getInteger("rtmp_live") == 1) {
-                    this.b.setOption(1, "rtmp_live", 1L);
+                    this.mIjkMediaPlayer.setOption(1, "rtmp_live", 1L);
                 }
 
-                this.b.setOption(1, "rtmp_buffer", var1.containsKey("rtmp_buffer") ? (long) var1.getInteger("rtmp_buffer") : 1000L);
+                this.mIjkMediaPlayer.setOption(1, "rtmp_buffer", var1.containsKey("rtmp_buffer") ? (long) var1.getInteger("rtmp_buffer") : 1000L);
                 if (var1.containsKey("timeout")) {
-                    this.b.setOption(1, "timeout", (long) (var1.getInteger("timeout") * 1000));
+                    this.mIjkMediaPlayer.setOption(1, "timeout", (long) (var1.getInteger("timeout") * 1000));
                 }
 
-                this.b.setOption(2, "threads", "1");
+                this.mIjkMediaPlayer.setOption(2, "threads", "1");
             }
 
             String var3 = "analyzeduration";
-            this.b.setOption(1, var3, var1.containsKey(var3) ? (long) var1.getInteger(var3) : 0L);
-            this.b.setOption(1, "probesize", var1.containsKey("probesize") ? (long) var1.getInteger("probesize") : 131072L);
-            this.b.setOption(4, "live-streaming", (long) (this.u ? 1 : 0));
-            this.b.setOption(4, "get-av-frame-timeout", var1.containsKey("get-av-frame-timeout") ? (long) (var1.getInteger("get-av-frame-timeout") * 1000) : 10000000L);
+            this.mIjkMediaPlayer.setOption(1, var3, var1.containsKey(var3) ? (long) var1.getInteger(var3) : 0L);
+            this.mIjkMediaPlayer.setOption(1, "probesize", var1.containsKey("probesize") ? (long) var1.getInteger("probesize") : 131072L);
+            this.mIjkMediaPlayer.setOption(4, "live-streaming", (long) (this.u ? 1 : 0));
+            this.mIjkMediaPlayer.setOption(4, "get-av-frame-timeout", var1.containsKey("get-av-frame-timeout") ? (long) (var1.getInteger("get-av-frame-timeout") * 1000) : 10000000L);
             this.j = var1.containsKey("mediacodec") ? var1.getInteger("mediacodec") : 0;
-            this.b.setOption(4, "mediacodec", this.j == 0 ? 0L : 1L);
+            this.mIjkMediaPlayer.setOption(4, "mediacodec", this.j == 0 ? 0L : 1L);
             String var4 = "mediacodec-handle-resolution-change";
-            this.b.setOption(4, var4, var1.containsKey(var4) ? (long) var1.getInteger(var4) : 1L);
-            this.b.setOption(4, "delay-optimization", var1.containsKey("delay-optimization") ? (long) var1.getInteger("delay-optimization") : 0L);
-            this.b.setOption(4, "cache-buffer-duration", var1.containsKey("cache-buffer-duration") ? (long) var1.getInteger("cache-buffer-duration") : 2000L);
-            this.b.setOption(4, "max-cache-buffer-duration", var1.containsKey("max-cache-buffer-duration") ? (long) var1.getInteger("max-cache-buffer-duration") : 4000L);
-            this.b.setOption(1, "reconnect", var1.containsKey("reconnect") ? (long) var1.getInteger("reconnect") : 1L);
-            this.b.setOption(4, "audio-render-msg-cb", var1.containsKey("audio-render-msg-cb") ? (long) var1.getInteger("audio-render-msg-cb") : 0L);
-            this.b.setOption(4, "video-render-msg-cb", var1.containsKey("video-render-msg-cb") ? (long) var1.getInteger("video-render-msg-cb") : 0L);
-            this.b.setOption(4, "nodisp", var1.containsKey("nodisp") ? (long) var1.getInteger("nodisp") : 0L);
+            this.mIjkMediaPlayer.setOption(4, var4, var1.containsKey(var4) ? (long) var1.getInteger(var4) : 1L);
+            this.mIjkMediaPlayer.setOption(4, "delay-optimization", var1.containsKey("delay-optimization") ? (long) var1.getInteger("delay-optimization") : 0L);
+            this.mIjkMediaPlayer.setOption(4, "cache-buffer-duration", var1.containsKey("cache-buffer-duration") ? (long) var1.getInteger("cache-buffer-duration") : 2000L);
+            this.mIjkMediaPlayer.setOption(4, "max-cache-buffer-duration", var1.containsKey("max-cache-buffer-duration") ? (long) var1.getInteger("max-cache-buffer-duration") : 4000L);
+            this.mIjkMediaPlayer.setOption(1, "reconnect", var1.containsKey("reconnect") ? (long) var1.getInteger("reconnect") : 1L);
+            this.mIjkMediaPlayer.setOption(4, "audio-render-msg-cb", var1.containsKey("audio-render-msg-cb") ? (long) var1.getInteger("audio-render-msg-cb") : 0L);
+            this.mIjkMediaPlayer.setOption(4, "video-render-msg-cb", var1.containsKey("video-render-msg-cb") ? (long) var1.getInteger("video-render-msg-cb") : 0L);
+            this.mIjkMediaPlayer.setOption(4, "nodisp", var1.containsKey("nodisp") ? (long) var1.getInteger("nodisp") : 0L);
         }
     }
 
@@ -508,63 +508,63 @@ public class PLMediaPlayer {
     }
 
     public void setDisplay(SurfaceHolder var1) {
-        this.b.setDisplay(var1);
-        this.r = var1;
+        this.mIjkMediaPlayer.setDisplay(var1);
+        this.mSurfaceHolder = var1;
     }
 
     public void setSurface(Surface var1) {
-        this.b.setSurface(var1);
-        this.s = var1;
+        this.mIjkMediaPlayer.setSurface(var1);
+        this.mSurface = var1;
     }
 
     public void setWakeMode(Context var1, int var2) {
-        this.b.setWakeMode(var1, var2);
+        this.mIjkMediaPlayer.setWakeMode(var1, var2);
     }
 
     public void setScreenOnWhilePlaying(boolean var1) {
-        this.b.setScreenOnWhilePlaying(var1);
+        this.mIjkMediaPlayer.setScreenOnWhilePlaying(var1);
     }
 
     public void setDataSource(Context var1, Uri var2) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        this.setDataSource(var1, var2, (Map) null);
+        this.setDataSource(var1, var2, null);
     }
 
-    public void setDataSource(Context var1, Uri var2, Map<String, String> var3) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context var1, Uri var2, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         Uri var4 = PLNetworkManager.getInstance().a(var2);
         this.a(var2.toString(), var4.toString());
         if (Build.VERSION.SDK_INT > 14) {
-            this.b.setDataSource(var1, var4, var3);
-            this.q = var3;
+            this.mIjkMediaPlayer.setDataSource(var1, var4, headers);
+            this.uri_headers = headers;
         } else {
-            this.b.setDataSource(var4.toString());
+            this.mIjkMediaPlayer.setDataSource(var4.toString());
         }
 
-        this.p = var2.toString();
+        this.video_url = var2.toString();
     }
 
-    public void setDataSource(String var1) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        String var2 = PLNetworkManager.getInstance().a(var1);
-        this.a(var1, var2);
-        this.b.setDataSource(var2);
-        this.p = var1;
+    public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        String var2 = PLNetworkManager.getInstance().a(path);
+        this.a(path, var2);
+        this.mIjkMediaPlayer.setDataSource(var2);
+        this.video_url = path;
     }
 
-    public void setDataSource(FileDescriptor var1) throws IOException, IllegalArgumentException, IllegalStateException {
-        this.b.setDataSource(var1);
+    public void setDataSource(FileDescriptor fd) throws IOException, IllegalArgumentException, IllegalStateException {
+        this.mIjkMediaPlayer.setDataSource(fd);
     }
 
     public String getDataSource() {
-        return this.b.getDataSource();
+        return this.mIjkMediaPlayer.getDataSource();
     }
 
     public void prepareAsync() throws IllegalStateException {
         String var1 = this.getDataSource();
         if (var1 != null && var1.contains(".m3u8")) {
-            this.b.setOption(4, "delay-optimization", 0L);
+            this.mIjkMediaPlayer.setOption(4, "delay-optimization", 0L);
         }
 
-        this.o = PlayerState.PREPARING;
-        this.b.prepareAsync();
+        this.mPlayerState = PlayerState.PREPARING;
+        this.mIjkMediaPlayer.prepareAsync();
         this.c = System.currentTimeMillis();
         this.v = 0L;
         this.w = 0L;
@@ -576,15 +576,21 @@ public class PLMediaPlayer {
         this.m = false;
         HandlerThread var2 = new HandlerThread("PlayerHt");
         var2.start();
-        this.f = new PLMediaPlayer.b(var2.getLooper(), this);
+        this.prepareAsyncHandler = new PrepareAsyncHandler(var2.getLooper(), this);
     }
 
-    public void setVolume(float var1, float var2) {
-        this.b.setVolume(var1, var2);
+    /**
+     * Sets the volume on this player.
+     * This API is recommended for balancing the output of audio streams within an application.
+     * Unless you are writing an application to control user settings, this API should be used in preference to AudioManager.setStreamVolume(int, int, int) which sets the volume of ALL streams of resize particular type.
+     * Note that the passed volume values are raw scalars in range 0.0 to 1.0. UI controls should be scaled logarithmically.
+     */
+    public void setVolume(float leftVolume, float rightVolume) {
+        this.mIjkMediaPlayer.setVolume(leftVolume, rightVolume);
     }
 
     public void start() throws IllegalStateException {
-        this.b.start();
+        this.mIjkMediaPlayer.start();
         if (this.v > this.c) {
             this.w += System.currentTimeMillis() - this.v;
         }
@@ -592,22 +598,22 @@ public class PLMediaPlayer {
     }
 
     public void pause() throws IllegalStateException {
-        this.b.pause();
-        this.o = PlayerState.PAUSED;
+        this.mIjkMediaPlayer.pause();
+        this.mPlayerState = PlayerState.PAUSED;
         this.v = System.currentTimeMillis();
     }
 
     public void stop() throws IllegalStateException {
         if (!this.l) {
-            this.e.q = this.b.getPktTotalSize();
+            this.e.q = this.mIjkMediaPlayer.getPktTotalSize();
             this.a(0, 0);
         }
 
-        this.b.stop();
-        com.dovar.pili.qos.b.b(this.a);
-        if (this.f != null) {
-            this.f.removeCallbacksAndMessages((Object) null);
-            this.f.a();
+        this.mIjkMediaPlayer.stop();
+        com.dovar.pili.qos.b.b(this.mContext);
+        if (this.prepareAsyncHandler != null) {
+            this.prepareAsyncHandler.removeCallbacksAndMessages((Object) null);
+            this.prepareAsyncHandler.destory();
         }
 
         this.n = true;
@@ -617,22 +623,22 @@ public class PLMediaPlayer {
         (new Handler(Looper.getMainLooper())).post(new Runnable() {
             public void run() {
                 try {
-                    PLMediaPlayer.this.b.stop();
-                    PLMediaPlayer.this.b.release();
-                    PLMediaPlayer.this.a(PLMediaPlayer.this.t);
-                    if (PLMediaPlayer.this.q == null) {
-                        PLMediaPlayer.this.b.setDataSource(PLMediaPlayer.this.p);
+                    PLMediaPlayer.this.mIjkMediaPlayer.stop();
+                    PLMediaPlayer.this.mIjkMediaPlayer.release();
+                    PLMediaPlayer.this.a(PLMediaPlayer.this.mAVOptions);
+                    if (PLMediaPlayer.this.uri_headers == null) {
+                        PLMediaPlayer.this.mIjkMediaPlayer.setDataSource(PLMediaPlayer.this.video_url);
                     } else {
-                        PLMediaPlayer.this.b.setDataSource(PLMediaPlayer.this.p, PLMediaPlayer.this.q);
+                        PLMediaPlayer.this.mIjkMediaPlayer.setDataSource(PLMediaPlayer.this.video_url, PLMediaPlayer.this.uri_headers);
                     }
 
-                    if (PLMediaPlayer.this.r != null) {
-                        PLMediaPlayer.this.b.setDisplay(PLMediaPlayer.this.r);
-                    } else if (PLMediaPlayer.this.s != null) {
-                        PLMediaPlayer.this.b.setSurface(PLMediaPlayer.this.s);
+                    if (PLMediaPlayer.this.mSurfaceHolder != null) {
+                        PLMediaPlayer.this.mIjkMediaPlayer.setDisplay(PLMediaPlayer.this.mSurfaceHolder);
+                    } else if (PLMediaPlayer.this.mSurface != null) {
+                        PLMediaPlayer.this.mIjkMediaPlayer.setSurface(PLMediaPlayer.this.mSurface);
                     }
 
-                    PLMediaPlayer.this.b.prepareAsync();
+                    PLMediaPlayer.this.mIjkMediaPlayer.prepareAsync();
                 } catch (IOException var2) {
                     var2.printStackTrace();
                     PLMediaPlayer.this.f();
@@ -646,29 +652,29 @@ public class PLMediaPlayer {
     }
 
     private void f() {
-        if (this.L != null) {
-            this.L.onError(this, -1);
+        if (this.mOnErrorListener != null) {
+            this.mOnErrorListener.onError(this, -1);
         }
 
     }
 
-    public void seekTo(long var1) throws IllegalStateException {
-        this.b.seekTo(var1);
+    public void seekTo(long msec) throws IllegalStateException {
+        this.mIjkMediaPlayer.seekTo(msec);
     }
 
     public void reset() {
-        this.b.reset();
+        this.mIjkMediaPlayer.reset();
     }
 
     public int getVideoWidth() {
-        return this.b.getVideoWidth();
+        return this.mIjkMediaPlayer.getVideoWidth();
     }
 
     public String getResolutionInline() {
         String var1 = null;
-        if (this.b != null) {
+        if (this.mIjkMediaPlayer != null) {
             try {
-                MediaInfo var2 = this.b.getMediaInfo();
+                MediaInfo var2 = this.mIjkMediaPlayer.getMediaInfo();
                 var1 = var2.mMeta.mVideoStream.getResolutionInline();
             } catch (Exception var3) {
                 ;
@@ -679,93 +685,93 @@ public class PLMediaPlayer {
     }
 
     public int getVideoHeight() {
-        return this.b.getVideoHeight();
+        return this.mIjkMediaPlayer.getVideoHeight();
     }
 
     public long getVideoBitrate() {
-        return this.b.getBitrateVideo();
+        return this.mIjkMediaPlayer.getBitrateVideo();
     }
 
     public int getVideoFps() {
-        return (int) this.b.getVideoOutputFramesPerSecond();
+        return (int) this.mIjkMediaPlayer.getVideoOutputFramesPerSecond();
     }
 
     public boolean isPlaying() {
-        return this.b.isPlaying();
+        return this.mIjkMediaPlayer.isPlaying();
     }
 
     public long getCurrentPosition() {
-        return this.b.getCurrentPosition();
+        return this.mIjkMediaPlayer.getCurrentPosition();
     }
 
     public long getDuration() {
-        return this.b.getDuration();
+        return this.mIjkMediaPlayer.getDuration();
     }
 
     public void setLooping(boolean var1) {
-        this.b.setLooping(var1);
+        this.mIjkMediaPlayer.setLooping(var1);
     }
 
     public boolean isLooping() {
-        return this.b.isLooping();
+        return this.mIjkMediaPlayer.isLooping();
     }
 
     public void setOnInfoListener(PLMediaPlayer.OnInfoListener var1) {
-        this.F = var1;
+        this.mOnInfoListener = var1;
     }
 
     public void setOnPreparedListener(PLMediaPlayer.OnPreparedListener var1) {
-        this.G = var1;
+        this.mOnPreparedListener = var1;
     }
 
     public void setOnCompletionListener(PLMediaPlayer.OnCompletionListener var1) {
-        this.H = var1;
+        this.mOnCompletionListener = var1;
     }
 
     public void setOnBufferingUpdateListener(PLMediaPlayer.OnBufferingUpdateListener var1) {
-        this.I = var1;
+        this.mOnBufferingUpdateListener = var1;
     }
 
     public void setOnSeekCompleteListener(PLMediaPlayer.OnSeekCompleteListener var1) {
-        this.J = var1;
+        this.mOnSeekCompleteListener = var1;
     }
 
     public void setOnVideoSizeChangedListener(PLMediaPlayer.OnVideoSizeChangedListener var1) {
-        this.K = var1;
+        this.mOnVideoSizeChangedListener = var1;
     }
 
-    public void setOnErrorListener(PLMediaPlayer.OnErrorListener var1) {
-        this.L = var1;
+    public void setIjkOnErrorListener(PLMediaPlayer.OnErrorListener var1) {
+        this.mOnErrorListener = var1;
     }
 
-    public void setOnMediaDataListener(PLMediaPlayer.a var1) {
-        this.M = var1;
+    public void setOnMediaDataListener(OnMediaDataListener mVar1) {
+        this.M = mVar1;
     }
 
     private void g() {
-        if (this.e != null && this.b != null) {
-            this.e.d = (int) this.b.getSourcFpsVideo();
-            this.e.e = (int) this.b.getFramesDroppedVideo();
-            this.e.f = (int) this.b.getSourcFpsAudio();
-            this.e.g = (int) this.b.getFramesDroppedAudio();
-            this.e.h = (int) this.b.getVideoOutputFramesPerSecond();
-            this.e.i = (int) this.b.getRenderFpsAudio();
-            this.e.j = (int) this.b.getBufferTimeVideo();
-            this.e.k = (int) this.b.getBufferTimeAudio();
-            this.e.l = this.b.getBitrateVideo();
-            this.e.m = this.b.getBitrateAudio();
+        if (this.e != null && this.mIjkMediaPlayer != null) {
+            this.e.d = (int) this.mIjkMediaPlayer.getSourcFpsVideo();
+            this.e.e = (int) this.mIjkMediaPlayer.getFramesDroppedVideo();
+            this.e.f = (int) this.mIjkMediaPlayer.getSourcFpsAudio();
+            this.e.g = (int) this.mIjkMediaPlayer.getFramesDroppedAudio();
+            this.e.h = (int) this.mIjkMediaPlayer.getVideoOutputFramesPerSecond();
+            this.e.i = (int) this.mIjkMediaPlayer.getRenderFpsAudio();
+            this.e.j = (int) this.mIjkMediaPlayer.getBufferTimeVideo();
+            this.e.k = (int) this.mIjkMediaPlayer.getBufferTimeAudio();
+            this.e.l = this.mIjkMediaPlayer.getBitrateVideo();
+            this.e.m = this.mIjkMediaPlayer.getBitrateAudio();
         }
     }
 
-    public static class b extends Handler {
+    public static class PrepareAsyncHandler extends Handler {
         private WeakReference<PLMediaPlayer> a;
 
-        public b(Looper var1, PLMediaPlayer var2) {
+        public PrepareAsyncHandler(Looper var1, PLMediaPlayer var2) {
             super(var1);
             this.a = new WeakReference(var2);
         }
 
-        public void a() {
+        public void destory() {
             this.getLooper().quit();
             this.a.clear();
         }
@@ -808,37 +814,37 @@ public class PLMediaPlayer {
         }
     }
 
-    public interface a {
+    public interface OnMediaDataListener {
         void a(byte[] var1, int var2, double var3, int var5, int var6, int var7, int var8);
 
         void a(byte[] var1, int var2, double var3, int var5, int var6, int var7, int var8, int var9, int var10);
     }
 
     public interface OnErrorListener {
-        boolean onError(PLMediaPlayer var1, int var2);
+        boolean onError(PLMediaPlayer mp, int errorCode);
     }
 
     public interface OnVideoSizeChangedListener {
-        void onVideoSizeChanged(PLMediaPlayer var1, int var2, int var3, int var4, int var5);
+        void onVideoSizeChanged(PLMediaPlayer var1, int width, int height, int videoSar, int videoDen);
     }
 
     public interface OnSeekCompleteListener {
-        void onSeekComplete(PLMediaPlayer var1);
+        void onSeekComplete(PLMediaPlayer mp);
     }
 
     public interface OnBufferingUpdateListener {
-        void onBufferingUpdate(PLMediaPlayer var1, int var2);
+        void onBufferingUpdate(PLMediaPlayer mp, int percent);
     }
 
     public interface OnCompletionListener {
-        void onCompletion(PLMediaPlayer var1);
+        void onCompletion(PLMediaPlayer mp);
     }
 
     public interface OnPreparedListener {
-        void onPrepared(PLMediaPlayer var1, int var2);
+        void onPrepared(PLMediaPlayer mp, int preparedTime);
     }
 
     public interface OnInfoListener {
-        boolean onInfo(PLMediaPlayer var1, int var2, int var3);
+        boolean onInfo(PLMediaPlayer mp, int what, int extra);
     }
 }

@@ -1,6 +1,7 @@
 package com.dovar.dplayer.commen.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -333,7 +334,7 @@ public abstract class RCommenAdapter<T> extends RecyclerView.Adapter<RCommenView
         mDatas = new ArrayList<>();
     }
 
-    public RCommenAdapter(Context context, int layoutId, List<T> datas) {
+    public RCommenAdapter(Context context, int layoutId,@NonNull List<T> datas) {
         mContext = context;
         mLayoutId = layoutId;
         mDatas = datas;

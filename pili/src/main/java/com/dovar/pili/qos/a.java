@@ -23,8 +23,8 @@ public class a {
     public long o;
     public long p;
     public long q;
-    public String r = "ffmpeg";
-    public String s = "ffmpeg";
+    public String format1 = "ffmpeg";
+    public String format2 = "ffmpeg";
 
     public a() {
     }

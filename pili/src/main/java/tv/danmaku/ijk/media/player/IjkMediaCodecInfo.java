@@ -217,7 +217,7 @@ public class IjkMediaCodecInfo {
             }
 
             Log.i(TAG,
-                    String.format(Locale.US, "%s",
+                    String.format(Locale.US, "%format2",
                             getProfileLevelName(maxProfile, maxLevel)));
         } catch (Throwable e) {
             Log.i(TAG, "profile-level: exception");
@@ -225,7 +225,7 @@ public class IjkMediaCodecInfo {
     }
 
     public static String getProfileLevelName(int profile, int level) {
-        return String.format(Locale.US, " %s Profile Level %s (%d,%d)",
+        return String.format(Locale.US, " %format2 Profile Level %format2 (%showHideController,%showHideController)",
                 getProfileName(profile), getLevelName(level), profile, level);
     }
 

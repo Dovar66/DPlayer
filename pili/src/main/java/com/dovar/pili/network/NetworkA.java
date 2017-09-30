@@ -32,17 +32,17 @@ import java.util.List;
 
 public class NetworkA {
     private DnsManager a;
-    private Context b;
+    private Context mContext;
     private final Object c = new Object();
     private HashMap<String, NetworkA.ClassB> d = new HashMap();
     private int e = 100000;
-    private Handler f;
-    private HandlerThread g;
-    private BroadcastReceiver h = new BroadcastReceiver() {
+    private Handler mHandler;
+    private HandlerThread mHandlerThread;
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context var1, Intent var2) {
             if("android.net.conn.CONNECTIVITY_CHANGE".equals(var2.getAction())) {
                 NetworkA.this.b();
-                NetworkA.this.f.sendEmptyMessage(1);
+                NetworkA.this.mHandler.sendEmptyMessage(1);
             }
 
         }
@@ -51,7 +51,7 @@ public class NetworkA {
         public boolean handleMessage(Message var1) {
             NetworkA.this.a();
             if(var1.what == 0) {
-                NetworkA.this.f.sendEmptyMessageDelayed(0, (long)NetworkA.this.e);
+                NetworkA.this.mHandler.sendEmptyMessageDelayed(0, (long)NetworkA.this.e);
             }
 
             return true;
@@ -77,25 +77,25 @@ public class NetworkA {
     }
 
     public void a(Context var1) throws UnknownHostException {
-        if(this.g == null) {
-            this.b = var1.getApplicationContext();
+        if(this.mHandlerThread == null) {
+            this.mContext = var1.getApplicationContext();
             if(this.a == null) {
                 this.a = d("119.29.29.29");
             }
 
-            this.g = new HandlerThread("DNSCacheManager");
-            this.g.start();
-            this.f = new Handler(this.g.getLooper(), this.i);
+            this.mHandlerThread = new HandlerThread("DNSCacheManager");
+            this.mHandlerThread.start();
+            this.mHandler = new Handler(this.mHandlerThread.getLooper(), this.i);
             IntentFilter var2 = new IntentFilter();
             var2.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-            var1.getApplicationContext().registerReceiver(this.h, var2);
-            this.f.sendEmptyMessage(0);
+            var1.getApplicationContext().registerReceiver(this.mBroadcastReceiver, var2);
+            this.mHandler.sendEmptyMessage(0);
             Log.d("DNSCacheManager", "startCacheService !");
         }
     }
 
     public void a(Context var1, String[] var2) throws UnknownHostException {
-        if(this.g == null) {
+        if(this.mHandlerThread == null) {
             String[] var3 = var2;
             int var4 = var2.length;
 
@@ -109,12 +109,11 @@ public class NetworkA {
     }
 
     public void b(Context var1) {
-        if(this.g != null) {
-            var1.getApplicationContext().unregisterReceiver(this.h);
-            this.g.interrupt();
-            this.g.quit();
-            this.g = null;
-            Object var2 = this.c;
+        if(this.mHandlerThread != null) {
+            var1.getApplicationContext().unregisterReceiver(this.mBroadcastReceiver);
+            this.mHandlerThread.interrupt();
+            this.mHandlerThread.quit();
+            this.mHandlerThread = null;
             synchronized(this.c) {
                 this.d.clear();
             }
@@ -124,7 +123,7 @@ public class NetworkA {
     }
 
     public String b(String var1) {
-        if(var1 != null && this.g != null) {
+        if(var1 != null && this.mHandlerThread != null) {
             Uri var2 = Uri.parse(var1);
             return this.a(var2).toString();
         } else {
@@ -133,19 +132,18 @@ public class NetworkA {
     }
 
     public Uri a(Uri var1) {
-        if(var1 != null && this.g != null) {
+        if(var1 != null && this.mHandlerThread != null) {
             String var2 = var1.getScheme();
             String var3 = var1.getHost();
             if(var3 != null && var2 != null && !var1.toString().contains(".m3u8") && !DnsManager.validIP(var3)) {
                 if(!var2.equalsIgnoreCase("rtmp") && !var2.equalsIgnoreCase("http")) {
                     return var1;
                 } else {
-                    Object var5 = this.c;
                     NetworkA.ClassB var4;
                     synchronized(this.c) {
                         if(!this.d.containsKey(var3)) {
                             this.d.put(var3, null);
-                            this.f.sendEmptyMessage(2);
+                            this.mHandler.sendEmptyMessage(2);
                             return var1;
                         }
 
@@ -175,8 +173,7 @@ public class NetworkA {
     }
 
     private void a() {
-        if(this.a != null && !this.d.isEmpty() && Util.isNetworkConnected(this.b) && !c(this.b)) {
-            Object var2 = this.c;
+        if(this.a != null && !this.d.isEmpty() && Util.isNetworkConnected(this.mContext) && !c(this.mContext)) {
             Object[] var1;
             synchronized(this.c) {
                 var1 = this.d.keySet().toArray();
@@ -190,7 +187,6 @@ public class NetworkA {
                 String var6 = (String)var5;
                 String[] var7 = this.c(var6);
                 if(var7 != null && var7.length > 0) {
-                    Object var8 = this.c;
                     synchronized(this.c) {
                         this.d.put(var6, new NetworkA.ClassB(var7, 0));
                     }
@@ -209,7 +205,6 @@ public class NetworkA {
     }
 
     private void b() {
-        Object var1 = this.c;
         synchronized(this.c) {
             Object[] var2 = this.d.keySet().toArray();
             this.d.clear();

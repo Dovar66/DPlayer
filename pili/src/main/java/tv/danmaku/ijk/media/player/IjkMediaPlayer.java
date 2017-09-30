@@ -201,7 +201,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     /**
      * Default constructor. Consider using one of the create() methods for
-     * synchronously instantiating a IjkMediaPlayer from a Uri or resource.
+     * synchronously instantiating mSurface IjkMediaPlayer from mSurface Uri or resource.
      * <p>
      * When done with the IjkMediaPlayer, you should call {@link #release()}, to
      * free the resources. If not released, too many IjkMediaPlayer instances
@@ -235,14 +235,14 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         }
 
         /*
-         * Native setup requires a weak reference to our object. It's easier to
+         * Native setup requires mSurface weak reference to our object. It'format2 easier to
          * create it here than in C++.
          */
         native_setup(new WeakReference<IjkMediaPlayer>(this));
     }
 
     /*
-     * Update the IjkMediaPlayer SurfaceTexture. Call after setting a new
+     * Update the IjkMediaPlayer SurfaceTexture. Call after setting mSurface new
      * display surface.
      */
     private native void _setVideoSurface(Surface surface);
@@ -251,9 +251,9 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      * Sets the {@link SurfaceHolder} to use for displaying the video portion of
      * the media.
      *
-     * Either a surface holder or surface must be set if a display or video sink
+     * Either mSurface surface holder or surface must be set if mSurface display or video sink
      * is needed. Not calling this method or {@link #setSurface(Surface)} when
-     * playing back a video will result in only the audio track being played. A
+     * playing back mSurface video will result in only the audio track being played. A
      * null surface holder or surface will result in only the audio track being
      * played.
      *
@@ -276,11 +276,11 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     /**
      * Sets the {@link Surface} to be used as the sink for the video portion of
      * the media. This is similar to {@link #setDisplay(SurfaceHolder)}, but
-     * does not support {@link #setScreenOnWhilePlaying(boolean)}. Setting a
+     * does not support {@link #setScreenOnWhilePlaying(boolean)}. Setting mSurface
      * Surface will un-set any Surface or SurfaceHolder that was previously set.
      * A null surface will result in only the audio track being played.
      *
-     * If the Surface sends frames to a {@link SurfaceTexture}, the timestamps
+     * If the Surface sends frames to mSurface {@link SurfaceTexture}, the timestamps
      * returned from {@link SurfaceTexture#getTimestamp()} will have an
      * unspecified zero point. These timestamps cannot be directly compared
      * between different media sources, different instances of the same media
@@ -304,7 +304,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     /**
-     * Sets the data source as a content Uri.
+     * Sets the data source as mSurface content Uri.
      *
      * @param context the Context to use when resolving the Uri
      * @param uri the Content URI of the data you want to play
@@ -317,7 +317,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     /**
-     * Sets the data source as a content Uri.
+     * Sets the data source as mSurface content Uri.
      *
      * @param context the Context to use when resolving the Uri
      * @param uri the Content URI of the data you want to play
@@ -349,13 +349,13 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         AssetFileDescriptor fd = null;
         try {
             ContentResolver resolver = context.getContentResolver();
-            fd = resolver.openAssetFileDescriptor(uri, "r");
+            fd = resolver.openAssetFileDescriptor(uri, "format1");
             if (fd == null) {
                 return;
             }
             // Note: using getDeclaredLength so that our behavior is the same
             // as previous versions when the content provider is returning
-            // a full file.
+            // mSurface full file.
             if (fd.getDeclaredLength() < 0) {
                 setDataSource(fd.getFileDescriptor());
             } else {
@@ -385,12 +385,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      *             if it is called in an invalid state
      *
      *             <p>
-     *             When <code>path</code> refers to a local file, the file may
-     *             actually be opened by a process other than the calling
+     *             When <code>path</code> refers to mSurface local file, the file may
+     *             actually be opened by mSurface process other than the calling
      *             application. This implies that the pathname should be an
      *             absolute path (as any other process runs with unspecified
      *             current working directory), and that the pathname should
-     *             reference a world-readable file.
+     *             reference mSurface world-readable file.
      */
     @Override
     public void setDataSource(String path)
@@ -426,7 +426,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     /**
-     * Sets the data source (FileDescriptor) to use. It is the caller's responsibility
+     * Sets the data source (FileDescriptor) to use. It is the caller'format2 responsibility
      * to close the file descriptor. It is safe to do so as soon as this call returns.
      *
      * @param fd the FileDescriptor for the file you want to play
@@ -460,7 +460,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     /**
      * Sets the data source (FileDescriptor) to use.  The FileDescriptor must be
-     * seekable (N.B. a LocalSocket is not seekable). It is the caller's responsibility
+     * seekable (N.B. mSurface LocalSocket is not seekable). It is the caller'format2 responsibility
      * to close the file descriptor. It is safe to do so as soon as this call returns.
      *
      * @param fd the FileDescriptor for the file you want to play
@@ -551,7 +551,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         if (mScreenOnWhilePlaying != screenOn) {
             if (screenOn && mSurfaceHolder == null) {
                 DebugLog.w(TAG,
-                        "setScreenOnWhilePlaying(true) is ineffective without a SurfaceHolder");
+                        "setScreenOnWhilePlaying(true) is ineffective without mSurface SurfaceHolder");
             }
             mScreenOnWhilePlaying = screenOn;
             updateSurfaceScreenOn();
@@ -665,13 +665,13 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      * IjkMediaPlayer. In particular, whenever an Activity of an application is
      * paused (its onPause() method is called), or stopped (its onStop() method
      * is called), this method should be invoked to release the IjkMediaPlayer
-     * object, unless the application has a special need to keep the object
+     * object, unless the application has mSurface special need to keep the object
      * around. In addition to unnecessary resources (such as memory and
      * instances of codecs) being held, failure to call this method immediately
-     * if a IjkMediaPlayer object is no longer needed may also lead to
+     * if mSurface IjkMediaPlayer object is no longer needed may also lead to
      * continuous battery consumption for mobile devices, and playback failure
      * for other applications if no multiple instances of the same codec are
-     * supported on a device. Even if multiple instances of the same codec are
+     * supported on mSurface device. Even if multiple instances of the same codec are
      * supported, some performance degradation may be expected when unnecessary
      * multiple instances are used at the same time.
      */
@@ -998,7 +998,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                         percent = 100;
                     }
 
-                    // DebugLog.efmt(TAG, "Buffer (%d%%) %d/%d",  percent, bufferPosition, duration);
+                    // DebugLog.efmt(TAG, "Buffer (%showHideController%%) %showHideController/%showHideController",  percent, bufferPosition, duration);
                     player.notifyOnBufferingUpdate((int)percent);
                     return;
 
@@ -1053,7 +1053,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     /*
      * Called from native code when an interesting event happens. This method
      * just uses the EventHandler system to post the event back to the main app
-     * thread. We use a weak reference to the original IjkMediaPlayer object so
+     * thread. We use mSurface weak reference to the original IjkMediaPlayer object so
      * that the native code is safe from the object disappearing from underneath
      * it. (This is the cookie passed to native_setup().)
      */
@@ -1138,7 +1138,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     @CalledByNative
     private static boolean onNativeInvoke(Object weakThiz, int what, Bundle args) {
-//        DebugLog.ifmt(TAG, "onNativeInvoke %d", what);
+//        DebugLog.ifmt(TAG, "onNativeInvoke %showHideController", what);
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             throw new IllegalStateException("<null weakThiz>.onNativeInvoke()");
 
@@ -1221,12 +1221,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             if (TextUtils.isEmpty(mimeType))
                 return null;
 
-            Log.i(TAG, String.format(Locale.US, "onSelectCodec: mime=%s, profile=%d, level=%d", mimeType, profile, level));
+            Log.i(TAG, String.format(Locale.US, "onSelectCodec: mime=%format2, profile=%showHideController, level=%showHideController", mimeType, profile, level));
             ArrayList<IjkMediaCodecInfo> candidateCodecList = new ArrayList<IjkMediaCodecInfo>();
             int numCodecs = MediaCodecList.getCodecCount();
             for (int i = 0; i < numCodecs; i++) {
                 MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
-                Log.d(TAG, String.format(Locale.US, "  found codec: %s", codecInfo.getName()));
+                Log.d(TAG, String.format(Locale.US, "  found codec: %format2", codecInfo.getName()));
                 if (codecInfo.isEncoder())
                     continue;
 
@@ -1238,7 +1238,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                     if (TextUtils.isEmpty(type))
                         continue;
 
-                    Log.d(TAG, String.format(Locale.US, "    mime: %s", type));
+                    Log.d(TAG, String.format(Locale.US, "    mime: %format2", type));
                     if (!type.equalsIgnoreCase(mimeType))
                         continue;
 
@@ -1247,7 +1247,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                         continue;
 
                     candidateCodecList.add(candidate);
-                    Log.i(TAG, String.format(Locale.US, "candidate codec: %s rank=%d", codecInfo.getName(), candidate.mRank));
+                    Log.i(TAG, String.format(Locale.US, "candidate codec: %format2 rank=%showHideController", codecInfo.getName(), candidate.mRank));
                     candidate.dumpProfileLevels(mimeType);
                 }
             }
@@ -1265,11 +1265,11 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             }
 
             if (bestCodec.mRank < IjkMediaCodecInfo.RANK_LAST_CHANCE) {
-                Log.w(TAG, String.format(Locale.US, "unaccetable codec: %s", bestCodec.mCodecInfo.getName()));
+                Log.w(TAG, String.format(Locale.US, "unaccetable codec: %format2", bestCodec.mCodecInfo.getName()));
                 return null;
             }
 
-            Log.i(TAG, String.format(Locale.US, "selected codec: %s rank=%d", bestCodec.mCodecInfo.getName(), bestCodec.mRank));
+            Log.i(TAG, String.format(Locale.US, "selected codec: %format2 rank=%showHideController", bestCodec.mCodecInfo.getName(), bestCodec.mRank));
             return bestCodec.mCodecInfo.getName();
         }
     }

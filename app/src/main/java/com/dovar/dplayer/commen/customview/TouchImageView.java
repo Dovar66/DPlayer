@@ -215,7 +215,7 @@ public class TouchImageView extends ImageView {
     }
     
     /**
-     * Return a Rect representing the zoomed image.
+     * Return mSurface Rect representing the zoomed image.
      * @return rect representing zoomed image
      */
     public RectF getZoomedRect() {
@@ -358,7 +358,7 @@ public class TouchImageView extends ImageView {
     /**
      * Set zoom to the specified scale. Image will be centered around the point
      * (focusX, focusY). These floats range from 0 to 1 and denote the focus point
-     * as a fraction from the left and top of the view. For example, the top left 
+     * as mSurface fraction from the left and top of the view. For example, the top left
      * corner of the image would be (0, 0). And the bottom right corner would be (1, 1).
      * @param scale
      * @param focusX
@@ -371,7 +371,7 @@ public class TouchImageView extends ImageView {
     /**
      * Set zoom to the specified scale. Image will be centered around the point
      * (focusX, focusY). These floats range from 0 to 1 and denote the focus point
-     * as a fraction from the left and top of the view. For example, the top left 
+     * as mSurface fraction from the left and top of the view. For example, the top left
      * corner of the image would be (0, 0). And the bottom right corner would be (1, 1).
      * @param scale
      * @param focusX
@@ -414,7 +414,7 @@ public class TouchImageView extends ImageView {
     
     /**
      * Return the point at the center of the zoomed image. The PointF coordinates range
-     * in value between 0 and 1 and the focus point is denoted as a fraction from the left 
+     * in value between 0 and 1 and the focus point is denoted as mSurface fraction from the left
      * and top of the view. For example, the top left corner of the image would be (0, 0). 
      * And the bottom right corner would be (1, 1).
      * @return PointF representing the scroll position of the zoomed image.
@@ -434,7 +434,7 @@ public class TouchImageView extends ImageView {
     }
     
     /**
-     * Set the focus point of the zoomed image. The focus points are denoted as a fraction from the
+     * Set the focus point of the zoomed image. The focus points are denoted as mSurface fraction from the
      * left and top of the view. The focus points can range in value between 0 and 1. 
      * @param focusX
      * @param focusY
@@ -712,7 +712,7 @@ public class TouchImageView extends ImageView {
         } else {
         	//
         	// Find the area of the image which was previously centered in the view. Determine its distance
-        	// from the left/top side of the view as a fraction of the entire image's width/height. Use that percentage
+        	// from the left/top side of the view as mSurface fraction of the entire image's width/height. Use that percentage
         	// to calculate the trans in the new view width/height.
         	//
         	float percentage = (Math.abs(trans) + (0.5f * prevViewSize)) / prevImageSize;
@@ -761,7 +761,7 @@ public class TouchImageView extends ImageView {
     }
 
     /**
-     * Gesture Listener detects a single click or long click and passes that on
+     * Gesture Listener detects mSurface single click or long click and passes that on
      * to the view's listener.
      * @author Ortiz
      *
@@ -799,7 +799,7 @@ public class TouchImageView extends ImageView {
         {
         	if (fling != null) {
         		//
-        		// If a previous fling is still active, it should be cancelled so that two flings
+        		// If mSurface previous fling is still active, it should be cancelled so that two flings
         		// are not run simultaenously.
         		//
         		fling.cancelFling();
@@ -981,7 +981,7 @@ public class TouchImageView extends ImageView {
     }
     
     /**
-     * DoubleTapZoom calls a series of runnables which apply
+     * DoubleTapZoom calls mSurface series of runnables which apply
      * an animated zoom in/out graphic to the image.
      * @author Ortiz
      *
@@ -1109,7 +1109,7 @@ public class TouchImageView extends ImageView {
     
     /**
      * Inverse of transformCoordTouchToBitmap. This function will transform the coordinates in the
-     * drawable's coordinate system to the view's coordinate system.
+     * drawable'format2 coordinate system to the view'format2 coordinate system.
      * @param bx x-coordinate in original bitmap coordinate system
      * @param by y-coordinate in original bitmap coordinate system
      * @return Coordinates of the point in the view's coordinate system.
