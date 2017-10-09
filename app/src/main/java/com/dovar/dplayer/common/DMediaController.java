@@ -46,7 +46,7 @@ import java.util.Locale;
  *
  * @see PLVideoTextureView
  */
-public class DMediaController extends FrameLayout implements IMediaController {
+public class DMediaController implements IMediaController {
     private static final String TAG = "PLMediaController";
 
     private Context mContext;
@@ -109,12 +109,6 @@ public class DMediaController extends FrameLayout implements IMediaController {
     }
 
     public interface ControlListener {
-        void onClickClose();
-
-        void onScreenPortOrLand();
-
-        void onClickMore();
-
         void onPauseOrPlay(boolean isPause);
 
         void initPortControllerView(View v);
@@ -182,7 +176,6 @@ public class DMediaController extends FrameLayout implements IMediaController {
     }
 
     public DMediaController(Context context, boolean isLive) {
-        super(context);
         this.isLive = isLive;
         initController(context);
     }
@@ -314,22 +307,22 @@ public class DMediaController extends FrameLayout implements IMediaController {
         });
     }
 
-    @Override
-    public void onFinishInflate() {
-        if (popupView != null)
-            initControllerView(popupView);
-        super.onFinishInflate();
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mShowing) {
-                    hide();
-                } else {
-                    show(sDefaultTimeout);
-                }
-            }
-        });
-    }
+//    @Override
+//    public void onFinishInflate() {
+//        if (popupView != null)
+//            initControllerView(popupView);
+//        super.onFinishInflate();
+//        setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mShowing) {
+//                    hide();
+//                } else {
+//                    show(sDefaultTimeout);
+//                }
+//            }
+//        });
+//    }
 
     protected void initControllerView(View v) {
         if (mListener != null) {
@@ -348,27 +341,8 @@ public class DMediaController extends FrameLayout implements IMediaController {
             popupDismiss();
             mAnchor.addView(v);
         }
-//        //返回
-//        View ibBack = v.findViewById(R.id.ibBack);
-//        //分享
-//        View ibMore = v.findViewById(R.id.ibMore);
-//        if (ibBack != null) {
-//            ibBack.setOnClickListener(closelistener);
-//        }
-//        if (ibMore != null) {
-//            ibMore.setOnClickListener(morelistener);
-//        }
 //        mPauseCheckbox = (CheckBox) v.findViewById(R.id.pause);
 //        View ll_mPause = v.findViewById(R.id.pause_ll);
-//        //全屏、退出全屏按钮
-//        View mFullScreenCheckbox = v.findViewById(R.id.expand);
-//        View ll_full = v.findViewById(R.id.expand_ll);
-//        if (mFullScreenCheckbox != null) {
-//            mFullScreenCheckbox.setOnClickListener(screenlistener);
-//        }
-//        if (ll_full != null) {
-//            ll_full.setOnClickListener(screenlistener);
-//        }
 //        if (mPauseCheckbox != null) {
 //            mPauseCheckbox.setOnClickListener(mPauseListener);
 //        }
@@ -403,7 +377,7 @@ public class DMediaController extends FrameLayout implements IMediaController {
 //        }
     }
 
-    private OnTouchListener touchListener = new OnTouchListener() {
+    private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (mProgress == null) return false;
@@ -428,34 +402,7 @@ public class DMediaController extends FrameLayout implements IMediaController {
         }
     };
 
-    private OnClickListener closelistener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onClickClose();
-            }
-        }
-    };
-
-    private OnClickListener screenlistener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onScreenPortOrLand();
-            }
-        }
-    };
-
-    private OnClickListener morelistener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onClickMore();
-            }
-        }
-    };
-
-    private OnClickListener muteListener = new OnClickListener() {
+    private View.OnClickListener muteListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (isMute) {
@@ -567,22 +514,22 @@ public class DMediaController extends FrameLayout implements IMediaController {
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event == null || super.onTouchEvent(event)) {
-            show();
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        if (event == null || super.onTouchEvent(event)) {
+//            show();
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onTrackballEvent(MotionEvent ev) {
+//        show();
+//        return false;
+//    }
 
-    @Override
-    public boolean onTrackballEvent(MotionEvent ev) {
-        show();
-        return false;
-    }
-
-    private OnClickListener mPauseListener = new OnClickListener() {
+    private View.OnClickListener mPauseListener = new View.OnClickListener() {
         public void onClick(View v) {
             doPauseResume();
         }
@@ -703,13 +650,11 @@ public class DMediaController extends FrameLayout implements IMediaController {
             } else {
                 throw new RuntimeException((getClass().getSimpleName() + "Init Failed!"));
             }
-//            removeAllViews();
             if (isFullScreen) {
                 popupView = mListener.makeLandControllerView();
             } else {
                 popupView = mListener.makeControllerView();
             }
-//            addView(mVideoView);
             initControllerView(popupView);
         } else {
             LogUtil.d(TAG, "setAnchorView: 又被回调了");//，为什么每次播放都回调？
@@ -742,13 +687,13 @@ public class DMediaController extends FrameLayout implements IMediaController {
 
     private void popupDismiss() {
         if (popupView == null) return;
-        popupView.setVisibility(GONE);
+        popupView.setVisibility(View.GONE);
         mShowing = false;
     }
 
     private void popupShow() {
         if (popupView == null) return;
-        popupView.setVisibility(VISIBLE);
+        popupView.setVisibility(View.VISIBLE);
         mShowing = true;
     }
 
@@ -818,7 +763,6 @@ public class DMediaController extends FrameLayout implements IMediaController {
     public void setEnabled(boolean enabled) {
         if (mProgress != null && !mDisableProgress)
             mProgress.setEnabled(enabled);
-        super.setEnabled(enabled);
     }
 
     public void resizeVideoHeightByPiexl(int height) {
@@ -841,8 +785,8 @@ public class DMediaController extends FrameLayout implements IMediaController {
         if (lp instanceof RelativeLayout.LayoutParams) {
             ((RelativeLayout.LayoutParams) lp).addRule(RelativeLayout.CENTER_IN_PARENT);
         }
-        if (lp instanceof LayoutParams) {
-            ((LayoutParams) lp).gravity = Gravity.CENTER;
+        if (lp instanceof FrameLayout.LayoutParams) {
+            ((FrameLayout.LayoutParams) lp).gravity = Gravity.CENTER;
         }
         mVideoView.setLayoutParams(lp);
 
@@ -886,8 +830,8 @@ public class DMediaController extends FrameLayout implements IMediaController {
             if (lp instanceof RelativeLayout.LayoutParams) {
                 ((RelativeLayout.LayoutParams) lp).addRule(RelativeLayout.CENTER_IN_PARENT);
             }
-            if (lp instanceof LayoutParams) {
-                ((LayoutParams) lp).gravity = Gravity.CENTER;
+            if (lp instanceof FrameLayout.LayoutParams) {
+                ((FrameLayout.LayoutParams) lp).gravity = Gravity.CENTER;
             }
             mVideoView.setLayoutParams(lp);
 
@@ -978,12 +922,11 @@ public class DMediaController extends FrameLayout implements IMediaController {
         }
     }
 
-    private String url = "http://pili-live-hls.itouchtv.cn/touchtv-1/59a0d335a3d5ec50f0312009.m3u8";
+    private String url = "rtmp://live.hkstv.hk.lxdns.com/live/hks";
 
     //如果与正在播放的流相同，则会继续播放而不是从头播放
     public void startPlay(String url) {
         url = this.url;
-        setMuteOnCalling();
 
         if (mVideoView != null && !TextUtils.isEmpty(url)) {
             if (url.equals(url_latest)) {//如果与正在播放的是同一个流
@@ -1122,10 +1065,6 @@ public class DMediaController extends FrameLayout implements IMediaController {
 
     //销毁界面时，必须调用
     public void destroy() {
-        if (popupView != null) {
-            removeView(popupView);
-        }
-
         if (mVideoView != null) {
             mVideoView.releaseSurfactexture();
             mVideoView.stopPlayback();

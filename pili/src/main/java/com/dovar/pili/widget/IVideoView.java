@@ -316,7 +316,7 @@ public abstract class IVideoView extends FrameLayout implements IMediaController
         if (var1 != null) {
             this.seekPercent = 0L;
             this.b = true;
-            this.init(headers);
+            init(headers);
             this.requestLayout();
             this.invalidate();
         }
