@@ -8,6 +8,8 @@ import com.dovar.dplayer.common.MyApplication;
 /**
  * 考虑到不同ROM的Toast样式不同，本着保留Toast多样性的原则，特别是如Smartision OS默认的样式相对美观
  * 所以此工具类在做Toast管理与扩展时优先考虑采用Rom的默认样式
+ *
+ * note:华为EMUI关闭应用的通知总开关后，系统的Toast也无法展示，此时需要采用自定义Toast
  */
 public class ToastUtil {
     private static Toast mToast;
