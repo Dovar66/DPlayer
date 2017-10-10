@@ -8,11 +8,15 @@ import com.dovar.dplayer.common.base.BaseContract;
 
 public interface VideoListContract {
     interface IView<T> extends BaseContract.IView<T> {
+        void onSuccess(T bean,boolean isLoadMore);
 
+        void onFail(boolean isLoadMore);
     }
 
     interface IPresenter extends BaseContract.IPresenter {
 
         void getVideo();
+
+        void getMoreVideo();
     }
 }

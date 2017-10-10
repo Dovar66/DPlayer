@@ -6,9 +6,7 @@ package com.dovar.dplayer.common.base;
 
 public interface BaseContract {
     interface IView<T> {
-        void onSuccess(T bean);
 
-        void onFail();
     }
 
     interface IPresenter {

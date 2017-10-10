@@ -8,9 +8,12 @@ import android.view.View;
  * Created by heweizong on 2017/9/11.
  */
 
-public class BaseModuleActivity extends AppCompatActivity{
+public abstract class BaseModuleActivity extends AppCompatActivity {
     protected Context mContext = this;
 
+    protected abstract void initUI();
+
+    protected abstract void initData();
 
     /**
      * 通过viewId获取控件

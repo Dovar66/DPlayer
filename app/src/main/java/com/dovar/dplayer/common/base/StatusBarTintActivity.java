@@ -2,28 +2,16 @@ package com.dovar.dplayer.common.base;
 
 import android.os.Build;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Space;
 
 import com.dovar.dplayer.R;
-import com.dovar.dplayer.http.Api;
-import com.dovar.dplayer.http.Reception;
 import com.dovar.dplayer.common.utils.DisplayUtil;
 import com.zhy.autolayout.AutoRelativeLayout;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by heweizong on 2017/7/13.
@@ -39,6 +27,15 @@ public abstract class StatusBarTintActivity extends BaseModuleActivity {
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Window win = getWindow();
+//            WindowManager.LayoutParams winParams = win.getAttributes();
+//            int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+//            winParams.flags |= bits;
+//            win.setAttributes(winParams);
+//        }
+        setStatusBar(true);
+
         if (enableTintStatusBar && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //activity根布局
             AutoRelativeLayout dectorView = new AutoRelativeLayout(this);
@@ -69,55 +66,6 @@ public abstract class StatusBarTintActivity extends BaseModuleActivity {
         } else {
             super.setContentView(layoutResID);
         }
-
-        //创建retrofit实例
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://fanyi.youdao.com/") // 设置网络请求的Url地址
-                .addConverterFactory(GsonConverterFactory.create()) // 设置数据解析器
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持RxJava平台
-                .build();
-
-        // 创建 网络请求接口 的实例
-        Api call = retrofit.create(Api.class);
-        //对 发送请求 进行封装
-        Call<Reception> mCall = call.getMusic();
-        //发送网络请求(异步)
-        mCall.enqueue(new Callback<Reception>() {
-            @Override
-            public void onResponse(@NonNull Call<Reception> call, @NonNull Response<Reception> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Reception> call, Throwable t) {
-
-            }
-        });
-        //发送网络请求(同步)
-//        Response<Reception> reception=mCall.execute();
-
-        call.getMusics().subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Reception>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Reception value) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     public ImageView getBackgroundImageView() {
@@ -152,6 +100,37 @@ public abstract class StatusBarTintActivity extends BaseModuleActivity {
         } else {
             iv_bg.setVisibility(View.GONE);
             space_status.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 设置透明状态栏与导航栏
+     *
+     * @param navi true不设置导航栏|false设置导航栏
+     */
+    public void setStatusBar(boolean navi) {
+        //api>21,全透明状态栏和导航栏;api>19,半透明状态栏和导航栏
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Window window = getWindow();
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(Color.TRANSPARENT);
+//            if (navi) {
+//                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN//状态栏不会被隐藏但activity布局会扩展到状态栏所在位置
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION//导航栏不会被隐藏但activity布局会扩展到导航栏所在位置
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+//                window.setNavigationBarColor(Color.TRANSPARENT);
+//            } else {
+//                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+//            }
+//        } else
+ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (navi) {
+                //半透明导航栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            }
+            //半透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 }

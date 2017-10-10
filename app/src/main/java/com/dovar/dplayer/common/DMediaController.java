@@ -926,7 +926,10 @@ public class DMediaController implements IMediaController {
 
     //如果与正在播放的流相同，则会继续播放而不是从头播放
     public void startPlay(String url) {
-        url = this.url;
+
+        if (TextUtils.isEmpty(url)) {
+            url = this.url;
+        }
 
         if (mVideoView != null && !TextUtils.isEmpty(url)) {
             if (url.equals(url_latest)) {//如果与正在播放的是同一个流
