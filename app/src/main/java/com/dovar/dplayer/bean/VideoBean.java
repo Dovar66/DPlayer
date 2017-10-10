@@ -26,8 +26,8 @@ public class VideoBean {
     private String nextPageUrl;
     private long date;
     private long nextPublishTime;
-    private Object dialog;
-    private Object topIssue;
+    private String dialog;
+    private String topIssue;
     private int refreshCount;
     private int lastStartId;
     private List<ItemListBean> itemList;
@@ -72,19 +72,19 @@ public class VideoBean {
         this.nextPublishTime = nextPublishTime;
     }
 
-    public Object getDialog() {
+    public String getDialog() {
         return dialog;
     }
 
-    public void setDialog(Object dialog) {
+    public void setDialog(String dialog) {
         this.dialog = dialog;
     }
 
-    public Object getTopIssue() {
+    public String getTopIssue() {
         return topIssue;
     }
 
-    public void setTopIssue(Object topIssue) {
+    public void setTopIssue(String topIssue) {
         this.topIssue = topIssue;
     }
 
@@ -121,7 +121,7 @@ public class VideoBean {
          */
 
         private String type;//视频：video
-        private String data;
+        private VideoDataBean data;
         private String tag;
 
         public String getType() {
@@ -132,11 +132,11 @@ public class VideoBean {
             this.type = type;
         }
 
-        public String getData() {
+        public VideoDataBean getData() {
             return data;
         }
 
-        public void setData(String data) {
+        public void setData(VideoDataBean data) {
             this.data = data;
         }
 

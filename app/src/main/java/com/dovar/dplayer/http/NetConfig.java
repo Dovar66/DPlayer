@@ -23,4 +23,5 @@ public class NetConfig {
 
     //一个
     public static final String Url_Music = "";
+    public static final String BaseUrl_Music = "http://v3.wufazhuce.com:8000/api/";
 }

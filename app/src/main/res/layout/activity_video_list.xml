@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
@@ -16,11 +16,11 @@
             android:background="#fff"
             android:overScrollMode="never"/>
 
-        <FrameLayout
-            android:id="@+id/video_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!--<FrameLayout-->
+            <!--android:id="@+id/video_frame"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
 
-        </FrameLayout>
-    </FrameLayout>
+        <!--</FrameLayout>-->
+    <!--</FrameLayout>-->
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

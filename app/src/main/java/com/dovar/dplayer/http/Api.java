@@ -1,5 +1,6 @@
 package com.dovar.dplayer.http;
 
+import com.dovar.dplayer.bean.MusicListBean;
 import com.dovar.dplayer.bean.VideoBean;
 
 import io.reactivex.Observable;
@@ -27,4 +28,8 @@ public interface Api {
 
     @GET("v4/tabs/selected")
     Observable<String> getVideoResponseStr();
+
+    @GET("channel/music/more/0?channel=wdj&version=4.0.2&uuid=ffffffff-a90e-706a-63f7-ccf973aae5ee&platform=android")
+    Observable<MusicListBean> getMusicList();
+
 }
