@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dovar.dplayer.common.base.StatusBarTintActivity;
+import com.dovar.dplayer.module.music.ui.fragment.LocalMusicFragment;
 import com.dovar.dplayer.module.music.ui.fragment.MusicListFragment;
 import com.dovar.dplayer.module.video.ui.VideoListActivity;
 import com.lantouzi.wheelview.WheelView;
@@ -103,6 +104,12 @@ public class MainActivity extends StatusBarTintActivity
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.playlistRecyclerContainer, mMusicListFragment, "musicList");
                 ft.commit();
+                break;
+            case R.id.nav_local:
+                LocalMusicFragment mLocalMusicFragment = LocalMusicFragment.newInstance();
+                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                ft2.replace(R.id.playlistRecyclerContainer, mLocalMusicFragment, "localMusicList");
+                ft2.commit();
                 break;
         }
 

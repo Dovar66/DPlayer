@@ -1,6 +1,10 @@
 package com.dovar.dplayer.module.music.ui.fragment;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dovar.dplayer.R;
+import com.dovar.dplayer.bean.LocalTrack;
 import com.dovar.dplayer.bean.Music;
 import com.dovar.dplayer.bean.MusicBean;
 import com.dovar.dplayer.common.adapter.RCommonAdapter;
@@ -17,7 +22,9 @@ import com.dovar.dplayer.common.base.BaseFragment;
 import com.dovar.dplayer.module.music.contract.MusicListContract;
 import com.dovar.dplayer.module.music.presenter.MusicListPresenter;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -105,4 +112,6 @@ public class MusicListFragment extends BaseFragment implements MusicListContract
         }
         return singers;
     }
+
+
 }
