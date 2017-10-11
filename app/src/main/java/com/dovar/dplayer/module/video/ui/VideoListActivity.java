@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.bean.VideoListBean;
-import com.dovar.dplayer.common.adapter.RCommenAdapter;
-import com.dovar.dplayer.common.adapter.RCommenViewHolder;
+import com.dovar.dplayer.common.adapter.RCommonAdapter;
+import com.dovar.dplayer.common.adapter.RCommonViewHolder;
 import com.dovar.dplayer.common.base.StatusBarTintActivity;
 import com.dovar.dplayer.module.video.contract.VideoListContract;
 import com.dovar.dplayer.module.video.presenter.VideoListPresenter;
@@ -24,7 +24,7 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoLis
 
     private VideoListPresenter mPresenter;
     private RecyclerView mVideoList;
-    private RCommenAdapter<VideoListBean.IssueListBean.ItemListBean> mAdapter;
+    private RCommonAdapter<VideoListBean.IssueListBean.ItemListBean> mAdapter;
     private RefreshLayout refreshLayout;
 
     public static void jump(Context mContext) {
@@ -60,15 +60,12 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoLis
         });
 
         mVideoList = findView(R.id.recyclerview);
-        mAdapter = new RCommenAdapter<VideoListBean.IssueListBean.ItemListBean>(this, R.layout.item_video) {
+        mAdapter = new RCommonAdapter<VideoListBean.IssueListBean.ItemListBean>(this, R.layout.item_video) {
             @Override
-            public void convert(RCommenViewHolder vh, int position) {
+            public void convert(RCommonViewHolder vh, int position) {
                 VideoListBean.IssueListBean.ItemListBean bean = getItem(position);
                 if (bean == null) return;
-//                vh.setImageUrl(R.id.thumnails, bean.getCover().getDetail());
-//                vh.setText(R.id.nickName, bean.getProvider().getName());
-//                vh.setText(R.id.title, bean.getTitle());
-//                vh.setImageUrl(R.id.ic_head, bean.getProvider().getIcon());
+
                 vh.setImageUrl(R.id.thumnails, bean.getData().getCover().getDetail());
                 vh.setText(R.id.nickName, bean.getData().getCategory());
                 vh.setText(R.id.title, bean.getData().getTitle());
@@ -78,7 +75,7 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoLis
             }
         };
 
-        mAdapter.setOnItemClickListener(new RCommenAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 VideoListBean.IssueListBean.ItemListBean bean = mAdapter.getItem(position);

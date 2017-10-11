@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/inc"
+        android:layout_width="match_parent"
+        android:layout_height="50px"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:id="@+id/title_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10px"
+                android:background="@drawable/back2"
+                android:clickable="false"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20px"
+            tools:text="告白气球"/>
+
+        <RelativeLayout
+            android:id="@+id/share"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/title_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10px"
+                android:background="@drawable/ic_menu_share"
+                android:clickable="false"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/inc"
+        >
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/kai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20px">
+
+        <ImageView
+            android:id="@+id/play_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:src="@drawable/ic_play_order_type"/>
+
+        <ImageView
+            android:id="@+id/previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="45px"
+            android:layout_toRightOf="@id/play_mode"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/music_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="45px"
+            android:layout_toLeftOf="@id/music_list"
+            android:src="@mipmap/ic_launcher"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/paly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/kai"
+        android:layout_marginBottom="10px"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/geshou_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:drawableTop="@drawable/ic_singer"
+                android:text="歌手"
+                android:textColor="@color/white"
+                android:textSize="13px"/>
+
+            <TextView
+                android:id="@+id/tv_collect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="65px"
+                android:layout_toLeftOf="@id/geshou_text"
+                android:drawableTop="@drawable/selector_collect"
+                android:text="收藏"
+                android:textColor="@color/white"
+                android:textSize="13px"/>
+
+            <TextView
+                android:id="@+id/zhuanji_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="65px"
+                android:layout_toRightOf="@id/geshou_text"
+                android:drawableTop="@drawable/ic_album"
+                android:text="专辑"
+                android:textColor="@color/white"
+                android:textSize="13px"/>
+        </RelativeLayout>
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:max="100"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:paddingLeft="10px"
+            android:paddingRight="10px"
+            android:thumbOffset="3dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5px">
+
+            <TextView
+                android:id="@+id/time_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10px"
+                android:text="00:00"
+                android:textColor="#999999"
+                android:textSize="12px"/>
+
+            <TextView
+                android:id="@+id/music_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10px"
+                android:text="00:00"
+                android:textColor="#999999"
+                android:textSize="12px"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/music_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="16px"
+            tools:text="告白气球"/>
+
+        <TextView
+            android:id="@+id/music_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="13px"/>
+    </LinearLayout>
+
+    <com.dovar.dplayer.common.customview.lyric.LyricView
+        android:id="@+id/lyric"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/paly"
+        android:layout_below="@id/inc"
+        android:layout_marginBottom="20px"
+        android:layout_marginTop="40px"/>
+    <!-- ############################################# -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/paly"
+        android:layout_below="@id/inc"
+        android:visibility="gone">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/center_body_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+        <LinearLayout
+            android:id="@+id/yuandian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </RelativeLayout>
+    <!-- ############################################# -->
+
+</RelativeLayout>

@@ -20,13 +20,13 @@ import java.lang.annotation.RetentionPolicy;
  * Email:xiaohe0949@163.com
  * 通用RecyclerView的ViewHolder
  */
-public class RCommenViewHolder extends RecyclerView.ViewHolder {
+public class RCommonViewHolder extends RecyclerView.ViewHolder {
 
     private SparseArray<View> mViews;
     private View mConvertView;
 
 
-    public RCommenViewHolder(View itemView) {
+    public RCommonViewHolder(View itemView) {
         super(itemView);
         mConvertView = itemView;
         mViews = new SparseArray<View>();
@@ -48,7 +48,7 @@ public class RCommenViewHolder extends RecyclerView.ViewHolder {
         return (T) view;
     }
 
-    public RCommenViewHolder setText(int viewId, String text) {
+    public RCommonViewHolder setText(int viewId, String text) {
         TextView tv = getView(viewId);
         if (tv != null) {
             if (!TextUtils.isEmpty(text)) {
@@ -60,7 +60,7 @@ public class RCommenViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public RCommenViewHolder setTextColor(int viewId, int color) {
+    public RCommonViewHolder setTextColor(int viewId, int color) {
         TextView tv = getView(viewId);
         if (tv != null) {
             tv.setTextColor(color);
@@ -68,7 +68,7 @@ public class RCommenViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public RCommenViewHolder setImageResource(int viewId, int resId) {
+    public RCommonViewHolder setImageResource(int viewId, int resId) {
         ImageView view = getView(viewId);
         if (view != null) {
             view.setImageResource(resId);
@@ -161,7 +161,7 @@ public class RCommenViewHolder extends RecyclerView.ViewHolder {
     /**
      * 给itemView中的子View添加点击事件
      */
-    public RCommenViewHolder setOnClickListener(int viewId, View.OnClickListener listener) {
+    public RCommonViewHolder setOnClickListener(int viewId, View.OnClickListener listener) {
         View view = getView(viewId);
         if (view != null) {
             view.setOnClickListener(listener);

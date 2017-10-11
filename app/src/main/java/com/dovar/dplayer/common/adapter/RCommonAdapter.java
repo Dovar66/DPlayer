@@ -21,7 +21,7 @@ import java.util.List;
  * 本类只适用于三种布局类型：TYPE_HEADER、TYPE_FOOTER、TYPE_COMMON
  * 多布局类型请使用{@link MultiCommonAdapter}
  */
-public abstract class RCommenAdapter<T> extends RecyclerView.Adapter<RCommenViewHolder> {
+public abstract class RCommonAdapter<T> extends RecyclerView.Adapter<RCommonViewHolder> {
 
     private static final String TAG = "adapter";
     protected Context mContext;
@@ -326,15 +326,15 @@ public abstract class RCommenAdapter<T> extends RecyclerView.Adapter<RCommenView
         }
     }
 
-    public abstract void convert(RCommenViewHolder vh, int position);
+    public abstract void convert(RCommonViewHolder vh, int position);
 
-    public RCommenAdapter(Context context, int layoutId) {
+    public RCommonAdapter(Context context, int layoutId) {
         mContext = context;
         mLayoutId = layoutId;
         mDatas = new ArrayList<>();
     }
 
-    public RCommenAdapter(Context context, int layoutId,@NonNull List<T> datas) {
+    public RCommonAdapter(Context context, int layoutId, @NonNull List<T> datas) {
         mContext = context;
         mLayoutId = layoutId;
         mDatas = datas;
@@ -342,24 +342,24 @@ public abstract class RCommenAdapter<T> extends RecyclerView.Adapter<RCommenView
 
 
     @Override
-    public RCommenViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RCommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {
             if (headerView == null) {
                 return null;
             }
-            return new RCommenViewHolder(headerView);
+            return new RCommonViewHolder(headerView);
         }
         if (viewType == TYPE_FOOTER) {
             if (footerView == null) {
                 return null;
             }
-            return new RCommenViewHolder(footerView);
+            return new RCommonViewHolder(footerView);
         }
-        return new RCommenViewHolder(View.inflate(mContext, mLayoutId, null));
+        return new RCommonViewHolder(View.inflate(mContext, mLayoutId, null));
     }
 
     @Override
-    public void onBindViewHolder(final RCommenViewHolder holder, int position) {
+    public void onBindViewHolder(final RCommonViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_HEADER) return;
         if (getItemViewType(position) == TYPE_FOOTER) return;
         int realPos;

@@ -27,40 +27,6 @@ public class VideoListPresenter extends DPresenter<VideoListContract.IView<Video
 
     @Override
     public void getVideo() {
-        //by okHttp
-//        OkHttpClient mClient = new OkHttpClient();
-//        Request mRequest = new Request.Builder()
-//                .url(NetConfig.BaseUrl_kaiyan + "v4/tabs/selected")
-//                .get()
-//                .build();
-//        mClient.newCall(mRequest).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                String str = response.body().string();
-//                try {
-//                    JSONObject jso = new JSONObject(str);
-//                    JSONArray jsa = jso.optJSONArray("itemList");
-//                    ArrayList<VideoDataBean> datas = new ArrayList<>();
-//                    for (int i = 0; i < jsa.length(); i++) {
-//                        JSONObject obj = jsa.optJSONObject(i);
-//                        if (obj.optString("type").equals("video")) {
-//                            VideoDataBean data = new Gson().fromJson(obj.optString("data"), VideoDataBean.class);
-//                            datas.add(data);
-//                        }
-//                    }
-//
-//                } catch (JSONException mE) {
-//                    mE.printStackTrace();
-//                }
-//
-//            }
-//        });
-
         //by retrofit
 //        RetrofitUtil.getInstance().create(Api.class)
 //                .getVideoResponse()

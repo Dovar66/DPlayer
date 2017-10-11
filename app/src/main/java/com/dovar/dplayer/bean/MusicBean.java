@@ -6,7 +6,7 @@ import java.util.List;
  * Created by ${dovar} on 2016/7/28.
  */
 public class MusicBean {
-    List<Songlist> song_list;
+    List<SongList> song_list;
 
     @Override
     public String toString() {
@@ -15,15 +15,15 @@ public class MusicBean {
                 '}';
     }
 
-    public List<Songlist> getSong_list() {
+    public List<SongList> getSong_list() {
         return song_list;
     }
 
-    public void setSong_list(List<Songlist> mSong_list) {
+    public void setSong_list(List<SongList> mSong_list) {
         song_list = mSong_list;
     }
 
-    public class Songlist{
+    public class SongList {
         String artist_id;
         String language;
         String pic_big;

@@ -1,11 +1,12 @@
 package com.dovar.dplayer.bean;
 
-import cn.bmob.v3.BmobObject;
 
 /**
  * Created by ${dovar} on 2016/8/8.
  */
-public class MusicStory extends BmobObject {
+public class MusicStory
+//        extends BmobObject
+{
     private String music_name;//歌曲名称
     private String singer;//演唱者
     private String singer_style;//歌手类别

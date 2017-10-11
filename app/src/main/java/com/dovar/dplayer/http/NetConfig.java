@@ -24,4 +24,10 @@ public class NetConfig {
     //一个
     public static final String Url_Music = "";
     public static final String BaseUrl_Music = "http://v3.wufazhuce.com:8000/api/";
+
+    public static final String BAIDU_MUSIC = "http://tingapi.ting.baidu.com/v1/restserver/";
+
+    //百度新歌榜
+    public static final String BAIDU_HOT = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.billboard.billList&format=json&type=1";
+
 }
