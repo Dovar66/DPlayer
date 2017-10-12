@@ -8,6 +8,7 @@ import com.dovar.dplayer.bean.VideoListBean;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -35,8 +36,9 @@ public interface Api {
     Observable<VideoListBean> getMoreVideoList(@Query("date") String date,@Query("num") String num);
 
     //获取歌曲列表
-    @GET("ting?from=qianqian&version=2.1.0&method=baidu.ting.billboard.billList&format=json&type=1&offset=0&size=20")
-    Observable<MusicBean> getMusicList();
+//    "ting?from=qianqian&version=2.1.0&method=baidu.ting.billboard.billList&format=json&type=1&offset=0&size=20"
+    @GET("ting")
+    Observable<MusicBean> getMusicList(@Query("from") String from, @Query("version") String version, @Query("method") String method, @Query("format") String format, @Query("type") String type, @Query("offset") int offset, @Query("size") int size, @Header("User-Agent") String agent);
 
     //根据歌曲ID获取歌曲播放信息
     @GET("http://ting.baidu.com/data/music/links?songIds={musicId}")

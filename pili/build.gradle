@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     testCompile 'junit:junit:4.12'
     compile 'com.qiniu:qiniu-android-sdk:7.2.+'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
 }

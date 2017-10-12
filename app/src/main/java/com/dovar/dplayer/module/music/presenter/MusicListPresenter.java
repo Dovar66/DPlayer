@@ -17,7 +17,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MusicListPresenter extends DPresenter<MusicListContract.IView> implements MusicListContract.IPresenter {
 
-    private int offset;
+    private int offset=0;
+    private int pageSize=20;
 
     public MusicListPresenter(MusicListContract.IView viewImp) {
         super(viewImp);
@@ -25,6 +26,15 @@ public class MusicListPresenter extends DPresenter<MusicListContract.IView> impl
 
     @Override
     public void getMusicList() {
+//        String url="http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.billboard.billList&format=json&type=1&offset=0&size=20";
+//
+//        RetrofitUtil.testUrlByVolley(Request.Method.GET, url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                LogUtil.d("hwz",response);
+//            }
+//        });
+
 //        RetrofitUtil.testUrlByOkhttp(NetConfig.BAIDU_HOT + "&offset=0&size=20", new Callback() {
 //            @Override
 //            public void onFailure(Call call, IOException e) {
@@ -37,8 +47,9 @@ public class MusicListPresenter extends DPresenter<MusicListContract.IView> impl
 //                MusicBean bean=new Gson().fromJson(str,MusicBean.class);
 //            }
 //        });
+
         RetrofitUtil.getInstance().create(Api.class)
-                .getMusicList()
+                .getMusicList("qianqian","2.1.0","baidu.ting.billboard.billList","json","1",offset,pageSize,"app)")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MusicBean>() {
@@ -50,6 +61,7 @@ public class MusicListPresenter extends DPresenter<MusicListContract.IView> impl
                     @Override
                     public void onNext(MusicBean value) {
                         if (isViewAttached()) {
+                            offset+=pageSize;
                             getView().onSuccess(value);
                         }
                     }

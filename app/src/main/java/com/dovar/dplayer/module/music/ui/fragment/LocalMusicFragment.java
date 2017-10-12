@@ -38,6 +38,8 @@ public class LocalMusicFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_local_music, container, false);
+        initUI();
+        initData();
         return mainView;
     }
 

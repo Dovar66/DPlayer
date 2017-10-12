@@ -27,7 +27,10 @@ public class NetConfig {
 
     public static final String BAIDU_MUSIC = "http://tingapi.ting.baidu.com/v1/restserver/";
 
-    //百度新歌榜
-    public static final String BAIDU_HOT = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.billboard.billList&format=json&type=1";
-
+    /**
+     *   百度新歌榜
+     *   此url使用Volley直接请求能正常返回，使用浏览器也可正常访问
+     *   但是使用okHttp则必须添加header{key:User-Agent value:任意}，否则返回错误码403{}
+     */
+    public static final String BAIDU_HOT = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.billboard.billList&format=json&type=1&offset=0&size=20";
 }

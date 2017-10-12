@@ -102,13 +102,15 @@ public class MainActivity extends StatusBarTintActivity
             case R.id.nav_playlists:
                 MusicListFragment mMusicListFragment = MusicListFragment.newInstance();
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.playlistRecyclerContainer, mMusicListFragment, "musicList");
+                ft.replace(R.id.fragContainer, mMusicListFragment, "musicList");
+                ft.addToBackStack("musicList");
                 ft.commit();
                 break;
             case R.id.nav_local:
                 LocalMusicFragment mLocalMusicFragment = LocalMusicFragment.newInstance();
                 FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                ft2.replace(R.id.playlistRecyclerContainer, mLocalMusicFragment, "localMusicList");
+                ft2.replace(R.id.fragContainer, mLocalMusicFragment, "localMusicList");
+                ft2.addToBackStack("localMusicList");
                 ft2.commit();
                 break;
         }
