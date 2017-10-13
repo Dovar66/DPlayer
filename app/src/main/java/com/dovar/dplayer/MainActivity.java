@@ -43,6 +43,8 @@ public class MainActivity extends StatusBarTintActivity
 
         initUI();
         initData();
+
+//        setTitle("Music DNA");
     }
 
     private void setupDrawerHeader() {

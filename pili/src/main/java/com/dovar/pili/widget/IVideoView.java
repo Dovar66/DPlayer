@@ -617,10 +617,10 @@ public abstract class IVideoView extends FrameLayout implements IMediaController
             if (var1 == 79 || var1 == 85) {
                 if (this.mPLMediaPlayer.isPlaying()) {
                     this.pause();
-                    this.mIMediaController.show();
+                    mIMediaController.show();
                 } else {
                     this.start();
-                    this.mIMediaController.hide();
+                    mIMediaController.hide();
                 }
 
                 return true;
@@ -638,7 +638,7 @@ public abstract class IVideoView extends FrameLayout implements IMediaController
             if (var1 == 86 || var1 == 127) {
                 if (this.mPLMediaPlayer.isPlaying()) {
                     this.pause();
-                    this.mIMediaController.show();
+                    mIMediaController.show();
                 }
 
                 return true;
