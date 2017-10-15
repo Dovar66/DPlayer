@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:collapsedTitleGravity="center_vertical"
-            app:contentScrim="?attr/colorAccent"
+            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="15dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -128,18 +128,10 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorAccent"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
-
-        <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--android:background="?attr/colorPrimary"-->
-        <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
 
     </android.support.design.widget.AppBarLayout>
 
@@ -148,20 +140,18 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorDark"
-            android:clickable="true"
-            android:padding="0dp">
+            android:background="#f2f4f5"
+            android:clickable="true">
 
-            <RelativeLayout
+            <com.zhy.autolayout.AutoRelativeLayout
                 android:id="@+id/recentsRecyclerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-6dp"
-                android:layout_marginRight="-6dp"
-                android:layout_marginTop="0dp">
+                android:layout_marginRight="-6dp">
 
                 <TextView
                     android:id="@+id/recentsRecyclerLabel"
@@ -169,8 +159,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:text="Recent"
-                    android:textColor="#FFF"
+                    android:text="music"
+                    android:textColor="#888"
                     android:textSize="16dp"
                     android:textStyle="bold"/>
 
@@ -185,7 +175,7 @@
                     android:text="Nothing to Show !"
                     android:textColor="#888"
                     android:textSize="13dp"
-                    android:visibility="invisible"/>
+                    android:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/recents_view_all"
@@ -195,16 +185,16 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="15dp"
                     android:text="VIEW ALL"
-                    android:textColor="#FFF"
+                    android:textColor="#888"
                     android:textSize="13sp"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recentsMusicList_home"
+                    android:id="@+id/rv_musicList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/recentsRecyclerLabel"
                     android:padding="5dp"/>
-            </RelativeLayout>
+            </com.zhy.autolayout.AutoRelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -214,7 +204,7 @@
                 android:layout_marginRight="10dp"
                 android:background="#565656"/>
 
-            <RelativeLayout
+            <com.zhy.autolayout.AutoRelativeLayout
                 android:id="@+id/playlistRecyclerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -231,8 +221,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:text="Playlists"
-                    android:textColor="#FFF"
+                    android:text="video"
+                    android:textColor="#888"
                     android:textSize="16dp"
                     android:textStyle="bold"/>
 
@@ -247,7 +237,7 @@
                     android:text="Nothing to Show !"
                     android:textColor="#888"
                     android:textSize="13dp"
-                    android:visibility="invisible"/>
+                    android:visibility="visible"/>
 
 
                 <TextView
@@ -258,16 +248,16 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="15dp"
                     android:text="VIEW ALL"
-                    android:textColor="#FFF"
+                    android:textColor="#888"
                     android:textSize="13sp"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/playlist_home"
+                    android:id="@+id/rv_videoList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/playListRecyclerLabel"
                     android:padding="5dp"/>
-            </RelativeLayout>
+            </com.zhy.autolayout.AutoRelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -277,17 +267,17 @@
                 android:layout_marginRight="10dp"
                 android:background="#565656"/>
 
-            <RelativeLayout
+            <com.zhy.autolayout.AutoRelativeLayout
                 android:id="@+id/bannerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/playlistRecyclerContainer"
                 android:padding="5dp">
 
-                <RelativeLayout
+                <com.zhy.autolayout.AutoRelativeLayout
                     android:id="@+id/localBanner"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp">
+                    android:layout_height="200px">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -306,21 +296,13 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_play_arrow_white_48dp"/>
 
-                    <View
-                        android:id="@+id/local_banner_alt_showcase"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="-10dp"/>
-                </RelativeLayout>
+                </com.zhy.autolayout.AutoRelativeLayout>
 
-                <LinearLayout
+                <com.zhy.autolayout.AutoLinearLayout
                     android:id="@+id/linearBanner1"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="200px"
                     android:layout_below="@+id/localBanner"
-                    android:layout_marginTop="0dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -338,11 +320,11 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@drawable/recents_card"/>
-                </LinearLayout>
+                </com.zhy.autolayout.AutoLinearLayout>
 
-                <LinearLayout
+                <com.zhy.autolayout.AutoLinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="200px"
                     android:layout_below="@+id/linearBanner1"
                     android:layout_marginTop="0dp"
                     android:orientation="horizontal">
@@ -362,14 +344,14 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@drawable/saved_card"/>
-                </LinearLayout>
+                </com.zhy.autolayout.AutoLinearLayout>
 
-            </RelativeLayout>
+            </com.zhy.autolayout.AutoRelativeLayout>
 
             <TextView
                 android:id="@+id/copyright_text"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="80px"
                 android:layout_below="@+id/bannerContainer"
                 android:gravity="center"
                 android:text="Music DNA"
@@ -378,20 +360,21 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_below="@+id/copyright_text"
-                android:background="#111111"/>
-        </RelativeLayout>
+                android:layout_height="130px"
+                android:layout_below="@+id/copyright_text"/>
+        </com.zhy.autolayout.AutoRelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
+    <!-- 搜索结果 -->
+    <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100px"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <!-- 搜索框本地结果 -->
+        <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/localRecyclerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -399,9 +382,10 @@
             android:layout_marginRight="-6dp"
             android:background="#222"
             android:translationZ="6dp"
+            tools:visibility="visible"
             android:visibility="gone">
 
-            <LinearLayout
+            <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/localRecyclerLabelContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -428,7 +412,7 @@
                     android:textColor="#FFF"
                     android:textSize="12dp"
                     android:textStyle="bold"/>
-            </LinearLayout>
+            </com.zhy.autolayout.AutoLinearLayout>
 
 
             <TextView
@@ -450,9 +434,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/localRecyclerLabelContainer"
                 android:padding="5dp"/>
-        </RelativeLayout>
+        </com.zhy.autolayout.AutoRelativeLayout>
 
-        <RelativeLayout
+        <!-- 搜索框在线结果 -->
+        <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/streamRecyclerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -461,6 +446,7 @@
             android:layout_marginRight="-6dp"
             android:background="#222"
             android:translationZ="6dp"
+            tools:visibility="visible"
             android:visibility="gone">
 
             <com.wang.avi.AVLoadingIndicatorView
@@ -522,8 +508,8 @@
                 android:padding="5dp">
 
             </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
-    </LinearLayout>
+        </com.zhy.autolayout.AutoRelativeLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
 
     <FrameLayout
         android:id="@+id/fragContainer"
@@ -543,63 +529,67 @@
         android:layout_height="match_parent"
         android:translationZ="8dp"/>
 
-    <FrameLayout
-        android:id="@+id/player_frag_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:translationZ="10dp"/>
+    <!--<com.zhy.autolayout.AutoLinearLayout-->
+        <!--android:id="@+id/bottomMargin"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="130px"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:background="@color/white"-->
+        <!--android:orientation="vertical">-->
 
-    <FrameLayout
-        android:id="@+id/bottomMargin"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_gravity="bottom"
-        android:background="#000">
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1px"-->
+            <!--android:alpha="0.1"-->
+            <!--android:background="#000000"/>-->
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/smallPlayer_home"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            >
+        <!--<com.zhy.autolayout.AutoRelativeLayout-->
+            <!--android:id="@+id/smallPlayer_home"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--&gt;-->
 
-            <ImageView
-                android:id="@+id/selected_track_image_sp_home"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="10dp"
-                />
+            <!--<ImageView-->
+                <!--android:id="@+id/selected_track_image_sp_home"-->
+                <!--android:layout_width="48dp"-->
+                <!--android:layout_height="48dp"-->
+                <!--android:src="@mipmap/ic_launcher"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--/>-->
 
-            <TextView
-                android:id="@+id/selected_track_title_sp_home"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/player_control"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:singleLine="false"
-                android:text="Title"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="13dp"/>
+            <!--<TextView-->
+                <!--android:id="@+id/selected_track_title_sp_home"-->
+                <!--android:layout_width="200dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_above="@+id/player_control"-->
+                <!--android:layout_marginLeft="35dp"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:ellipsize="end"-->
+                <!--android:gravity="center"-->
+                <!--android:singleLine="false"-->
+                <!--android:text="Title"-->
+                <!--android:textAlignment="center"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:textColor="@color/colorDark"-->
+                <!--android:textSize="13dp"/>-->
 
-            <ImageView
-                android:id="@+id/player_control_sp_home"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="17dp"
-                android:layout_marginTop="2dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                />
-        </android.support.v7.widget.Toolbar>
-    </FrameLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/player_control_sp_home"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginRight="17dp"-->
+                <!--android:src="@drawable/ic_play_arrow_white_48dp"-->
+                <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                <!--android:clickable="true"-->
+                <!--/>-->
+        <!--</com.zhy.autolayout.AutoRelativeLayout>-->
+    <!--</com.zhy.autolayout.AutoLinearLayout>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -608,5 +598,11 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email"/>
+
+    <FrameLayout
+        android:id="@+id/player_frag_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="10dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

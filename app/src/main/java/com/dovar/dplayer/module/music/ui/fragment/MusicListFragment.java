@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dovar.dplayer.HomePresenter;
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.bean.LocalTrack;
 import com.dovar.dplayer.bean.Music;
@@ -84,7 +85,7 @@ public class MusicListFragment extends BaseFragment implements MusicListContract
                 ) {
             final Music music = new Music();
             music.setName(song.getTitle());//歌曲名
-            music.setSinger(formatSingers(song.getArtist_name()));//歌手名
+            music.setSinger(HomePresenter.formatSingers(song.getArtist_name()));//歌手名
             music.setSong_id(song.getSong_id());//歌曲id
             music.setLrclink(song.getLrclink());//歌词链接
             music.setPic_big(song.getPic_big());//大图标
@@ -100,18 +101,6 @@ public class MusicListFragment extends BaseFragment implements MusicListContract
 
     }
 
-    /**
-     * 合唱歌曲时最多只显示两个歌手名
-     *
-     * @param singers 歌手名
-     */
-    private String formatSingers(String singers) {
-        String[] singerArray = singers.split(",");
-        if (singerArray.length > 2) {
-            return singerArray[0] + "," + singerArray[1];
-        }
-        return singers;
-    }
 
 
 }

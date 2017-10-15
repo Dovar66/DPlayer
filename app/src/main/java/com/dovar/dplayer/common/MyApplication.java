@@ -21,6 +21,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.squareup.leakcanary.LeakCanary;
 import com.zhy.autolayout.config.AutoLayoutConifg;
 
 /**
@@ -73,6 +74,20 @@ public class MyApplication extends Application {
         //默认使用的高度是设备的可用高度，也就是不包括状态栏和底部的操作栏的
         // 如果你希望拿设备的物理高度进行百分比化,可以在Application的onCreate方法中进行设置:
         AutoLayoutConifg.getInstance().useDeviceSize();
+
+        setupLeakCanary();
+    }
+
+    /**
+     * 初始化LeakCanary,用于监测内存泄漏
+     */
+    private void setupLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     /**

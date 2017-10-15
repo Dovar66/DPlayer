@@ -1,9 +1,11 @@
 package com.dovar.dplayer.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ${dovar} on 2016/6/20.
  */
-public class Music {
+public class Music implements Serializable{
 
 
     public String getSong_id() {

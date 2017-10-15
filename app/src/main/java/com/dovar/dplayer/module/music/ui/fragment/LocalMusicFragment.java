@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dovar.dplayer.MainActivity;
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.bean.LocalTrack;
+import com.dovar.dplayer.bean.Music;
+import com.dovar.dplayer.common.adapter.RCommonAdapter;
 import com.dovar.dplayer.common.base.BaseFragment;
 import com.dovar.dplayer.module.music.adapter.LocalMusicAdapter;
 
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017-10-11.
+ * 本地音乐列表
  */
 
 public class LocalMusicFragment extends BaseFragment {
@@ -52,6 +56,17 @@ public class LocalMusicFragment extends BaseFragment {
     @Override
     protected void initData() {
         mAdapter = new LocalMusicAdapter(getActivity());
+        mAdapter.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (getActivity() instanceof MainActivity) {
+                    LocalTrack music = mAdapter.getItem(position);
+                    Music mMusic = new Music();
+                    mMusic.setUrl(music.getPath());
+                    ((MainActivity) getActivity()).showMusicPlayer(mMusic);
+                }
+            }
+        });
         localMusicList.setAdapter(mAdapter);
 
         getLocalSongs();

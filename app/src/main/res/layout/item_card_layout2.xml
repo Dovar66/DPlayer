@@ -1,52 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="115dp"
-    android:layout_height="154dp"
-    android:layout_margin="7dp"
-    android:background="@drawable/custom_ripple"
-    android:clickable="true"
-    android:focusable="true"
-    android:longClickable="true">
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                       xmlns:tools="http://schemas.android.com/tools"
+                                       android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
+                                       android:layout_margin="7dp"
+                                       android:background="@drawable/custom_ripple"
+                                       android:clickable="true"
+                                       android:focusable="true"
+                                       android:longClickable="true">
 
     <ImageView
-        android:id="@+id/backImage"
-        android:layout_width="match_parent"
-        android:layout_height="115dp"
-        android:layout_gravity="top"
-        android:background="#222222"
-        android:scaleType="centerCrop" />
+        android:id="@+id/iv_cover"
+        android:layout_width="230px"
+        android:layout_height="230px"
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/ic_launcher"/>
 
     <RelativeLayout
         android:id="@+id/bottomHolder"
-        android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_width="230px"
+        android:layout_height="95px"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/backImage"
-        android:layout_gravity="bottom">
+        android:layout_below="@+id/iv_cover">
 
         <TextView
-            android:id="@+id/card_title"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
-            android:layout_height="22dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="45px"
+            android:layout_marginTop="10px"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Title"
             android:textColor="#FFF"
-            android:textSize="13dp" />
+            android:textSize="26px"/>
 
         <TextView
-            android:id="@+id/card_artist"
+            android:id="@+id/tv_artist"
             android:layout_width="match_parent"
-            android:layout_height="19dp"
-            android:layout_below="@+id/card_title"
+            android:layout_height="38px"
+            android:layout_below="@+id/tv_title"
             android:layout_marginTop="-5dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Artist"
             android:textColor="#EEE"
-            android:textSize="9dp" />
+            android:textSize="18px"/>
 
     </RelativeLayout>
-</RelativeLayout>
+</com.zhy.autolayout.AutoRelativeLayout>

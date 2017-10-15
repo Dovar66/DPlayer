@@ -2,6 +2,7 @@ package com.dovar.dplayer.http;
 
 /**
  * Created by Administrator on 2017-09-12.
+ * 记录所有网络url
  */
 
 public class NetConfig {

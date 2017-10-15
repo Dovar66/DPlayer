@@ -85,6 +85,7 @@ public class RetrofitUtil {
         return getInstance().create(Api.class).getVideoBean();
     }
 
+    //用okhttp
     public static void testUrlByOkhttp(String url, Callback mCallback) {
         OkHttpClient mClient = new OkHttpClient();
         Request mRequest = new Request.Builder()

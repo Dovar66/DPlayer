@@ -4,11 +4,13 @@ import com.dovar.dplayer.bean.MusicBean;
 import com.dovar.dplayer.common.base.DPresenter;
 import com.dovar.dplayer.http.Api;
 import com.dovar.dplayer.http.RetrofitUtil;
+import com.dovar.dplayer.model.MusicModel;
 import com.dovar.dplayer.module.music.contract.MusicListContract;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -17,11 +19,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MusicListPresenter extends DPresenter<MusicListContract.IView> implements MusicListContract.IPresenter {
 
-    private int offset=0;
-    private int pageSize=20;
+    private MusicModel mMusicModel;
+    private int offset = 0;
+    private int pageSize = 20;
 
     public MusicListPresenter(MusicListContract.IView viewImp) {
         super(viewImp);
+        mMusicModel = new MusicModel();
     }
 
     @Override
@@ -48,36 +52,32 @@ public class MusicListPresenter extends DPresenter<MusicListContract.IView> impl
 //            }
 //        });
 
-        RetrofitUtil.getInstance().create(Api.class)
-                .getMusicList("qianqian","2.1.0","baidu.ting.billboard.billList","json","1",offset,pageSize,"app)")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MusicBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        mMusicModel.getMusicList(offset, pageSize,new Observer<MusicBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(MusicBean value) {
-                        if (isViewAttached()) {
-                            offset+=pageSize;
-                            getView().onSuccess(value);
-                        }
-                    }
+            @Override
+            public void onNext(MusicBean value) {
+                if (isViewAttached()) {
+                    offset += pageSize;
+                    getView().onSuccess(value);
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace(); //请求过程中发生错误
-                        if (isViewAttached()) {
-                            getView().onFail();
-                        }
-                    }
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace(); //请求过程中发生错误
+                if (isViewAttached()) {
+                    getView().onFail();
+                }
+            }
 
-                    @Override
-                    public void onComplete() {
+            @Override
+            public void onComplete() {
 
-                    }
-                });
+            }
+        });
     }
 }

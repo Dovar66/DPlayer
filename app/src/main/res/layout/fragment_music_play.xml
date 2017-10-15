@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                       xmlns:tools="http://schemas.android.com/tools"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent"
+                                       android:background="@color/white"
+                                       android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/inc"
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/ll_title"
         android:layout_width="match_parent"
-        android:layout_height="50px"
-        android:fitsSystemWindows="true">
+        android:layout_height="50px">
 
         <RelativeLayout
-            android:id="@+id/title_left"
+            android:id="@+id/ll_back"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <ImageButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:background="@drawable/back2"
-                android:clickable="false"/>
+                android:layout_marginLeft="20px"
+                android:background="@drawable/back2"/>
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
@@ -37,39 +36,32 @@
             tools:text="告白气球"/>
 
         <RelativeLayout
-            android:id="@+id/share"
+            android:id="@+id/ll_share"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/title_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10px"
-                android:background="@drawable/ic_menu_share"
-                android:clickable="false"/>
+                android:layout_marginRight="20px"
+                android:background="@drawable/ic_menu_share"/>
         </RelativeLayout>
-    </LinearLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/inc"
-        >
-    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/kai"
+        android:id="@+id/ll_controller"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20px">
 
         <ImageView
-            android:id="@+id/play_mode"
+            android:id="@+id/iv_play_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -78,23 +70,23 @@
             android:src="@drawable/ic_play_order_type"/>
 
         <ImageView
-            android:id="@+id/previous"
+            android:id="@+id/iv_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="45px"
-            android:layout_toRightOf="@id/play_mode"
+            android:layout_toRightOf="@id/iv_play_mode"
             android:src="@mipmap/ic_launcher"/>
 
         <ImageView
-            android:id="@+id/play_pause"
+            android:id="@+id/iv_play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:src="@mipmap/ic_launcher"/>
 
         <ImageView
-            android:id="@+id/music_list"
+            android:id="@+id/iv_music_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -103,30 +95,30 @@
             android:src="@mipmap/ic_launcher"/>
 
         <ImageView
-            android:id="@+id/next"
+            android:id="@+id/iv_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="45px"
-            android:layout_toLeftOf="@id/music_list"
+            android:layout_toLeftOf="@id/iv_music_list"
             android:src="@mipmap/ic_launcher"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/paly"
+    <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/ll_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/kai"
+        android:layout_above="@id/ll_controller"
         android:layout_marginBottom="10px"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/geshou_text"
+                android:id="@+id/tv_singer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -142,23 +134,23 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="65px"
-                android:layout_toLeftOf="@id/geshou_text"
+                android:layout_toLeftOf="@id/tv_singer"
                 android:drawableTop="@drawable/selector_collect"
                 android:text="收藏"
                 android:textColor="@color/white"
                 android:textSize="13px"/>
 
             <TextView
-                android:id="@+id/zhuanji_text"
+                android:id="@+id/tv_album"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="65px"
-                android:layout_toRightOf="@id/geshou_text"
+                android:layout_toRightOf="@id/tv_singer"
                 android:drawableTop="@drawable/ic_album"
                 android:text="专辑"
                 android:textColor="@color/white"
                 android:textSize="13px"/>
-        </RelativeLayout>
+        </com.zhy.autolayout.AutoRelativeLayout>
 
         <SeekBar
             android:id="@+id/seekbar"
@@ -172,17 +164,17 @@
             android:paddingRight="10px"
             android:thumbOffset="3dp"/>
 
-        <RelativeLayout
+        <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5px">
 
             <TextView
-                android:id="@+id/time_progress"
+                android:id="@+id/music_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10px"
+                android:layout_marginLeft="20px"
                 android:text="00:00"
                 android:textColor="#999999"
                 android:textSize="12px"/>
@@ -192,48 +184,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10px"
+                android:layout_marginRight="20px"
                 android:text="00:00"
                 android:textColor="#999999"
                 android:textSize="12px"/>
-        </RelativeLayout>
+        </com.zhy.autolayout.AutoRelativeLayout>
 
-        <TextView
-            android:id="@+id/music_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="16px"
-            tools:text="告白气球"/>
-
-        <TextView
-            android:id="@+id/music_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="13px"/>
-    </LinearLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
 
     <com.dovar.dplayer.common.customview.lyric.LyricView
         android:id="@+id/lyric"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/paly"
-        android:layout_below="@id/inc"
+        android:layout_above="@id/ll_container"
+        android:layout_below="@id/ll_title"
         android:layout_marginBottom="20px"
         android:layout_marginTop="40px"/>
-    <!-- ############################################# -->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/paly"
-        android:layout_below="@id/inc"
+        android:layout_above="@id/ll_container"
+        android:layout_below="@id/ll_title"
         android:visibility="gone">
 
         <android.support.v4.view.ViewPager
@@ -251,6 +223,5 @@
             android:orientation="horizontal">
         </LinearLayout>
     </RelativeLayout>
-    <!-- ############################################# -->
 
-</RelativeLayout>
+</com.zhy.autolayout.AutoRelativeLayout>

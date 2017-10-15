@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +24,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dovar.dplayer.bean.Music;
+import com.dovar.dplayer.bean.MusicByIdBean;
+import com.dovar.dplayer.bean.VideoListBean;
+import com.dovar.dplayer.common.adapter.RCommonAdapter;
+import com.dovar.dplayer.common.adapter.RCommonViewHolder;
 import com.dovar.dplayer.common.base.StatusBarTintActivity;
+import com.dovar.dplayer.common.utils.ToastUtil;
 import com.dovar.dplayer.module.music.ui.fragment.LocalMusicFragment;
+import com.dovar.dplayer.module.music.ui.fragment.MusicFragment;
 import com.dovar.dplayer.module.music.ui.fragment.MusicListFragment;
 import com.dovar.dplayer.module.video.ui.VideoListActivity;
 import com.lantouzi.wheelview.WheelView;
@@ -31,8 +40,11 @@ import com.lantouzi.wheelview.WheelView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends StatusBarTintActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeContract.IView {
 
     private ImageView navImageView;
 
@@ -41,10 +53,10 @@ public class MainActivity extends StatusBarTintActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
         initUI();
         initData();
 
-//        setTitle("Music DNA");
     }
 
     private void setupDrawerHeader() {
@@ -159,8 +171,8 @@ public class MainActivity extends StatusBarTintActivity
 
         final TextView timerSetText = (TextView) dialog.findViewById(R.id.timer_set_text);
 
-//        setBtn.setBackgroundColor(themeColor);
-//        removerBtn.setBackgroundColor(themeColor);
+        setBtn.setBackgroundResource(R.color.b24242);
+        removerBtn.setBackgroundResource(R.color.b24242);
         cancelBtn.setBackgroundColor(Color.WHITE);
 
         if (isSleepTimerEnabled) {
@@ -253,6 +265,8 @@ public class MainActivity extends StatusBarTintActivity
     @Override
     protected void initUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbar.setLogo(R.mipmap.ic_launcher);
+        toolbar.setTitle("多媒体");
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -278,10 +292,89 @@ public class MainActivity extends StatusBarTintActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setupMusicList();
+        setupVideoList();
     }
+
+    private HomePresenter mPresenter;
 
     @Override
     protected void initData() {
+        mPresenter = new HomePresenter(this);
+        mPresenter.getMusicList();
+        mPresenter.getVideoList();
+    }
 
+    @BindView(R.id.rv_musicList)
+    RecyclerView rv_musicList;
+    @BindView(R.id.rv_videoList)
+    RecyclerView rv_videoList;
+
+    private RCommonAdapter<Music> adapter_music;
+    private RCommonAdapter<VideoListBean.IssueListBean.ItemListBean> adapter_video;
+
+    private void setupMusicList() {
+        rv_musicList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapter_music = new RCommonAdapter<Music>(this, R.layout.item_card_layout2) {
+            @Override
+            public void convert(RCommonViewHolder vh, int position) {
+                Music bean = getItem(position);
+                if (bean == null) return;
+                vh.setText(R.id.tv_title, bean.getName());
+                vh.setText(R.id.tv_artist, bean.getSinger());
+                vh.setImageUrl(R.id.iv_cover, bean.getPic_small());
+            }
+        };
+        adapter_music.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                showMusicPlayer(adapter_music.getItem(position));
+            }
+        });
+        rv_musicList.setAdapter(adapter_music);
+    }
+
+    private void setupVideoList() {
+        rv_videoList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapter_video = new RCommonAdapter<VideoListBean.IssueListBean.ItemListBean>(this, R.layout.item_card_layout2) {
+            @Override
+            public void convert(RCommonViewHolder vh, int position) {
+                VideoListBean.IssueListBean.ItemListBean bean = getItem(position);
+                if (bean == null) return;
+                vh.setText(R.id.tv_title, bean.getData().getTitle());
+                vh.setText(R.id.tv_artist, bean.getData().getDescription());
+                vh.setImageUrl(R.id.iv_cover, bean.getData().getCover().getDetail());
+            }
+        };
+        rv_videoList.setAdapter(adapter_video);
+    }
+
+    @Override
+    public void getMusicListSuccess(List<Music> mMusicList, boolean isLoadMore) {
+        adapter_music.addDatas(mMusicList, !isLoadMore);
+    }
+
+    @Override
+    public void getMusicListFail(boolean isLoadMore) {
+        ToastUtil.show("获取歌曲失败");
+    }
+
+    @Override
+    public void getVideoListSuccess(List<VideoListBean.IssueListBean.ItemListBean> mVideoList, boolean isLoadMore) {
+        adapter_video.addDatas(mVideoList, !isLoadMore);
+    }
+
+    @Override
+    public void getVideoListFail(boolean isLoadMore) {
+        ToastUtil.show("获取视频失败");
+    }
+
+    public void showMusicPlayer(Music mMusics){
+        MusicFragment musicFragment = MusicFragment.newInstance(mMusics);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragContainer, musicFragment, "musicPlayer");
+        ft.addToBackStack("musicPlayer");
+        ft.commit();
     }
 }

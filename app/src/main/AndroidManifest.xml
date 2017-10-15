@@ -39,6 +39,8 @@
         </activity>
         <activity android:name=".module.music.ui.MusicActivity">
         </activity>
+
+        <service android:name=".module.music.MusicService"/>
     </application>
 
 </manifest>

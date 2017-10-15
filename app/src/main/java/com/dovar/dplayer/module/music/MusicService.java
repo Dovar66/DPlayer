@@ -1,5 +1,6 @@
 package com.dovar.dplayer.module.music;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,11 +15,13 @@ import com.dovar.dplayer.bean.Music;
 import com.dovar.dplayer.common.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MusicService extends Service {
 
+    private static final String KEY_MUSICLIST="key_music_list";
     private final String TAG = "DPlayer";
     private MyMediaPlayer mPlayer;//播放器实例
     private MyMusicPlayReceiver mReceiver;//广播
@@ -30,6 +33,17 @@ public class MusicService extends Service {
     public static int playMode = 1;//歌曲播放模式<顺序播放、随机播放、单曲循环>,默认顺序播放
     private String current_musicId;//播放器当前播放歌曲的id
 
+    public static void startMusicService(Activity mActivity) {
+        Intent mIntent = new Intent(mActivity, MusicService.class);
+        mActivity.startService(mIntent);
+    }
+
+    public static void startPlay(Context mContext,ArrayList<Music> mMusicList){
+        Intent mIntent=new Intent(Constants.ACTION_NEWPLAYLIST);
+        mIntent.putExtra(KEY_MUSICLIST,mMusicList);
+        mIntent.putExtra("position",0);
+        mContext.sendBroadcast(mIntent);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -133,7 +147,7 @@ public class MusicService extends Service {
                         musics = new ArrayList<>();
                     }
                     musics.clear();
-                    musics.addAll((ArrayList<Music>) intent.getSerializableExtra("musics"));
+                    musics.addAll((ArrayList<Music>) intent.getSerializableExtra(KEY_MUSICLIST));
                     curPosition = intent.getIntExtra("position", -1);
                     if (curPosition != -1 && musics.size() > 0 && musics.size() > curPosition) {
                         if (!(current_musicId != null && current_musicId.equals(musics.get(curPosition).getSong_id()))) {
@@ -219,13 +233,13 @@ public class MusicService extends Service {
     private void loadMusic() {
         mPlayer.reset();
         if (musics.size() > curPosition) {
-//            String url = Constandt_url.picture + musics.get(curPosition).getPath();
-//            try {
-//                mPlayer.setDataSource(url);
-//                mPlayer.prepareAsync();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+            String url = musics.get(curPosition).getUrl();
+            try {
+                mPlayer.setDataSource(url);
+                mPlayer.prepareAsync();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
