@@ -41,7 +41,7 @@ public interface Api {
     Observable<MusicBean> getMusicList(@Query("from") String from, @Query("version") String version, @Query("method") String method, @Query("format") String format, @Query("type") String type, @Query("offset") int offset, @Query("size") int size, @Header("User-Agent") String agent);
 
     //根据歌曲ID获取歌曲播放信息
-    @GET("http://ting.baidu.com/data/music/links?songIds={musicId}")
-    Observable<MusicByIdBean> getMusicById(@Path("musicId") String musicId);
+    @GET("http://ting.baidu.com/data/music/links")
+    Observable<MusicByIdBean> getMusicById(@Query("songIds") String musicId);
 
 }

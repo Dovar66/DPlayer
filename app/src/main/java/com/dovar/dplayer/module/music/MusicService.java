@@ -21,27 +21,24 @@ import java.util.concurrent.Executors;
 
 public class MusicService extends Service {
 
-    private static final String KEY_MUSICLIST="key_music_list";
+    private static final String KEY_MUSIC = "key_music";
     private final String TAG = "DPlayer";
     private MyMediaPlayer mPlayer;//播放器实例
     private MyMusicPlayReceiver mReceiver;//广播
     private ExecutorService mExecutorService;// 可缓存线程池
     private int seektoTime;// 当前播放进度
 
-    private ArrayList<Music> musics;//播放歌单
-    public static int curPosition;//当前播放歌曲下标
+    private String playUrl;//播放歌曲Url
     public static int playMode = 1;//歌曲播放模式<顺序播放、随机播放、单曲循环>,默认顺序播放
-    private String current_musicId;//播放器当前播放歌曲的id
 
     public static void startMusicService(Activity mActivity) {
         Intent mIntent = new Intent(mActivity, MusicService.class);
         mActivity.startService(mIntent);
     }
 
-    public static void startPlay(Context mContext,ArrayList<Music> mMusicList){
-        Intent mIntent=new Intent(Constants.ACTION_NEWPLAYLIST);
-        mIntent.putExtra(KEY_MUSICLIST,mMusicList);
-        mIntent.putExtra("position",0);
+    public static void startPlay(Context mContext, String mPlayUrl) {
+        Intent mIntent = new Intent(Constants.ACTION_NEWPLAYLIST);
+        mIntent.putExtra(KEY_MUSIC, mPlayUrl);
         mContext.sendBroadcast(mIntent);
     }
 
@@ -58,8 +55,6 @@ public class MusicService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.start();
-                //更新记录当前播放歌曲id
-                current_musicId = musics.get(curPosition).getSong_id();
             }
         });
         mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -124,16 +119,10 @@ public class MusicService extends Service {
         registerReceiver(mReceiver, filter);
     }
 
-    public static OnResumeDataListener mOnResumeDataListener;
     public static OnSongCutListener mOnSongCutListener;
 
     public interface OnSongCutListener {
         void onSongCut();
-    }
-
-
-    public interface OnResumeDataListener {
-        void onResumeData(int curDuration, int duration, ArrayList<Music> musics, boolean isPlaying);
     }
 
     private class MyMusicPlayReceiver extends BroadcastReceiver {
@@ -142,19 +131,9 @@ public class MusicService extends Service {
             String action = intent.getAction();
             switch (action) {
                 case Constants.ACTION_NEWPLAYLIST:
-                    //创建新歌单，开始播放
-                    if (musics == null) {
-                        musics = new ArrayList<>();
-                    }
-                    musics.clear();
-                    musics.addAll((ArrayList<Music>) intent.getSerializableExtra(KEY_MUSICLIST));
-                    curPosition = intent.getIntExtra("position", -1);
-                    if (curPosition != -1 && musics.size() > 0 && musics.size() > curPosition) {
-                        if (!(current_musicId != null && current_musicId.equals(musics.get(curPosition).getSong_id()))) {
-                            //当前播放歌曲与需要播放歌曲不相同才切歌
-                            loadMusic();
-                        }
-                    }
+                    playUrl = intent.getStringExtra(KEY_MUSIC);
+
+                    loadMusic();
                 case Constants.ACTION_PLAY:
                     //继续播放
                     mPlayer.start();
@@ -165,7 +144,6 @@ public class MusicService extends Service {
                     break;
                 case Constants.ACTION_NEWPLAY:
                     //切歌
-                    if (musics == null) return;
                     loadMusic();
                     break;
                 case Constants.ACTION_CHANGE:
@@ -174,18 +152,11 @@ public class MusicService extends Service {
                     mPlayer.start();
                     break;
                 case Constants.ACTION_TRANSFERDATA:
-                    if (mOnResumeDataListener != null) {
-                        Log.d(TAG, "onReceive: !=null");
-                        mOnResumeDataListener.onResumeData(mPlayer.getCurrentPosition(), mPlayer.getDuration(), musics, mPlayer.isPlaying());
-                    }
+
                     break;
                 case Constants.ACTION_NEXT://下一曲播放
-                    if (musics != null && musics.size() > 0) {
-                        nextIndex();
-                        loadMusic();
-                    } else {
-                        Toast.makeText(context, "当前播放列表为空", Toast.LENGTH_SHORT).show();
-                    }
+                    nextIndex();
+                    loadMusic();
                     break;
                 case Constants.ACTION_ADD:
                     ArrayList<Music> insert = (ArrayList<Music>) intent.getSerializableExtra("insert");
@@ -193,34 +164,8 @@ public class MusicService extends Service {
                         Log.d(TAG, "onReceive: insert is null!");
                         return;
                     }
-                    if (musics != null) {
-                        int pos = curPosition + 1;
-                        for (Music item : insert
-                                ) {
-                            musics.add(pos, item);
-                            pos += 1;
-                        }
-                    } else {
-                        musics = new ArrayList<>();
-                        musics.addAll(insert);
-                        curPosition = 0;
-                        loadMusic();
-                    }
                     break;
                 case Constants.ACTION_DELETE:
-                    int pos = intent.getIntExtra("position", -1);
-                    if (pos != -1) {
-                        musics.remove(pos);
-                    }
-                    if (musics.size() == 0) {
-                        mPlayer.reset();
-                        return;
-                    }
-                    String needCut = intent.getStringExtra("needCut");
-                    if (needCut != null && needCut.equals("yes")) {
-                        //需要切歌
-                        loadMusic();
-                    }
                     break;
             }
         }
@@ -232,14 +177,11 @@ public class MusicService extends Service {
      */
     private void loadMusic() {
         mPlayer.reset();
-        if (musics.size() > curPosition) {
-            String url = musics.get(curPosition).getUrl();
-            try {
-                mPlayer.setDataSource(url);
-                mPlayer.prepareAsync();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            mPlayer.setDataSource(playUrl);
+            mPlayer.prepareAsync();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -248,18 +190,18 @@ public class MusicService extends Service {
      */
     private void nextIndex() {
         switch (playMode) {
-            case Constants.MODE_INORDER:
-                if (curPosition == musics.size() - 1) {
-                    curPosition = 0;
-                } else {
-                    curPosition += 1;
-                }
-                break;
-            case Constants.MODE_RANDOM:
-                curPosition = (int) (Math.random() * musics.size());
-                break;
-            case Constants.MODE_SINGLE:
-                break;
+//            case Constants.MODE_INORDER:
+//                if (curPosition == musics.size() - 1) {
+//                    curPosition = 0;
+//                } else {
+//                    curPosition += 1;
+//                }
+//                break;
+//            case Constants.MODE_RANDOM:
+//                curPosition = (int) (Math.random() * musics.size());
+//                break;
+//            case Constants.MODE_SINGLE:
+//                break;
         }
     }
 

@@ -3,6 +3,7 @@ package com.dovar.dplayer.common.base;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * Created by heweizong on 2017/9/11.
@@ -32,5 +33,14 @@ public abstract class BaseModuleActivity extends AppCompatActivity {
         if (view == null) return null;
         view.setOnClickListener(onClickImp);
         return view;
+    }
+
+    protected void setText(TextView tv, String text) {
+        if (tv != null) {
+            if (text == null) {
+                text = "";
+            }
+            tv.setText(text);
+        }
     }
 }

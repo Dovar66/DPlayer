@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -329,7 +330,7 @@ public class MainActivity extends StatusBarTintActivity
         adapter_music.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                showMusicPlayer(adapter_music.getItem(position));
+                showMusicPlayer(position, (ArrayList<Music>) adapter_music.getDatas());
             }
         });
         rv_musicList.setAdapter(adapter_music);
@@ -370,8 +371,8 @@ public class MainActivity extends StatusBarTintActivity
         ToastUtil.show("获取视频失败");
     }
 
-    public void showMusicPlayer(Music mMusics){
-        MusicFragment musicFragment = MusicFragment.newInstance(mMusics);
+    public void showMusicPlayer(int index, ArrayList<Music> mMusicList){
+        MusicFragment musicFragment = MusicFragment.newInstance(index,mMusicList);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragContainer, musicFragment, "musicPlayer");
         ft.addToBackStack("musicPlayer");

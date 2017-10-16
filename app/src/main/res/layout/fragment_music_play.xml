@@ -3,7 +3,7 @@
                                        xmlns:tools="http://schemas.android.com/tools"
                                        android:layout_width="match_parent"
                                        android:layout_height="match_parent"
-                                       android:background="@color/white"
+                                       android:background="@color/colorDark"
                                        android:orientation="vertical">
 
     <com.zhy.autolayout.AutoLinearLayout
@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
-                android:background="@drawable/back2"/>
+                android:background="@drawable/lz"/>
         </RelativeLayout>
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:src="@drawable/ic_play_order_type"/>
+            android:src="@drawable/ic_order_random"/>
 
         <ImageView
             android:id="@+id/iv_previous"
@@ -76,14 +76,14 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="45px"
             android:layout_toRightOf="@id/iv_play_mode"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_previous"/>
 
         <ImageView
             android:id="@+id/iv_play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_play2"/>
 
         <ImageView
             android:id="@+id/iv_music_list"
@@ -92,7 +92,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_menu"/>
 
         <ImageView
             android:id="@+id/iv_next"
@@ -101,7 +101,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="45px"
             android:layout_toLeftOf="@id/iv_music_list"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_next"/>
     </RelativeLayout>
 
     <com.zhy.autolayout.AutoLinearLayout

@@ -61,9 +61,11 @@ public class LocalMusicFragment extends BaseFragment {
             public void onItemClick(int position) {
                 if (getActivity() instanceof MainActivity) {
                     LocalTrack music = mAdapter.getItem(position);
+                    ArrayList<Music> mMusicArrayList=new ArrayList<Music>();
                     Music mMusic = new Music();
                     mMusic.setUrl(music.getPath());
-                    ((MainActivity) getActivity()).showMusicPlayer(mMusic);
+                    mMusicArrayList.add(mMusic);
+                    ((MainActivity) getActivity()).showMusicPlayer(0,mMusicArrayList);
                 }
             }
         });
