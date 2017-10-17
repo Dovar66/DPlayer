@@ -25,7 +25,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.zhy.autolayout.config.AutoLayoutConifg;
 
 /**
- * Created by Administrator on 2017-09-11.
+ * Created by hwz on 2017-09-11.
  */
 
 public class MyApplication extends Application {
