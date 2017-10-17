@@ -241,7 +241,7 @@
 
 
                 <TextView
-                    android:id="@+id/playlists_view_all"
+                    android:id="@+id/video_view_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/playListRecyclerLabel"

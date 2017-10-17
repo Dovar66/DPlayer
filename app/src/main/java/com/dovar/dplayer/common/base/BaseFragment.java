@@ -6,19 +6,28 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
+import com.dovar.dplayer.R;
 import com.dovar.dplayer.common.MyApplication;
+import com.dovar.dplayer.common.utils.DisplayUtil;
 import com.dovar.dplayer.common.utils.NetWorkUtil;
+import com.zhy.autolayout.AutoRelativeLayout;
 
 /**
  * Created by heweizong on 2017/10/11.
@@ -272,6 +281,76 @@ public abstract class BaseFragment extends Fragment {
                 text = "";
             }
             tv.setText(text);
+        }
+    }
+
+    private ImageView iv_bg;
+    private Space space_status;
+    private boolean tintStatusBarByColor = true;//or tintStatusBarByImage
+    private boolean tintStatusBarByImage = true;//or tintStatusBarByImage
+    private boolean enableTintStatusBar = true;
+
+    public ImageView getBackgroundImageView() {
+        return iv_bg;
+    }
+
+    public View createContentView(@LayoutRes int layoutResID) {
+        if (enableTintStatusBar && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //activity根布局
+            AutoRelativeLayout dectorView = new AutoRelativeLayout(getActivity());
+
+            //添加背景图
+            iv_bg = new ImageView(getActivity());
+            iv_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            RelativeLayout.LayoutParams lp_bg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            iv_bg.setId(R.id.id_statusbar_tint_bg);
+            dectorView.addView(iv_bg, lp_bg);
+
+            //标题栏占位布局
+            space_status = new Space(getActivity());
+            space_status.setId(R.id.id_statusbar_tint_space);
+            RelativeLayout.LayoutParams lp_space = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+            dectorView.addView(space_status, lp_space);
+
+            //contentView
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            lp.addRule(RelativeLayout.BELOW, R.id.id_statusbar_tint_space);
+            View subContentView = View.inflate(getActivity(), layoutResID, null);
+            dectorView.addView(subContentView, lp);
+
+            //将背景色转移到dectorView
+            dectorView.setBackground(subContentView.getBackground());
+            subContentView.setBackground(null);
+
+            return dectorView;
+        } else {
+            return View.inflate(getActivity(), layoutResID, null);
+        }
+    }
+
+    public void setStatusBarTintEnabled(boolean enabled) {
+        this.enableTintStatusBar = enabled;
+        if (iv_bg == null || space_status == null) return;
+
+
+        if (enabled) {
+            if (tintStatusBarByColor) {
+                space_status.setVisibility(View.VISIBLE);
+                ViewGroup.LayoutParams lp_space = space_status.getLayoutParams();
+                lp_space.height = DisplayUtil.getStatusBarHeight(getActivity());
+                space_status.setLayoutParams(lp_space);
+            } else {
+                space_status.setVisibility(View.GONE);
+            }
+
+            if (tintStatusBarByImage) {
+                iv_bg.setVisibility(View.VISIBLE);
+            } else {
+                iv_bg.setVisibility(View.GONE);
+            }
+        } else {
+            iv_bg.setVisibility(View.GONE);
+            space_status.setVisibility(View.GONE);
         }
     }
 

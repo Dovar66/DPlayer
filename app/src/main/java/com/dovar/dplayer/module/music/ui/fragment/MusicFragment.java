@@ -1,8 +1,8 @@
 package com.dovar.dplayer.module.music.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,23 +12,25 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.bean.Music;
 import com.dovar.dplayer.bean.MusicByIdBean;
 import com.dovar.dplayer.common.base.BaseFragment;
 import com.dovar.dplayer.common.customview.lyric.LyricView;
 import com.dovar.dplayer.common.utils.Constants;
+import com.dovar.dplayer.common.utils.PhotoUtil;
 import com.dovar.dplayer.common.utils.ToastUtil;
 import com.dovar.dplayer.module.music.MusicService;
 import com.dovar.dplayer.module.music.contract.MusicContract;
 import com.dovar.dplayer.module.music.presenter.MusicPresenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by heweizong on 2017/10/11.
@@ -38,6 +40,7 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
 
     public static final String KEY_MUSIC = "key_music";
     public static final String KEY_MUSICLIST = "key_music_list";
+    private Callback mCallback;
     @BindView(R.id.tv_title)
     TextView tv_title;//顶部显示的歌曲名
     @BindView(R.id.seekbar)
@@ -65,14 +68,6 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
 
     private MusicPresenter mPresenter;
 
-    public static MusicFragment newInstance(Music mMusic) {
-        MusicFragment fragment = new MusicFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putSerializable(KEY_MUSIC, mMusic);
-        fragment.setArguments(mBundle);
-        return fragment;
-    }
-
     public static MusicFragment newInstance(int index, ArrayList<Music> mMusicList) {
         MusicFragment fragment = new MusicFragment();
         Bundle mBundle = new Bundle();
@@ -82,24 +77,60 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
         return fragment;
     }
 
+    public void updateMusics(int index, ArrayList<Music> mMusicList) {
+        if (mMusicList != null && index >= 0 && mMusicList.size() > index) {
+            curIndex = index;
+            musicList = mMusicList;
+            playMusic(curIndex);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parseIntent();
+        if (mCallback != null) {
+            mCallback.onPlayerShowOrHide(true);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mCallback != null) {
+            mCallback.onPlayerShowOrHide(false);
+        }
+        super.onDestroy();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_music_play, container, false);
+        mainView = createContentView(R.layout.fragment_music_play);
+        setStatusBarTintEnabled(true);
 
-        ButterKnife.bind(mainView);
+        ButterKnife.bind(this, mainView);
         MusicService.startMusicService(getActivity());
         initUI();
         initData();
 
         playMusic(curIndex);
         return mainView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Callback) {
+            mCallback = (Callback) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mCallback != null) {
+            mCallback = null;
+        }
     }
 
     private void parseIntent() {
@@ -136,7 +167,7 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
 
     @Override
     protected void initUI() {
-        setText(tv_title, musicList.get(curIndex).getName());
+
     }
 
     @Override
@@ -146,34 +177,47 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
 
     //上一首
     @OnClick(R.id.iv_previous)
-    void onClickPrevious() {
+    void onClickPrevious(View v) {
         playNextOrPrevious(false);
     }
 
     //下一首
     @OnClick(R.id.iv_next)
-    void onClickNext() {
+    void onClickNext(View v) {
         playNextOrPrevious(true);
     }
 
     //播放&暂停
     @OnClick(R.id.iv_play_pause)
-    void playAndPause() {
+    void playAndPause(View v) {
         getActivity().sendBroadcast(new Intent(Constants.ACTION_PLAY));
     }
 
     //播放模式
     @OnClick(R.id.iv_play_mode)
-    void onClickPlayMode() {
-
+    void onClickPlayMode(View v) {
+        switch (playMode) {
+            case Constants.MODE_INORDER:
+                playMode = Constants.MODE_RANDOM;
+                iv_playMode.setImageResource(R.drawable.ic_order_random);
+                break;
+            case Constants.MODE_RANDOM:
+                playMode = Constants.MODE_SINGLE;
+                iv_playMode.setImageResource(R.drawable.ic_order_single);
+                break;
+            case Constants.MODE_SINGLE:
+                playMode = Constants.MODE_INORDER;
+                iv_playMode.setImageResource(R.drawable.ic_play_order);
+                break;
+        }
     }
 
     @OnClick(R.id.ll_back)
-    void onClickBack() {
+    void onClickBack(View v) {
         getActivity().onBackPressed();
     }
 
-    public static int playMode = Constants.MODE_INORDER;//歌曲播放模式<顺序播放、随机播放、单曲循环>,默认顺序播放
+    private int playMode = Constants.MODE_INORDER;//歌曲播放模式<顺序播放、随机播放、单曲循环>,默认顺序播放
 
     /**
      * 播放上一首或下一首
@@ -215,7 +259,7 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
     }
 
     private void playMusic(int index) {
-        if (index >= 0 && index < musicList.size()) {
+        if (index >= 0 && musicList != null && index < musicList.size()) {
             Music playingMusic = musicList.get(index);
             if (playingMusic != null) {
                 if (TextUtils.isEmpty(playingMusic.getUrl())) {
@@ -223,8 +267,17 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
                 } else {
                     MusicService.startPlay(getActivity(), playingMusic.getUrl());
                 }
+
+                setText(tv_title, playingMusic.getName());
+                //背景高斯模糊
+                Glide.with(this).load(PhotoUtil.bigPhoto(playingMusic.getPic_big())).bitmapTransform(new BlurTransformation(getActivity())).into(getBackgroundImageView());
             }
         }
+    }
+
+    public interface Callback {
+
+        void onPlayerShowOrHide(boolean isShow);
     }
 
 }

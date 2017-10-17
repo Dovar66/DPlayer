@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -43,11 +45,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends StatusBarTintActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeContract.IView {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeContract.IView, MusicFragment.Callback {
 
     private ImageView navImageView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,17 +274,11 @@ public class MainActivity extends StatusBarTintActivity
         toolbar.setTitle("多媒体");
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                VideoListActivity.jump(MainActivity.this);
-                            }
-                        }).show();
+                showMusicPlayer(0, null);
             }
         });
 
@@ -371,11 +369,34 @@ public class MainActivity extends StatusBarTintActivity
         ToastUtil.show("获取视频失败");
     }
 
-    public void showMusicPlayer(int index, ArrayList<Music> mMusicList){
-        MusicFragment musicFragment = MusicFragment.newInstance(index,mMusicList);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    public void showMusicPlayer(int index, ArrayList<Music> mMusicList) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Fragment musicFragment = fm.findFragmentByTag("musicPlayer");
+        if (musicFragment == null) {
+            musicFragment = MusicFragment.newInstance(index, mMusicList);
+        } else {
+            if (musicFragment instanceof MusicFragment) {
+                ((MusicFragment) musicFragment).updateMusics(index, mMusicList);
+            }
+        }
         ft.replace(R.id.fragContainer, musicFragment, "musicPlayer");
         ft.addToBackStack("musicPlayer");
         ft.commit();
+    }
+
+    @Override
+    public void onPlayerShowOrHide(boolean isShow) {
+        if (fab == null) return;
+        if (isShow) {
+            fab.setVisibility(View.GONE);
+        } else {
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @OnClick(R.id.video_view_all)
+    void videoViewAll(View v) {
+        VideoListActivity.jump(MainActivity.this);
     }
 }
