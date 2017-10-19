@@ -154,21 +154,21 @@
                 android:layout_marginRight="-6dp">
 
                 <TextView
-                    android:id="@+id/recentsRecyclerLabel"
+                    android:id="@+id/tv_music"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:text="music"
+                    android:text="推荐音乐"
                     android:textColor="#888"
-                    android:textSize="16dp"
+                    android:textSize="32px"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/recentsNothingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/recentsRecyclerLabel"
+                    android:layout_below="@+id/tv_music"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="25dp"
                     android:layout_marginTop="25dp"
@@ -177,22 +177,11 @@
                     android:textSize="13dp"
                     android:visibility="visible"/>
 
-                <TextView
-                    android:id="@+id/recents_view_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/recentsRecyclerLabel"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:text="VIEW ALL"
-                    android:textColor="#888"
-                    android:textSize="13sp"/>
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_musicList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/recentsRecyclerLabel"
+                    android:layout_below="@+id/tv_music"
                     android:padding="5dp"/>
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -215,22 +204,22 @@
 
 
                 <TextView
-                    android:id="@+id/playListRecyclerLabel"
+                    android:id="@+id/tv_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:text="video"
+                    android:text="推荐视频"
                     android:textColor="#888"
-                    android:textSize="16dp"
+                    android:textSize="32px"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/playlistNothingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/playListRecyclerLabel"
+                    android:layout_below="@+id/tv_video"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="25dp"
                     android:layout_marginTop="25dp"
@@ -239,23 +228,11 @@
                     android:textSize="13dp"
                     android:visibility="visible"/>
 
-
-                <TextView
-                    android:id="@+id/video_view_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/playListRecyclerLabel"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:text="VIEW ALL"
-                    android:textColor="#888"
-                    android:textSize="13sp"/>
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_videoList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/playListRecyclerLabel"
+                    android:layout_below="@+id/tv_video"
                     android:padding="5dp"/>
             </com.zhy.autolayout.AutoRelativeLayout>
 

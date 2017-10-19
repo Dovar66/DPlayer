@@ -4,11 +4,11 @@
                                        xmlns:tools="http://schemas.android.com/tools"
                                        android:layout_width="wrap_content"
                                        android:layout_height="wrap_content"
-                                       android:layout_margin="7dp"
                                        android:background="@drawable/custom_ripple"
                                        android:clickable="true"
                                        android:focusable="true"
-                                       android:longClickable="true">
+                                       android:longClickable="true"
+                                       android:padding="1px">
 
     <ImageView
         android:id="@+id/iv_cover"
@@ -17,35 +17,35 @@
         android:scaleType="centerCrop"
         tools:src="@mipmap/ic_launcher"/>
 
-    <RelativeLayout
+    <com.zhy.autolayout.AutoRelativeLayout
         android:id="@+id/bottomHolder"
         android:layout_width="230px"
-        android:layout_height="95px"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/iv_cover">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
-            android:layout_height="45px"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10px"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Title"
-            android:textColor="#FFF"
+            android:textColor="@color/colorDark"
             android:textSize="26px"/>
 
         <TextView
             android:id="@+id/tv_artist"
             android:layout_width="match_parent"
-            android:layout_height="38px"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tv_title"
             android:layout_marginTop="-5dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Artist"
-            android:textColor="#EEE"
-            android:textSize="18px"/>
+            android:textColor="@color/colorDark"
+            android:textSize="20px"/>
 
-    </RelativeLayout>
+    </com.zhy.autolayout.AutoRelativeLayout>
 </com.zhy.autolayout.AutoRelativeLayout>

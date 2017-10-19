@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -288,14 +289,13 @@ public abstract class BaseFragment extends Fragment {
     private Space space_status;
     private boolean tintStatusBarByColor = true;//or tintStatusBarByImage
     private boolean tintStatusBarByImage = true;//or tintStatusBarByImage
-    private boolean enableTintStatusBar = true;
 
     public ImageView getBackgroundImageView() {
         return iv_bg;
     }
 
     public View createContentView(@LayoutRes int layoutResID) {
-        if (enableTintStatusBar && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //activity根布局
             AutoRelativeLayout dectorView = new AutoRelativeLayout(getActivity());
 
@@ -304,12 +304,13 @@ public abstract class BaseFragment extends Fragment {
             iv_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             RelativeLayout.LayoutParams lp_bg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             iv_bg.setId(R.id.id_statusbar_tint_bg);
+            iv_bg.setBackgroundResource(R.color.white);
             dectorView.addView(iv_bg, lp_bg);
 
             //标题栏占位布局
             space_status = new Space(getActivity());
             space_status.setId(R.id.id_statusbar_tint_space);
-            RelativeLayout.LayoutParams lp_space = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+            RelativeLayout.LayoutParams lp_space = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.getStatusBarHeight(getActivity()));
             dectorView.addView(space_status, lp_space);
 
             //contentView
@@ -329,16 +330,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void setStatusBarTintEnabled(boolean enabled) {
-        this.enableTintStatusBar = enabled;
         if (iv_bg == null || space_status == null) return;
-
 
         if (enabled) {
             if (tintStatusBarByColor) {
                 space_status.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams lp_space = space_status.getLayoutParams();
-                lp_space.height = DisplayUtil.getStatusBarHeight(getActivity());
-                space_status.setLayoutParams(lp_space);
             } else {
                 space_status.setVisibility(View.GONE);
             }
@@ -352,6 +348,14 @@ public abstract class BaseFragment extends Fragment {
             iv_bg.setVisibility(View.GONE);
             space_status.setVisibility(View.GONE);
         }
+    }
+
+    public void setStatusBarColor(@DrawableRes int resId) {
+        tintStatusBarByColor = true;
+        if (space_status == null) return;
+
+        space_status.setBackgroundResource(resId);
+        space_status.setVisibility(View.VISIBLE);
     }
 
 }

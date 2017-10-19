@@ -58,7 +58,7 @@ public class DMediaController implements IMediaController {
     private TextView mEndTime, mCurrentTime;//视频时长、当前播放时间
     private CheckBox mPauseCheckbox;//播放暂停按钮
 
-    private View popupView;
+    private View popupView;//mVideoView的controllerView，包含播放按钮、暂停按钮等UI
     private long mDuration;
     private boolean mShowing;
     private boolean mDragging;

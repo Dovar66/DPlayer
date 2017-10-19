@@ -395,8 +395,17 @@ public class MainActivity extends StatusBarTintActivity
         }
     }
 
-    @OnClick(R.id.video_view_all)
+    @OnClick(R.id.tv_video)
     void videoViewAll(View v) {
         VideoListActivity.jump(MainActivity.this);
+    }
+
+    @OnClick(R.id.tv_music)
+    void musicViewAll(View v) {
+        MusicListFragment mMusicListFragment = MusicListFragment.newInstance();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragContainer, mMusicListFragment, "musicList");
+        ft.addToBackStack("musicList");
+        ft.commit();
     }
 }

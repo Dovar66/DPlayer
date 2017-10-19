@@ -49,7 +49,7 @@ public class MusicListFragment extends BaseFragment implements MusicListContract
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_local_music, container,false);
+        mainView = createContentView(R.layout.fragment_local_music);
 
         initUI();
         initData();
@@ -100,7 +100,6 @@ public class MusicListFragment extends BaseFragment implements MusicListContract
     public void onFail() {
 
     }
-
 
 
 }

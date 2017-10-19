@@ -41,7 +41,7 @@ public class LocalMusicFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_local_music, container, false);
+        mainView =createContentView(R.layout.fragment_local_music);
         initUI();
         initData();
         return mainView;
