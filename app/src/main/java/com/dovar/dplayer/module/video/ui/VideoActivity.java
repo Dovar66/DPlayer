@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.common.DMediaController;
@@ -15,6 +16,7 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
     private DMediaController mDMediaController;
     private static final String Key_url = "key_url";
     private String video_url;
+    private ImageView iv_start;
 
     public static void jump(Context mContext, String url) {
         Intent mIntent = new Intent(mContext, VideoActivity.class);
@@ -97,27 +99,60 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
 
     @Override
     public void onPauseOrPlay(boolean isPause) {
-
+        if (iv_start != null) {
+            if (isPause) {
+                iv_start.setVisibility(View.VISIBLE);
+            } else {
+                iv_start.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
     public void initPortControllerView(View v) {
+        View ll_space = v.findViewById(R.id.ll_space);
+        View ll_playback = v.findViewById(R.id.ll_playback);
+        if (mDMediaController.isLive()) {
+            ll_space.setVisibility(View.VISIBLE);
+            ll_playback.setVisibility(View.GONE);
+        } else {
+            ll_space.setVisibility(View.GONE);
+            ll_playback.setVisibility(View.VISIBLE);
+        }
 
+        iv_start = (ImageView) v.findViewById(R.id.iv_start);
+        if (iv_start != null) {
+            iv_start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDMediaController.start();
+                    iv_start.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Override
     public void initLandControllerView(View v) {
-
+        View ll_space = v.findViewById(R.id.ll_space);
+        View ll_playback = v.findViewById(R.id.ll_playback);
+        if (mDMediaController.isLive()) {
+            ll_space.setVisibility(View.VISIBLE);
+            ll_playback.setVisibility(View.GONE);
+        } else {
+            ll_space.setVisibility(View.GONE);
+            ll_playback.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public View makeControllerView() {
-        return null;
+        return View.inflate(mContext, R.layout.media_controll_view_tv, null);
     }
 
     @Override
     public View makeLandControllerView() {
-        return null;
+        return View.inflate(mContext, R.layout.media_controll_view_big_tv, null);
     }
 
 }

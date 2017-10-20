@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gdtv.third.autolayout.AutoFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                           xmlns:tools="http://schemas.android.com/tools"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_video_shadow"/>
+
+    <com.gdtv.third.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.gdtv.third.autolayout.AutoRelativeLayout
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24px"
+            android:paddingLeft="30px"
+            android:paddingRight="30px"
+            android:paddingTop="24px">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/nav_back_white"/>
+
+        </com.gdtv.third.autolayout.AutoRelativeLayout>
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/ibMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_20px"
+            android:paddingLeft="@dimen/dimen_20px"
+            android:paddingRight="@dimen/dimen_30px"
+            android:paddingTop="24px">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/nav_more"/>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_start"
+            android:layout_width="121px"
+            android:layout_height="121px"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_centerInParent="true"
+            android:src="@drawable/video_play_big"/>
+
+        <ImageButton
+            android:id="@+id/iv_mute"
+            android:layout_width="65px"
+            android:layout_height="65px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:background="@drawable/video_btn_volume_off"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="120px"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/shape_video_shadow_bottom"/>
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/ll_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.gdtv.third.autolayout.AutoLinearLayout
+                android:id="@+id/ll_playback"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+
+                <com.gdtv.third.autolayout.AutoRelativeLayout
+                    android:id="@+id/pause_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/dimen_20px"
+                    android:paddingLeft="26px"
+                    android:paddingRight="12px">
+
+                    <CheckBox
+                        android:id="@+id/pause"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/radio_play_or_pause"
+                        android:button="@null"/>
+                </com.gdtv.third.autolayout.AutoRelativeLayout>
+
+                <TextView
+                    android:id="@+id/time_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16px"
+                    android:paddingBottom="@dimen/dimen_20px"
+                    android:text="00:00"
+                    android:textColor="@color/T5"
+                    android:textSize="24px"/>
+
+                <com.gdtv.third.autolayout.AutoLinearLayout
+                    android:id="@+id/ll_seek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_20px">
+
+                    <SeekBar
+                        android:id="@+id/progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxHeight="4px"
+                        android:minHeight="4px"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="0dp"
+                        android:progressDrawable="@drawable/seekbar_style"
+                        android:thumb="@drawable/thumb"/>
+                </com.gdtv.third.autolayout.AutoLinearLayout>
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16px"
+                    android:paddingBottom="@dimen/dimen_20px"
+                    android:textColor="@color/T5"
+                    android:textSize="24px"
+                    tools:text="01:12:03"/>
+
+            </com.gdtv.third.autolayout.AutoLinearLayout>
+
+            <Space
+                android:id="@+id/ll_space"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"/>
+
+            <com.gdtv.third.autolayout.AutoRelativeLayout
+                android:id="@+id/expand_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dimen_20px"
+                android:paddingLeft="12px"
+                android:paddingRight="26px">
+
+                <ImageView
+                    android:id="@+id/expand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/video_btn_full_screen"/>
+            </com.gdtv.third.autolayout.AutoRelativeLayout>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+    </com.gdtv.third.autolayout.AutoRelativeLayout>
+
+</com.gdtv.third.autolayout.AutoFrameLayout>

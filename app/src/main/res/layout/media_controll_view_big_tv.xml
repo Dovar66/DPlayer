@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gdtv.third.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              xmlns:tools="http://schemas.android.com/tools"
+                                              android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140px"
+        android:background="@drawable/shape_video_shadow_bottom"
+        android:rotation="180"/>
+
+    <com.gdtv.third.autolayout.AutoLinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30px"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/nav_back_white"/>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="广东体育频道—欧洲杯西班牙VS"
+            android:textColor="@color/T5"
+            android:textSize="32px"/>
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/ratio_ll"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30px"
+                android:layout_marginLeft="35px"
+                android:layout_marginRight="35px"
+                android:layout_marginTop="30px"
+                android:gravity="center"
+                android:text="流畅"
+                android:textColor="@color/white_FFFFFF"
+                android:textSize="32px"/>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/favorite_ll"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/favorite"
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:layout_marginBottom="30px"
+                android:layout_marginLeft="35px"
+                android:layout_marginRight="35px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/fscreen_btn_collect_nor"/>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/ibMore"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:layout_marginBottom="30px"
+                android:layout_marginLeft="35px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/nav_more"/>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+
+    </com.gdtv.third.autolayout.AutoLinearLayout>
+
+    <com.gdtv.third.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:id="@+id/lock"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"
+            android:background="@drawable/fscreen_btn_lock_off"/>
+
+        <ImageButton
+            android:id="@+id/iv_mute"
+            android:layout_width="100px"
+            android:layout_height="100px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            android:background="@drawable/fscreen_btn_volume_off"/>
+    </com.gdtv.third.autolayout.AutoRelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120px"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shape_video_shadow_bottom"/>
+
+    <com.gdtv.third.autolayout.AutoLinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/ll_playback"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <com.gdtv.third.autolayout.AutoLinearLayout
+                android:id="@+id/pause_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/dimen_20px"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/pause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="26px"
+                    android:layout_marginRight="26px"
+                    android:background="@drawable/radio_play_or_pause"
+                    android:button="@null"/>
+            </com.gdtv.third.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:id="@+id/time_current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15px"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/dimen_20px"
+                android:text="00:00:00"
+                android:singleLine="true"
+                android:textColor="@color/white_FFFFFF"
+                android:textSize="26px"/>
+
+            <com.gdtv.third.autolayout.AutoLinearLayout
+                android:id="@+id/ll_seek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingBottom="@dimen/dimen_20px"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <SeekBar
+                    android:id="@+id/progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="10px"
+                    android:minHeight="10px"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
+                    android:progressDrawable="@drawable/seekbar_style"
+                    android:thumb="@drawable/thumb"
+                    />
+            </com.gdtv.third.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22px"
+                android:gravity="center"
+                android:text="00:00:00"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/dimen_20px"
+                android:textColor="@color/white_FFFFFF"
+                android:textSize="26px"/>
+
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+
+        <Space
+            android:id="@+id/ll_space"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_weight="1"/>
+
+        <com.gdtv.third.autolayout.AutoLinearLayout
+            android:id="@+id/expand_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dimen_20px"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="26px"
+                android:background="@drawable/fullscreen_ic_small"/>
+        </com.gdtv.third.autolayout.AutoLinearLayout>
+    </com.gdtv.third.autolayout.AutoLinearLayout>
+
+    <!--我也不知道为什么，反正在布局里随便加个RecyclerView，然后popupWindow的内容就不会扩展到导航栏了 -->
+    <!--这个bug查了一天 -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        />
+</com.gdtv.third.autolayout.AutoRelativeLayout>

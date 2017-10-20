@@ -10,41 +10,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.android.volley.Response;
 import com.bumptech.glide.Glide;
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.bean.Music;
 import com.dovar.dplayer.bean.MusicByIdBean;
-import com.dovar.dplayer.common.MyApplication;
 import com.dovar.dplayer.common.base.BaseFragment;
 import com.dovar.dplayer.common.customview.lyric.LyricView;
 import com.dovar.dplayer.common.utils.Constants;
-import com.dovar.dplayer.common.utils.DisplayUtil;
 import com.dovar.dplayer.common.utils.PhotoUtil;
 import com.dovar.dplayer.common.utils.ToastUtil;
-import com.dovar.dplayer.http.RetrofitUtil;
 import com.dovar.dplayer.module.music.MusicService;
 import com.dovar.dplayer.module.music.contract.MusicContract;
 import com.dovar.dplayer.module.music.presenter.MusicPresenter;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import okhttp3.Call;
-import okhttp3.Callback;
 
 /**
  * Created by heweizong on 2017/10/11.
@@ -75,11 +69,10 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
     LyricView mLyricView;//歌词
 
     private final int INTERVAL = 45;// 歌词每行的间隔
-    private String lrc = Environment.getExternalStorageDirectory() + File.separator + "musicLyric";//歌词保存路径
-    private static int height = 600;//点击歌曲列表进入本页时onGlobalLayout（）在onResumeData()之前执行，从右上角标进入时则相反
 
     private ArrayList<Music> musicList;//当前播放歌单
     private int curIndex;//当前歌曲在列表中的位置
+    private int duration=1;//当前播放歌曲总时长
 
     private MusicPresenter mPresenter;
 
@@ -129,15 +122,6 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
         initData();
 
         playMusic(curIndex);
-        //设置高亮歌词的显示高度，显示在歌词控件中间
-        mLyricView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mLyricView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                height = mLyricView.getHeight() / 2 + DisplayUtil.dip2px(getActivity(), 50) + DisplayUtil.getStatusBarHeight(getActivity());
-                mLyricView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
         return mainView;
     }
 
@@ -191,7 +175,34 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
 
     @Override
     protected void initUI() {
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //判断是否是用户触摸改变，代码中改变progress时为false
+                if (fromUser) {
+                    if (judgeError()) {
+                        return;
+                    }
+//                    Intent mIntent = new Intent();
+//                    mIntent.setAction(Constant.ACTION_CHANGE);
+//                    mIntent.putExtra("progress", progress);
+//                    sendBroadcast(mIntent);
+                    //调整歌词显示
+                    mLyricView.setOffsetY(220 - mLyricView.SelectIndex(progress / 100 * duration) * (mLyricView.getSIZEWORD() + INTERVAL));
+                    mLyricView.invalidate();
+                }
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
@@ -297,87 +308,118 @@ public class MusicFragment extends BaseFragment implements MusicContract.IView {
                 Glide.with(this).load(PhotoUtil.bigPhoto(playingMusic.getPic_big())).bitmapTransform(new BlurTransformation(getActivity())).into(getBackgroundImageView());
             }
 
-            searchLrc(0);
+            searchLrc();
         }
     }
 
     /**
      * 加载歌词
      */
-    private void searchLrc(int curDuration) {
+    private void searchLrc() {
         if (mLyricView != null) {
             if (musicList != null && musicList.size() > 0 && musicList.size() > curIndex) {
-                loadLyc(curDuration);
+                String lrc = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LyricSync/" + musicList.get(curIndex).getName().trim() + ".lrc";
+                if (!new File(lrc).exists()) {
+                    writeMedia(lrc);
+                }
+                LyricView.read(lrc);
+                mLyricView.SetTextSize();
+                mLyricView.setOffsetY(320);
             }
         }
     }
 
-    //加载歌词，本地没有则下载
-    private void loadLyc(final int curDuration) {
-        //歌词路径
-        final File mFile = new File(lrc + File.separator + musicList.get(curIndex).getName().trim() + ".lrc");
-        //如果歌词存在则直接读取歌词文件，不存在则下载并保存到该路径
-        if (!mFile.exists()) {
-            RetrofitUtil.testUrlByOkhttp(musicList.get(curIndex).getLrclink(), new okhttp3.Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
+    // 缓存歌词到本地
+    private void writeMedia(final String lrcPath) {
+        new Thread(new Runnable() {
 
-                }
+            @Override
+            public void run() {
+                FileOutputStream out = null;
+                InputStream is = null;
 
-                @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                    final String res = response.body().string();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                //判断歌词文件夹是否已创建，没有则创建
-                                File dir = new File(lrc);
-                                if (!dir.exists()) {
-                                    dir.mkdir();
-                                }
-                                //保存歌词信息为.lyric文件
-                                BufferedWriter bfw = new BufferedWriter(new FileWriter(mFile));
-                                bfw.write(res);
-                                bfw.flush();
-                                bfw.close();
-                            } catch (FileNotFoundException mE) {
-                                mE.printStackTrace();
-                            } catch (IOException mE) {
-                                mE.printStackTrace();
-                            }
-                            mLyricView.reset();
-                            //歌词内容不为空则读取歌词
-                            if (mFile.length() > 0) {
-                                mLyricView.read(mFile);
-                                mLyricView.SetTextSize(MyApplication.getInstance().getWidth());
-                                int index = mLyricView.SelectIndex(curDuration);
-                                mLyricView.setOffsetY(height - index * (mLyricView.getSIZEWORD() + INTERVAL));
-                                mLyricView.invalidate();
-                            }
+                String savePath = lrcPath;
+                try {
+                    URL url = new URL(musicList.get(curIndex).getLrclink());
+                    HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+                    if (savePath == null) {
+                        savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LyricSync/" + musicList.get(curIndex).getName() + ".lrc";
+                    }
+
+                    File cacheFile = new File(savePath);
+
+                    if (!cacheFile.exists()) {
+                        cacheFile.getParentFile().mkdirs();
+                        cacheFile.createNewFile();
+                    }
+
+                    long readSize = cacheFile.length();
+                    out = new FileOutputStream(cacheFile, true);
+
+                    httpConnection.setRequestProperty("User-Agent", "NetFox");
+                    httpConnection.setRequestProperty("RANGE", "bytes=" + readSize + "-");
+
+                    is = httpConnection.getInputStream();
+
+                    long mediaLength = httpConnection.getContentLength();
+                    if (mediaLength == -1) {
+                        return;
+                    }
+
+                    mediaLength += readSize;
+
+                    byte buf[] = new byte[4 * 1024];
+                    int size = 0;
+
+                    while ((size = is.read(buf)) != -1) {
+                        try {
+                            out.write(buf, 0, size);
+                            readSize += size;
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("error", e.toString());
+                } finally {
+                    if (out != null) {
+                        try {
+                            out.close();
+                        } catch (IOException e) {
+                            //
+                        }
+                    }
+
+                    if (is != null) {
+                        try {
+                            is.close();
+                        } catch (IOException e) {
+                            //
+                        }
+                    }
                 }
-            });
-        }
-        mLyricView.reset();
-        //歌词内容不为空则读取歌词
-        if (mFile.length() > 0) {
-            mLyricView.read(mFile);
-            mLyricView.SetTextSize(MyApplication.getInstance().getWidth());
-            int index = mLyricView.SelectIndex(curDuration);
-            mLyricView.setOffsetY(height - index * (mLyricView.getSIZEWORD() + INTERVAL));
-            mLyricView.invalidate();
-        }
+
+                LyricView.read(savePath);
+                mLyricView.SetTextSize();
+                mLyricView.setOffsetY(320);
+            }
+        }).start();
+
     }
+
+    private boolean judgeError() {
+        return musicList == null || musicList.size() == 0;
+    }
+
 
     public interface Callback {
 
         void onPlayerShowOrHide(boolean isShow);
     }
 
-    //更新歌词
-//                mLyricView.setOffsetY(mLyricView.getOffsetY()-mLyricView.SpeedLrc());
-//                mLyricView.SelectIndex(curPosition);
-//                mLyricView.invalidate();
+    //调整歌词显示
+//            mLyricView.setOffsetY(220-mLyricView.SelectIndex(progress/100*duration)*(mLyricView.getSIZEWORD()+INTERVAL));
+//            mLyricView.invalidate();
 }
