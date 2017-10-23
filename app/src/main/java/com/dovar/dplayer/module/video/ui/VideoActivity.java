@@ -2,6 +2,8 @@ package com.dovar.dplayer.module.video.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -64,7 +66,7 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
     }
 
     private void setupVideoPlayer() {
-        mDMediaController = new DMediaController(this);
+        mDMediaController = new DMediaController(this, false);
         mDMediaController.setControlListener(this);
         mDMediaController.setAnchorView((ViewGroup) findView(R.id.video_container));
         mDMediaController.startPlay(video_url);
@@ -131,6 +133,17 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
                 }
             });
         }
+
+        v.findViewById(R.id.expand_ll).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                }
+            }
+        });
     }
 
     @Override
@@ -144,6 +157,17 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
             ll_space.setVisibility(View.GONE);
             ll_playback.setVisibility(View.VISIBLE);
         }
+
+        v.findViewById(R.id.expand_ll).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                }
+            }
+        });
     }
 
     @Override

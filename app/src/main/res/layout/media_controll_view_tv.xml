@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gdtv.third.autolayout.AutoFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                            xmlns:tools="http://schemas.android.com/tools"
                                            android:layout_width="match_parent"
                                            android:layout_height="wrap_content">
@@ -10,11 +10,11 @@
         android:layout_height="match_parent"
         android:background="@drawable/shape_video_shadow"/>
 
-    <com.gdtv.third.autolayout.AutoRelativeLayout
+    <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.gdtv.third.autolayout.AutoRelativeLayout
+        <com.zhy.autolayout.AutoRelativeLayout
             android:id="@+id/ibBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,9 +28,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/nav_back_white"/>
 
-        </com.gdtv.third.autolayout.AutoRelativeLayout>
+        </com.zhy.autolayout.AutoRelativeLayout>
 
-        <com.gdtv.third.autolayout.AutoLinearLayout
+        <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/ibMore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/nav_more"/>
-        </com.gdtv.third.autolayout.AutoLinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
 
         <ImageView
             android:id="@+id/iv_start"
@@ -71,7 +71,7 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/shape_video_shadow_bottom"/>
 
-        <com.gdtv.third.autolayout.AutoLinearLayout
+        <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.gdtv.third.autolayout.AutoLinearLayout
+            <com.zhy.autolayout.AutoLinearLayout
                 android:id="@+id/ll_playback"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 android:visibility="gone">
 
 
-                <com.gdtv.third.autolayout.AutoRelativeLayout
+                <com.zhy.autolayout.AutoRelativeLayout
                     android:id="@+id/pause_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/radio_play_or_pause"
                         android:button="@null"/>
-                </com.gdtv.third.autolayout.AutoRelativeLayout>
+                </com.zhy.autolayout.AutoRelativeLayout>
 
                 <TextView
                     android:id="@+id/time_current"
@@ -115,7 +115,7 @@
                     android:textColor="@color/T5"
                     android:textSize="24px"/>
 
-                <com.gdtv.third.autolayout.AutoLinearLayout
+                <com.zhy.autolayout.AutoLinearLayout
                     android:id="@+id/ll_seek"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                         android:paddingStart="0dp"
                         android:progressDrawable="@drawable/seekbar_style"
                         android:thumb="@drawable/thumb"/>
-                </com.gdtv.third.autolayout.AutoLinearLayout>
+                </com.zhy.autolayout.AutoLinearLayout>
 
                 <TextView
                     android:id="@+id/time"
@@ -147,7 +147,7 @@
                     android:textSize="24px"
                     tools:text="01:12:03"/>
 
-            </com.gdtv.third.autolayout.AutoLinearLayout>
+            </com.zhy.autolayout.AutoLinearLayout>
 
             <Space
                 android:id="@+id/ll_space"
@@ -155,7 +155,7 @@
                 android:layout_height="1px"
                 android:layout_weight="1"/>
 
-            <com.gdtv.third.autolayout.AutoRelativeLayout
+            <com.zhy.autolayout.AutoRelativeLayout
                 android:id="@+id/expand_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -169,8 +169,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/video_btn_full_screen"/>
-            </com.gdtv.third.autolayout.AutoRelativeLayout>
-        </com.gdtv.third.autolayout.AutoLinearLayout>
-    </com.gdtv.third.autolayout.AutoRelativeLayout>
+            </com.zhy.autolayout.AutoRelativeLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
+    </com.zhy.autolayout.AutoRelativeLayout>
 
-</com.gdtv.third.autolayout.AutoFrameLayout>
+</com.zhy.autolayout.AutoFrameLayout>
