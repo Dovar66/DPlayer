@@ -1,12 +1,14 @@
 package com.dovar.dplayer.common.utils;
 
+import com.dovar.dplayer.BuildConfig;
+
 /**
  * Created by Administrator on 2017-09-25.
  */
 
 public class Constants {
     //调试模式
-    public static boolean isDebug = true;
+    public static boolean isDebug = BuildConfig.DEBUG;
 
     //播放模式
     public static final int MODE_INORDER = 1;//顺序播放

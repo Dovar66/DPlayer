@@ -5,4 +5,22 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="dimen_2px">2px</dimen>
+    <dimen name="dimen_10px">10px</dimen>
+    <dimen name="dimen_18px">18px</dimen>
+    <dimen name="dimen_20px">20px</dimen>
+    <dimen name="dimen_24px">24px</dimen>
+    <dimen name="dimen_30px">30px</dimen>
+
+    <!-- APP中所有字体的规范尺寸 -->
+    <dimen name="text_18px">18px</dimen>
+    <dimen name="text_20px">20px</dimen>
+    <dimen name="text_24px">24px</dimen>
+    <dimen name="text_28px">28px</dimen>
+    <dimen name="text_30px">30px</dimen>
+    <dimen name="text_32px">32px</dimen>
+    <dimen name="text_36px">36px</dimen>
+    <dimen name="text_40px">40px</dimen>
+    <dimen name="text_42px">42px</dimen>
 </resources>

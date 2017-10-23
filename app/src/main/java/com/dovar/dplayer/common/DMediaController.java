@@ -100,6 +100,7 @@ public class DMediaController implements IMediaController {
     private STATE playState = STATE.idle;//播放器当前状态
 
     private boolean isMute;//当前是否静音
+    private PhoneStateListener mPhoneStateListener;
 
     private Handler mHandler = new ControllerHandler(this);
 
@@ -184,23 +185,26 @@ public class DMediaController implements IMediaController {
         mContext = context;
         mAM = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mTM = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
-        mTM.listen(new PhoneStateListener() {
-            @Override
-            public void onCallStateChanged(int state, String incomingNumber) {
-                super.onCallStateChanged(state, incomingNumber);
-                switch (state) {
-                    case TelephonyManager.CALL_STATE_IDLE://挂断
-                        onCallStateChange();
-                        break;
-                    case TelephonyManager.CALL_STATE_RINGING://来电响铃
-                        onCallStateChange();
-                        break;
-                    case TelephonyManager.CALL_STATE_OFFHOOK://通话
-                        onCallStateChange();
-                        break;
+        if (mTM != null) {
+            mPhoneStateListener = new PhoneStateListener() {
+                @Override
+                public void onCallStateChanged(int state, String incomingNumber) {
+                    super.onCallStateChanged(state, incomingNumber);
+                    switch (state) {
+                        case TelephonyManager.CALL_STATE_IDLE://挂断
+                            onCallStateChange();
+                            break;
+                        case TelephonyManager.CALL_STATE_RINGING://来电响铃
+                            onCallStateChange();
+                            break;
+                        case TelephonyManager.CALL_STATE_OFFHOOK://通话
+                            onCallStateChange();
+                            break;
+                    }
                 }
-            }
-        }, PhoneStateListener.LISTEN_CALL_STATE);
+            };
+            mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
         initPlayer();
     }
 
@@ -307,23 +311,6 @@ public class DMediaController implements IMediaController {
         });
     }
 
-//    @Override
-//    public void onFinishInflate() {
-//        if (popupView != null)
-//            initControllerView(popupView);
-//        super.onFinishInflate();
-//        setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mShowing) {
-//                    hide();
-//                } else {
-//                    show(sDefaultTimeout);
-//                }
-//            }
-//        });
-//    }
-
     protected void initControllerView(View v) {
         if (mListener != null) {
             if (isFullScreen) {
@@ -341,40 +328,38 @@ public class DMediaController implements IMediaController {
             popupDismiss();
             mAnchor.addView(v);
         }
-//        mPauseCheckbox = (CheckBox) v.findViewById(R.id.pause);
-//        View ll_mPause = v.findViewById(R.id.pause_ll);
-//        if (mPauseCheckbox != null) {
-//            mPauseCheckbox.setOnClickListener(mPauseListener);
-//        }
-//        if (ll_mPause != null) {
-//            ll_mPause.setOnClickListener(mPauseListener);
-//        }
-//        if (!isLive) {
-//            View ll_seek = v.findViewById(R.id.ll_seek);
-//            if (ll_seek != null) {
-//                //扩大seekbar的事件响应区域
-//                ll_seek.setOnTouchListener(touchListener);
-//            }
-//            mProgress = (SeekBar) v.findViewById(R.id.progress);
-//            if (mProgress != null) {
-//                mProgress.setOnSeekBarChangeListener(mSeekListener);
-//                mProgress.setThumbOffset(1);
-//                mProgress.setMax(1000);
-//                mProgress.setEnabled(!mDisableProgress);
-//            }
-//
-//            mEndTime = (TextView) v.findViewById(R.id.time);
-//            mCurrentTime = (TextView) v.findViewById(R.id.time_current);
-//        }
-//        View iv_mute = v.findViewById(R.id.iv_mute);
-//        if (iv_mute != null) {
-//            if (isMute) {
-//                iv_mute.setBackgroundResource(R.drawable.video_btn_volume_off);
-//            } else {
-//                iv_mute.setBackgroundResource(R.drawable.video_btn_volume_on);
-//            }
-//            iv_mute.setOnClickListener(muteListener);
-//        }
+        //初始化播放器必不可少的播放相关的UI控件
+        mPauseCheckbox = (CheckBox) v.findViewById(R.id.pause);
+        View ll_mPause = v.findViewById(R.id.pause_ll);
+        if (ll_mPause != null) {
+            ll_mPause.setOnClickListener(mPauseListener);
+        }
+        if (!isLive) {
+            View ll_seek = v.findViewById(R.id.ll_seek);
+            if (ll_seek != null) {
+                //扩大seekbar的事件响应区域
+                ll_seek.setOnTouchListener(touchListener);
+            }
+            mProgress = (SeekBar) v.findViewById(R.id.progress);
+            if (mProgress != null) {
+                mProgress.setOnSeekBarChangeListener(mSeekListener);
+                mProgress.setThumbOffset(1);
+                mProgress.setMax(1000);
+                mProgress.setEnabled(!mDisableProgress);
+            }
+
+            mEndTime = (TextView) v.findViewById(R.id.time);
+            mCurrentTime = (TextView) v.findViewById(R.id.time_current);
+        }
+        View iv_mute = v.findViewById(R.id.iv_mute);
+        if (iv_mute != null) {
+            if (isMute) {
+                iv_mute.setBackgroundResource(R.drawable.video_btn_volume_off);
+            } else {
+                iv_mute.setBackgroundResource(R.drawable.video_btn_volume_on);
+            }
+            iv_mute.setOnClickListener(muteListener);
+        }
     }
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -514,21 +499,6 @@ public class DMediaController implements IMediaController {
         }
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        if (event == null || super.onTouchEvent(event)) {
-//            show();
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onTrackballEvent(MotionEvent ev) {
-//        show();
-//        return false;
-//    }
-
     private View.OnClickListener mPauseListener = new View.OnClickListener() {
         public void onClick(View v) {
             doPauseResume();
@@ -561,7 +531,6 @@ public class DMediaController implements IMediaController {
         updatePausePlay();
     }
 
-
     private SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
 
         public void onStartTrackingTouch(SeekBar bar) {
@@ -575,8 +544,9 @@ public class DMediaController implements IMediaController {
             mDragging = true;
             show(sDefaultTimeout);
             mHandler.removeMessages(SHOW_PROGRESS);
-            if (mInstantSeeking)
+            if (mInstantSeeking && mAM != null) {
                 mAM.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            }
         }
 
         public void onProgressChanged(SeekBar bar, int progress, boolean fromuser) {
@@ -620,7 +590,7 @@ public class DMediaController implements IMediaController {
 
             show(sDefaultTimeout);
             mHandler.removeMessages(SHOW_PROGRESS);
-            if (!isMute) {
+            if (!isMute && mAM != null) {
                 mAM.setStreamMute(AudioManager.STREAM_MUSIC, false);
             }
             mDragging = false;
@@ -636,54 +606,53 @@ public class DMediaController implements IMediaController {
      * - AudioPlayer has no anchor view, so the view parameter will be null.
      *
      * @param view The view to which to anchor the controller when it is visible.
-     *             每次开始播放都会被回调
+     *             每次开始播放都会被七牛播放器回调
+     * @deprecated by setAnchorView(ViewGroup container)
      */
     @Override
     public void setAnchorView(View view) {
-        if (mAnchor == null && mListener != null) {
-            if (view instanceof ViewGroup) {
-                mAnchor = (ViewGroup) view;
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                //将videoView放置在mAnchor的最底层，controllerView则放置在最上层，其余包括StateController在内的页面逻辑视图都在中间层
-                //mAnchor必须是RelativeLayout或FrameLayout
-                mAnchor.addView(mVideoView, 0, lp);
-            } else {
-                throw new RuntimeException((getClass().getSimpleName() + "Init Failed!"));
-            }
-            if (isFullScreen) {
-                popupView = mListener.makeLandControllerView();
-            } else {
-                popupView = mListener.makeControllerView();
-            }
-            initControllerView(popupView);
-        } else {
-            LogUtil.d(TAG, "setAnchorView: 又被回调了");//，为什么每次播放都回调？
-        }
+//        if (mAnchor == null && mListener != null) {
+//            if (view instanceof ViewGroup) {
+//                mAnchor = (ViewGroup) view;
+//                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                //将videoView放置在mAnchor的最底层，controllerView则放置在最上层，其余包括StateController在内的页面逻辑视图都在中间层
+//                //mAnchor必须是RelativeLayout或FrameLayout
+//                mAnchor.addView(mVideoView, 0, lp);
+//            } else {
+//                throw new RuntimeException((getClass().getSimpleName() + "Init Failed!"));
+//            }
+//            if (isFullScreen) {
+//                popupView = mListener.makeLandControllerView();
+//            } else {
+//                popupView = mListener.makeControllerView();
+//            }
+//            initControllerView(popupView);
+//        }
     }
 
-//    public void setAnchorView(ViewGroup container) {
-//        if (mAnchor == null && mListener != null) {
-    //将videoView放置在mAnchor的最底层，controllerView则放置在最上层，其余包括StateController在内的页面逻辑视图都在中间层
-    //controllerView与中间层未消费的点击事件最终传递给videoView，videoView响应onTouchEvent()方法控制controllerView的展示
-    //videoView未获取到PLMediaPlayer时不会响应show()/hide()方法
-    //mAnchor必须是RelativeLayout或FrameLayout
-//            if (container instanceof RelativeLayout || container instanceof FrameLayout) {
-//                mAnchor = container;
-//                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                mAnchor.addView(mVideoView, 0, lp);
-//                if (isFullScreen) {
-//                    popupView = mListener.makeLandControllerView();
-//                } else {
-//                    popupView = mListener.makeControllerView();
-//                }
-//                initControllerView(popupView);
-//            } else {
-//                throw new RuntimeException((getClass().getSimpleName() + "Init Failed! require RelativeLayout||FrameLayout!"));
-//            }
-//        } else {
-//            LogUtil.showHideController(TAG, "setAnchorView: 又被回调了");//，为什么每次播放都回调？
-//        }
-//    }
+    //不会被七牛播放器回调
+     /*将videoView放置在mAnchor的最底层，controllerView则放置在最上层，其余包括StateController在内的页面逻辑视图都在中间层
+    controllerView与中间层未消费的点击事件最终传递给videoView，videoView响应onTouchEvent()方法控制controllerView的展示
+    videoView未获取到PLMediaPlayer时不会响应show()/hide()方法
+    mAnchor必须是RelativeLayout或FrameLayout
+    */
+    public void setAnchorView(ViewGroup container) {
+        if (mAnchor == null && mListener != null) {
+            if (container instanceof RelativeLayout || container instanceof FrameLayout) {
+                mAnchor = container;
+                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                mAnchor.addView(mVideoView, 0, lp);
+                if (isFullScreen) {
+                    popupView = mListener.makeLandControllerView();
+                } else {
+                    popupView = mListener.makeControllerView();
+                }
+                initControllerView(popupView);
+            } else {
+                throw new RuntimeException((getClass().getSimpleName() + "Init Failed! require RelativeLayout||FrameLayout!"));
+            }
+        }
+    }
 
     private void popupDismiss() {
         if (popupView == null) return;
@@ -707,7 +676,6 @@ public class DMediaController implements IMediaController {
     public void show() {
         show(sDefaultTimeout);
     }
-
 
     /**
      * Show the controller on screen. It will go away automatically after
@@ -917,6 +885,7 @@ public class DMediaController implements IMediaController {
 
     //播放视频前检查手机是否处于通话状态，是则设置静音，但这里不需要修改isMute的值
     private void setMuteOnCalling() {
+        if (mTM == null || mAM == null) return;
         if (mTM.getCallState() != TelephonyManager.CALL_STATE_IDLE) {
             mAM.setStreamMute(AudioManager.STREAM_MUSIC, true);
         }
@@ -1072,14 +1041,6 @@ public class DMediaController implements IMediaController {
             mVideoView.releaseSurfactexture();
             mVideoView.stopPlayback();
             mVideoView = null;
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        //放在主线程时会阻塞主线程
-//                        mVideoView.stopPlayback();
-//                        mVideoView = null;
-//                    }
-//                }).start();
         }
         if (mPlayer != null) {
             mPlayer = null;
@@ -1092,6 +1053,9 @@ public class DMediaController implements IMediaController {
 
         setControlListener(null);
         if (mTM != null) {
+            if (mPhoneStateListener != null) {
+                mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);//注销监听
+            }
             mTM = null;
         }
         if (mAM != null) {
@@ -1100,7 +1064,9 @@ public class DMediaController implements IMediaController {
     }
 
 
-    public void onCallStateChange() {
+    private void onCallStateChange() {
+        if (mTM == null || mAM == null) return;
+
         if (isMute) {
             mAM.setStreamMute(AudioManager.STREAM_MUSIC, true);
         } else {

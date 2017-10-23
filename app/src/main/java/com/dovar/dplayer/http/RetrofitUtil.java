@@ -19,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Administrator on 2017-09-12.
  */
+
 /**
  * Retrofit简单使用步骤：
  * <p>
@@ -44,6 +45,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * });
  * 4.2发送网络请求(同步)
  * Response<Reception> reception=mCall.execute();
+ * 5. 取消
+ * mCall.cancel();
+ *
  * <p>
  * 常见的使用方式：
  * call.getMusics().subscribeOn(Schedulers.io())
@@ -69,10 +73,15 @@ public class RetrofitUtil {
         if (mRetrofit == null) {
             synchronized (RetrofitUtil.class) {
                 if (mRetrofit == null) {
+                    //获取Retrofit实例
                     mRetrofit = new Retrofit.Builder()
+                            //设置OKHttpClient,如果不设置会提供一个默认的
+                            .client(new OkHttpClient())
+                            //设置baseUrl
                             .baseUrl(NetConfig.BAIDU_MUSIC)
-//                            .client()
+                            //添加Gson转换器
                             .addConverterFactory(GsonConverterFactory.create())
+                            // 支持RxJava
                             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                             .build();
                 }
@@ -95,9 +104,9 @@ public class RetrofitUtil {
         mClient.newCall(mRequest).enqueue(mCallback);
     }
 
-    public static void testUrlByVolley(int mMethod, String url, Response.Listener<String> mListener){
+    public static void testUrlByVolley(int mMethod, String url, Response.Listener<String> mListener) {
         RequestQueue mQueue = Volley.newRequestQueue(MyApplication.getInstance());
-        StringRequest mStringRequest=new StringRequest(mMethod, url,mListener , new Response.ErrorListener() {
+        StringRequest mStringRequest = new StringRequest(mMethod, url, mListener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.getNetworkTimeMs();
@@ -105,6 +114,36 @@ public class RetrofitUtil {
         });
         mQueue.add(mStringRequest);
     }
+
+
+    /*
+    okHttp() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        okHttpClient = new OkHttpClient.Builder()
+                //打印日志
+                .addInterceptor(interceptor)
+
+                //设置Cache目录
+                .cache(CacheUtil.getCache(UIUtil.getContext()))
+
+                //设置缓存
+                .addInterceptor(cacheInterceptor)
+                .addNetworkInterceptor(cacheInterceptor)
+
+                //失败重连
+                .retryOnConnectionFailure(true)
+
+                //time out
+                .readTimeout(TIMEOUT_READ, TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT_CONNECTION, TimeUnit.SECONDS)
+
+                .build()
+
+        ;
+    }
+     */
 }
 
 

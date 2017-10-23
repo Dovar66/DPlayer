@@ -63,7 +63,7 @@
                 android:layout_marginTop="30px"
                 android:gravity="center"
                 android:text="流畅"
-                android:textColor="@color/white_FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="32px"/>
         </com.gdtv.third.autolayout.AutoLinearLayout>
 
@@ -177,7 +177,7 @@
                 android:paddingBottom="@dimen/dimen_20px"
                 android:text="00:00:00"
                 android:singleLine="true"
-                android:textColor="@color/white_FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="26px"/>
 
             <com.gdtv.third.autolayout.AutoLinearLayout
@@ -211,7 +211,7 @@
                 android:text="00:00:00"
                 android:layout_gravity="center_vertical"
                 android:paddingBottom="@dimen/dimen_20px"
-                android:textColor="@color/white_FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="26px"/>
 
         </com.gdtv.third.autolayout.AutoLinearLayout>
@@ -238,14 +238,4 @@
                 android:background="@drawable/fullscreen_ic_small"/>
         </com.gdtv.third.autolayout.AutoLinearLayout>
     </com.gdtv.third.autolayout.AutoLinearLayout>
-
-    <!--我也不知道为什么，反正在布局里随便加个RecyclerView，然后popupWindow的内容就不会扩展到导航栏了 -->
-    <!--这个bug查了一天 -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        />
 </com.gdtv.third.autolayout.AutoRelativeLayout>

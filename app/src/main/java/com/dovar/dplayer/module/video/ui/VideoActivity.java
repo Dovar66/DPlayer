@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.dovar.dplayer.R;
@@ -65,7 +66,7 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
     private void setupVideoPlayer() {
         mDMediaController = new DMediaController(this);
         mDMediaController.setControlListener(this);
-        mDMediaController.setAnchorView(findView(R.id.video_container));
+        mDMediaController.setAnchorView((ViewGroup) findView(R.id.video_container));
         mDMediaController.startPlay(video_url);
 
 //        TextureView mTextureView=new TextureView(this);
