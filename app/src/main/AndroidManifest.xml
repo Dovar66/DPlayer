@@ -33,9 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".module.video.ui.VideoListActivity">
+        <activity android:name=".module.video.ui.VideoListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".module.video.ui.VideoActivity">
+        <activity android:name=".module.video.ui.VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".module.music.ui.MusicActivity">
         </activity>

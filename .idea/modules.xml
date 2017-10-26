@@ -3,9 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DPlayer.iml" filepath="$PROJECT_DIR$/DPlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DPlayer.iml" filepath="$PROJECT_DIR$/DPlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/autolayout/autolayout.iml" filepath="$PROJECT_DIR$/autolayout/autolayout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autolayout/autolayout.iml" filepath="$PROJECT_DIR$/autolayout/autolayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/pili/pili.iml" filepath="$PROJECT_DIR$/pili/pili.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pili/pili.iml" filepath="$PROJECT_DIR$/pili/pili.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xsnow/xsnow.iml" filepath="$PROJECT_DIR$/xsnow/xsnow.iml" />
       <module fileurl="file://$PROJECT_DIR$/xsnow/xsnow.iml" filepath="$PROJECT_DIR$/xsnow/xsnow.iml" />
     </modules>
   </component>

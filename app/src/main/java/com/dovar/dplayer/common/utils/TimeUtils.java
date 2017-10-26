@@ -515,4 +515,21 @@ public class TimeUtils {
             }
         }
     }
+
+    //按照格式生成时长，比如01:50:10
+    public static String generateTime(long position) {
+        int totalSeconds = (int) (position / 1000);
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+
+        if (hours > 0) {
+            return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes,
+                    seconds).toString();
+        } else {
+            return String.format(Locale.US, "%02d:%02d", minutes, seconds)
+                    .toString();
+        }
+    }
 }
