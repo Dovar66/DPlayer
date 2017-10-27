@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -311,7 +311,7 @@ public class MainActivity extends StatusBarTintActivity
     private RCommonAdapter<VideoListBean.IssueListBean.ItemListBean> adapter_video;
 
     private void setupMusicList() {
-        rv_musicList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rv_musicList.setLayoutManager(new GridLayoutManager(mContext, 3));
         adapter_music = new RCommonAdapter<Music>(this, R.layout.item_card_layout2) {
             @Override
             public void convert(RCommonViewHolder vh, int position) {
@@ -332,7 +332,7 @@ public class MainActivity extends StatusBarTintActivity
     }
 
     private void setupVideoList() {
-        rv_videoList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rv_videoList.setLayoutManager(new GridLayoutManager(mContext, 3));
         adapter_video = new RCommonAdapter<VideoListBean.IssueListBean.ItemListBean>(this, R.layout.item_card_layout2) {
             @Override
             public void convert(RCommonViewHolder vh, int position) {
@@ -348,6 +348,15 @@ public class MainActivity extends StatusBarTintActivity
 
     @Override
     public void getMusicListSuccess(List<Music> mMusicList, boolean isLoadMore) {
+        if (mMusicList != null) {
+            if (mMusicList.size() > 6) {
+                mMusicList = mMusicList.subList(0, 6);
+            } else {
+                while (mMusicList.size() < 6) {
+                    mMusicList.add(new Music());
+                }
+            }
+        }
         adapter_music.addDatas(mMusicList, !isLoadMore);
     }
 
@@ -358,6 +367,15 @@ public class MainActivity extends StatusBarTintActivity
 
     @Override
     public void getVideoListSuccess(List<VideoListBean.IssueListBean.ItemListBean> mVideoList, boolean isLoadMore) {
+        if (mVideoList != null) {
+            if (mVideoList.size() > 6) {
+                mVideoList = mVideoList.subList(0, 6);
+            } else {
+                while (mVideoList.size() < 6) {
+                    mVideoList.add(new VideoListBean.IssueListBean.ItemListBean());
+                }
+            }
+        }
         adapter_video.addDatas(mVideoList, !isLoadMore);
     }
 
