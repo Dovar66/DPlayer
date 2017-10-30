@@ -1,5 +1,6 @@
 package com.dovar.dplayer;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,6 +37,8 @@ import com.dovar.dplayer.module.music.ui.fragment.MusicFragment;
 import com.dovar.dplayer.module.music.ui.fragment.MusicListFragment;
 import com.dovar.dplayer.module.video.ui.VideoListActivity;
 import com.lantouzi.wheelview.WheelView;
+import com.vise.xsnow.permission.OnPermissionCallback;
+import com.vise.xsnow.permission.PermissionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,17 +126,36 @@ public class MainActivity extends StatusBarTintActivity
                 ft.commit();
                 break;
             case R.id.nav_local:
-                LocalMusicFragment mLocalMusicFragment = LocalMusicFragment.newInstance();
-                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                ft2.replace(R.id.fragContainer, mLocalMusicFragment, "localMusicList");
-                ft2.addToBackStack("localMusicList");
-                ft2.commit();
+                PermissionManager.instance().with(this).request(new OnPermissionCallback() {
+                    @Override
+                    public void onRequestAllow(String permissionName) {
+                        showLocalMusicFragment();
+                    }
+
+                    @Override
+                    public void onRequestRefuse(String permissionName) {
+                        ToastUtil.show("本次请求权限被拒绝");
+                    }
+
+                    @Override
+                    public void onRequestNoAsk(String permissionName) {
+                        ToastUtil.show("该权限已被禁止，请去设置中打开");
+                    }
+                }, Manifest.permission.READ_EXTERNAL_STORAGE);
                 break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showLocalMusicFragment() {
+        LocalMusicFragment mLocalMusicFragment = LocalMusicFragment.newInstance();
+        FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+        ft2.replace(R.id.fragContainer, mLocalMusicFragment, "localMusicList");
+        ft2.addToBackStack("localMusicList");
+        ft2.commit();
     }
 
     private void invalidateDrawerImg() {
