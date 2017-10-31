@@ -35,6 +35,7 @@ import com.dovar.dplayer.common.utils.ToastUtil;
 import com.dovar.dplayer.module.music.ui.fragment.LocalMusicFragment;
 import com.dovar.dplayer.module.music.ui.fragment.MusicFragment;
 import com.dovar.dplayer.module.music.ui.fragment.MusicListFragment;
+import com.dovar.dplayer.module.video.ui.VideoActivity;
 import com.dovar.dplayer.module.video.ui.VideoListActivity;
 import com.lantouzi.wheelview.WheelView;
 import com.vise.xsnow.permission.OnPermissionCallback;
@@ -361,10 +362,18 @@ public class MainActivity extends StatusBarTintActivity
                 VideoListBean.IssueListBean.ItemListBean bean = getItem(position);
                 if (bean == null) return;
                 vh.setText(R.id.tv_title, bean.getData().getTitle());
-                vh.setText(R.id.tv_artist, bean.getData().getDescription());
+                vh.getView(R.id.tv_artist).setVisibility(View.GONE);
+                //vh.setText(R.id.tv_artist, bean.getData().getDescription());
                 vh.setImageUrl(R.id.iv_cover, bean.getData().getCover().getDetail());
             }
         };
+
+        adapter_video.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                VideoActivity.jump(mContext,adapter_video.getItem(position).getData().getPlayUrl());
+            }
+        });
         rv_videoList.setAdapter(adapter_video);
     }
 
