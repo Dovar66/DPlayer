@@ -58,7 +58,7 @@ public class LocalMusicFragment extends BaseFragment {
         mAdapter = new LocalMusicAdapter(getActivity());
         mAdapter.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position,View itemView) {
                 if (getActivity() instanceof MainActivity) {
                     LocalTrack music = mAdapter.getItem(position);
                     ArrayList<Music> mMusicArrayList=new ArrayList<Music>();
