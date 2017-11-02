@@ -106,6 +106,9 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoLis
             @Override
             public void onPrepared(PLMediaPlayer plMediaPlayer, int preparedTime) {
                 LogUtil.d("tag", "准备播放");
+                // 屏幕常亮
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
                 mVideoFloatContainer.setVisibility(View.VISIBLE);
                 mVideoLoadingView.setVisibility(View.VISIBLE);
                 //for cover the pre Video frame
@@ -134,6 +137,8 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoLis
                 if (mCurrentPlayArea != null) {
                     mCurrentPlayArea.setClickable(true);
                 }
+                // 取消屏幕常亮
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                 mVideoFloatContainer.setVisibility(View.INVISIBLE);//隐藏播放窗口
                 mCurrentPlayArea.setVisibility(View.VISIBLE);

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.dovar.dplayer.R;
 import com.dovar.dplayer.common.mediaControl.DMediaController;
@@ -117,11 +118,22 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
 
     //初始化播放事件监听
     private  void initMediaPlayerListener(){
+        mDMediaController.setOnPreparedListener(new DMediaController.OnPreparedListener() {
+            @Override
+            public void onPrepared(PLMediaPlayer plMediaPlayer, int preparedTime) {
+                // 屏幕常亮
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        });
+
         mDMediaController.setOnCompletionListener(new DMediaController.OnCompletionListener() {
             @Override
             public void onCompletion(PLMediaPlayer plMediaPlayer) {
                 //播放完变回竖屏
                 mDMediaController.changeToFullScreen(false);
+
+                // 取消屏幕常亮
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
 
