@@ -28,6 +28,14 @@ public class VideoActivity extends StatusBarTintActivity implements DMediaContro
         mContext.startActivity(mIntent);
     }
 
+    public static void jump(Context mContext, String url,Bundle options) {
+        Intent mIntent = new Intent(mContext, VideoActivity.class);
+        if (!TextUtils.isEmpty(url)) {
+            mIntent.putExtra(Key_url, url);
+        }
+        mContext.startActivity(mIntent,options);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

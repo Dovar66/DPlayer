@@ -1123,19 +1123,20 @@ public class DMediaController implements IMediaController {
                 lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
 
+            //适配的原则就是以视频流的宽高比从小开始放大，看谁先等于屏幕的宽高，只要有一个边等于了屏幕的边或者自己定义的边长，就停止放大
             if (isFullScreen) {
                 long ratio = plMediaPlayer.getVideoHeight() / plMediaPlayer.getVideoWidth();//视频流高宽比，eg:10:16 or eg:9:16
                 long ratio_phone = screenY / screenX;//屏幕高宽比,eg:9:16 or eg:10:16
                 //自适应屏幕宽高
                 if (ratio > ratio_phone) { //此时应该视频的高变为屏幕的高，
-                    lp.width=screenY /(plMediaPlayer.getVideoHeight() / plMediaPlayer.getVideoWidth());
                     lp.height=screenY;
+                    lp.width=lp.height * (plMediaPlayer.getVideoWidth() / plMediaPlayer.getVideoHeight() );
                     //下面这种情况会造成视频画面宽超出屏幕的问题，所以更改
 //                    lp.width = screenX;
 //                    lp.height = screenX * plMediaPlayer.getVideoHeight() / plMediaPlayer.getVideoWidth();
                 } else { //宽等于屏幕的宽
                     lp.width=screenX;
-                    lp.height=screenX * plMediaPlayer.getVideoHeight() / plMediaPlayer.getVideoWidth();
+                    lp.height=lp.width * plMediaPlayer.getVideoHeight() / plMediaPlayer.getVideoWidth();
 //                    lp.width = screenY * plMediaPlayer.getVideoWidth() / plMediaPlayer.getVideoHeight();
 //                    lp.height = screenY;
                 }

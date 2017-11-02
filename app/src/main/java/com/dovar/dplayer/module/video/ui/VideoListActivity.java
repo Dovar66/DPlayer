@@ -228,7 +228,7 @@ public class VideoListActivity extends StatusBarTintActivity implements VideoLis
 
         mAdapter.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position,View itemView) {
             }
         });
         mLayoutManager=new LinearLayoutManager(this);

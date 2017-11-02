@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import com.dovar.dplayer.common.utils.LogUtil;
 
@@ -355,7 +355,8 @@ public abstract class RCommonAdapter<T> extends RecyclerView.Adapter<RCommonView
             }
             return new RCommonViewHolder(footerView);
         }
-        return new RCommonViewHolder(View.inflate(mContext, mLayoutId, null));
+        return new RCommonViewHolder(LayoutInflater.from(mContext).inflate(mLayoutId,parent,false));
+        //View.inflate(mContext, mLayoutId, null)
     }
 
     @Override
@@ -375,7 +376,7 @@ public abstract class RCommonAdapter<T> extends RecyclerView.Adapter<RCommonView
                 @Override
                 public void onClick(View v) {
                     //必须使用holder.getAdapterPosition()动态获取正确的position,否则在数据发生变化时，点击事件还是响应原来的position
-                    onItemClickListener.onItemClick(hasHeader ? holder.getAdapterPosition() - 1 : holder.getAdapterPosition());
+                    onItemClickListener.onItemClick(hasHeader ? holder.getAdapterPosition() - 1 : holder.getAdapterPosition(),holder.itemView);
                 }
             });
         }
@@ -420,7 +421,7 @@ public abstract class RCommonAdapter<T> extends RecyclerView.Adapter<RCommonView
 
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position,View itemView);
     }
 
     protected OnItemClickListener onItemClickListener;

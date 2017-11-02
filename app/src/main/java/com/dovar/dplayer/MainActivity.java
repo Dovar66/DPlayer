@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -329,6 +330,10 @@ public class MainActivity extends StatusBarTintActivity
     RecyclerView rv_musicList;
     @BindView(R.id.rv_videoList)
     RecyclerView rv_videoList;
+    @BindView(R.id.tv_music_more)
+    TextView music_more;
+    @BindView(R.id.tv_video_more)
+    TextView video_more;
 
     private RCommonAdapter<Music> adapter_music;
     private RCommonAdapter<VideoListBean.IssueListBean.ItemListBean> adapter_video;
@@ -347,7 +352,7 @@ public class MainActivity extends StatusBarTintActivity
         };
         adapter_music.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position,View itemView) {
                 showMusicPlayer(position, (ArrayList<Music>) adapter_music.getDatas());
             }
         });
@@ -356,6 +361,7 @@ public class MainActivity extends StatusBarTintActivity
 
     private void setupVideoList() {
         rv_videoList.setLayoutManager(new GridLayoutManager(mContext, 3));
+        rv_videoList.setHasFixedSize(true);
         adapter_video = new RCommonAdapter<VideoListBean.IssueListBean.ItemListBean>(this, R.layout.item_card_layout2) {
             @Override
             public void convert(RCommonViewHolder vh, int position) {
@@ -370,11 +376,23 @@ public class MainActivity extends StatusBarTintActivity
 
         adapter_video.setOnItemClickListener(new RCommonAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-                VideoActivity.jump(mContext,adapter_video.getItem(position).getData().getPlayUrl());
+            public void onItemClick(int position,View itemView) {
+                //平滑地将一个控件过渡到另外一个act
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this,
+                                itemView.findViewById(R.id.iv_cover), getString(R.string.transition_video_img));
+                VideoActivity.jump(mContext,adapter_video.getItem(position).getData().getPlayUrl(),options.toBundle());
+                //VideoActivity.jump(mContext,adapter_video.getItem(position).getData().getPlayUrl());
             }
         });
         rv_videoList.setAdapter(adapter_video);
+
+        video_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VideoListActivity.jump(mContext);
+            }
+        });
     }
 
     @Override

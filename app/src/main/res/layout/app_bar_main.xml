@@ -165,6 +165,18 @@
                     android:textStyle="bold"/>
 
                 <TextView
+                    android:id="@+id/tv_music_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="更多 "
+                    android:textColor="#888"
+                    android:textSize="30px"
+                    android:textStyle="bold"/>
+
+                <TextView
                     android:id="@+id/recentsNothingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -182,6 +194,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_music"
+                    android:layout_marginRight="@dimen/card_margin"
+                    android:layout_marginBottom="@dimen/card_margin"
                     android:padding="5dp"/>
             </com.zhy.autolayout.AutoRelativeLayout>
 
@@ -216,6 +230,18 @@
                     android:textStyle="bold"/>
 
                 <TextView
+                    android:id="@+id/tv_video_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="更多 "
+                    android:textColor="#888"
+                    android:textSize="30px"
+                    android:textStyle="bold"/>
+
+                <TextView
                     android:id="@+id/playlistNothingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -233,6 +259,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_video"
+                    android:layout_marginRight="@dimen/card_margin"
+                    android:layout_marginBottom="@dimen/card_margin"
                     android:padding="5dp"/>
             </com.zhy.autolayout.AutoRelativeLayout>
 

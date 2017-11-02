@@ -34,4 +34,6 @@
     <dimen name="video_small_screen_width">200dp</dimen>
     <dimen name="video_small_screen_margin">5dp</dimen>
 
+    <dimen name="card_margin">3dp</dimen>
+
 </resources>
