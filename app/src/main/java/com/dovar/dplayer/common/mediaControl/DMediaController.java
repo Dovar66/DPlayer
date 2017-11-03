@@ -223,27 +223,37 @@ public class DMediaController implements IMediaController {
 
     private void initController(Context context) {
         mContext = context;
-        mAM = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        mTM = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
-        mTM.listen(new PhoneStateListener() {
+        //在线程中创建
+        new Thread(new Runnable() {
             @Override
-            public void onCallStateChanged(int state, String incomingNumber) {
-                super.onCallStateChanged(state, incomingNumber);
-                switch (state) {
-                    case TelephonyManager.CALL_STATE_IDLE://挂断
-                        onCallStateChange();
-                        break;
-                    case TelephonyManager.CALL_STATE_RINGING://来电响铃
-                        onCallStateChange();
-                        break;
-                    case TelephonyManager.CALL_STATE_OFFHOOK://通话
-                        onCallStateChange();
-                        break;
-                }
+            public void run() {
+                mAM = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+                mTM = (TelephonyManager) mContext.getSystemService(Service.TELEPHONY_SERVICE);
+                mTM.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             }
-        }, PhoneStateListener.LISTEN_CALL_STATE);
+        }).start();
+
         initPlayer();//初始化播放相关
     }
+
+    //电话监听
+    public  PhoneStateListener phoneStateListener=new PhoneStateListener(){
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            super.onCallStateChanged(state, incomingNumber);
+            switch (state) {
+                case TelephonyManager.CALL_STATE_IDLE://挂断
+                    onCallStateChange();
+                    break;
+                case TelephonyManager.CALL_STATE_RINGING://来电响铃
+                    onCallStateChange();
+                    break;
+                case TelephonyManager.CALL_STATE_OFFHOOK://通话
+                    onCallStateChange();
+                    break;
+            }
+        }
+    };
 
     private void initPlayer() {
         mVideoView = new PLVideoTextureView(mContext);
@@ -1436,7 +1446,9 @@ public class DMediaController implements IMediaController {
         }
 
         setControlListener(null);
-        if (mTM != null) {
+        if (mTM != null&&phoneStateListener!=null) { //还是会有内存泄露，估计GC没来得及回收
+            mTM.listen(phoneStateListener,PhoneStateListener.LISTEN_NONE);
+            phoneStateListener=null;
             mTM = null;
         }
         if (mAM != null) {
@@ -1444,7 +1456,7 @@ public class DMediaController implements IMediaController {
         }
     }
 
-    public void onCallStateChange() {
+    public  void  onCallStateChange() {
         if (isMute) {
             mAM.setStreamMute(AudioManager.STREAM_MUSIC, true);
         } else {
